@@ -231,7 +231,7 @@ def Prepare_Figure(judgement):
     return DataA, DataB, DataC, DataD
 
 
-# ガリレオ探査機の周波数一覧（Hz)とダウンロードした電波強度電波を代入（das2をcsvに変換）
+# ガリレオ探査機の周波数一覧（Hz)とダウンロードした電波強度電波を代入（das2をcsvに変換）あああ
 def Prepare_Galileo_data(fleq_tag, rad_row_data):
     gal_fleq_tag = np.array(fleq_tag, dtype='float64')/1000000
 
