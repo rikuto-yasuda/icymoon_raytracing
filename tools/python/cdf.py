@@ -89,5 +89,5 @@ print(position5.shape)
 
 DATA = np.hstack((TIME5, np.reshape(FRE5, [FRE5.shape[0],1]),position5))
 print(DATA.shape)
-np.savetxt('/Users/yasudarikuto/research/raytracing/tools/results/Radio_data.txt', DATA)
+np.savetxt('/Users/yasudarikuto/research/icymoon_raytracing/tools/results/Radio_data.txt', DATA)
 

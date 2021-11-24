@@ -4,12 +4,12 @@ import math
 
 # %%
 Rdo = np.loadtxt(
-    '/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/All_Gnymede_Radio_data.txt')  # ???
+    '/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/All_Gnymede_Radio_data.txt')  # ???
 
 Rdo[:, 12:15] = Rdo[:, 12:15]*71492
 
 GG = np.loadtxt(
-    '/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/GLL_GAN_2.txt')
+    '/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/GLL_GAN_2.txt')
 
 # %%
 
@@ -79,7 +79,7 @@ for i in range(lr):
 print(Xmax, Ymax)
 
 np.savetxt(
-    '/Users/yasudarikuto/research/raytracing/tools/result_for_yasudaetal2022/R_P_fulldata.txt', res)
+    '/Users/yasudarikuto/research/icymoon_raytracing/tools/result_for_yasudaetal2022/R_P_fulldata.txt', res)
 
 
 # %%

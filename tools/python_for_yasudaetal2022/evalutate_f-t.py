@@ -8,11 +8,11 @@ Radio_name_cdf='../result_for_yasudaetal2022/tracing_range_' +
 Radio_Range=pd.read_csv(Radio_name_cdf, header=0)
 
 Radio_observer_position=np.loadtxt(
-    '/Users/yasudarikuto/research/raytracing/tools/result_for_yasudaetal2022/R_P_'+object_name+'_fulldata.txt',)  # 電波源の経度を含む
+    '/Users/yasudarikuto/research/icymoon_raytracing/tools/result_for_yasudaetal2022/R_P_'+object_name+'_fulldata.txt',)  # 電波源の経度を含む
 
 
 galdata=np.loadtxt(
-    '/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/GLL_GAN_2.txt')
+    '/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/GLL_GAN_2.txt')
 
 
 n=len(Radio_observer_position)

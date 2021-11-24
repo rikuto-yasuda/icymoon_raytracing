@@ -5,17 +5,17 @@ import matplotlib as mpt
 import pandas as pd
 from matplotlib.colors import LogNorm
 
-df = np.genfromtxt('/Users/yasudarikuto/research/raytracing/raytrace.tohoku/src/rtc/tools/map_model/europa_plume_plasma_map')
-data1 = np.genfromtxt("/Users/yasudarikuto/research/raytracing/raytrace.tohoku/src/rtc/testing/ray-Peuropa_plume-Mtest_simple-benchmark-LO-Z100-FR1e6")
-data2 = np.genfromtxt("/Users/yasudarikuto/research/raytracing/raytrace.tohoku/src/rtc/testing/ray-Peuropa_plume-Mtest_simple-benchmark-LO-Z200-FR1e6")
-data3 = np.genfromtxt("/Users/yasudarikuto/research/raytracing/raytrace.tohoku/src/rtc/testing/ray-Peuropa_plume-Mtest_simple-benchmark-LO-Z300-FR1e6")
-data4 = np.genfromtxt("/Users/yasudarikuto/research/raytracing/raytrace.tohoku/src/rtc/testing/ray-Peuropa_plume-Mtest_simple-benchmark-LO-Z400-FR1e6")
-data5 = np.genfromtxt("/Users/yasudarikuto/research/raytracing/raytrace.tohoku/src/rtc/testing/ray-Peuropa_plume-Mtest_simple-benchmark-LO-Z500-FR1e6")
-data6 = np.genfromtxt("/Users/yasudarikuto/research/raytracing/raytrace.tohoku/src/rtc/testing/ray-Peuropa_plume-Mtest_simple-benchmark-LO-Z600-FR1e6")
-data7 = np.genfromtxt("/Users/yasudarikuto/research/raytracing/raytrace.tohoku/src/rtc/testing/ray-Peuropa_plume-Mtest_simple-benchmark-LO-Z700-FR1e6")
-data8 = np.genfromtxt("/Users/yasudarikuto/research/raytracing/raytrace.tohoku/src/rtc/testing/ray-Peuropa_plume-Mtest_simple-benchmark-LO-Z800-FR1e6")
-data9 = np.genfromtxt("/Users/yasudarikuto/research/raytracing/raytrace.tohoku/src/rtc/testing/ray-Peuropa_plume-Mtest_simple-benchmark-LO-Z900-FR1e6")
-data10 = np.genfromtxt("/Users/yasudarikuto/research/raytracing/raytrace.tohoku/src/rtc/testing/ray-Peuropa_plume-Mtest_simple-benchmark-LO-Z1000-FR1e6")
+df = np.genfromtxt('/Users/yasudarikuto/research/icymoon_raytracing/raytrace.tohoku/src/rtc/tools/map_model/europa_plume_plasma_map')
+data1 = np.genfromtxt("/Users/yasudarikuto/research/icymoon_raytracing/raytrace.tohoku/src/rtc/testing/ray-Peuropa_plume-Mtest_simple-benchmark-LO-Z100-FR1e6")
+data2 = np.genfromtxt("/Users/yasudarikuto/research/icymoon_raytracing/raytrace.tohoku/src/rtc/testing/ray-Peuropa_plume-Mtest_simple-benchmark-LO-Z200-FR1e6")
+data3 = np.genfromtxt("/Users/yasudarikuto/research/icymoon_raytracing/raytrace.tohoku/src/rtc/testing/ray-Peuropa_plume-Mtest_simple-benchmark-LO-Z300-FR1e6")
+data4 = np.genfromtxt("/Users/yasudarikuto/research/icymoon_raytracing/raytrace.tohoku/src/rtc/testing/ray-Peuropa_plume-Mtest_simple-benchmark-LO-Z400-FR1e6")
+data5 = np.genfromtxt("/Users/yasudarikuto/research/icymoon_raytracing/raytrace.tohoku/src/rtc/testing/ray-Peuropa_plume-Mtest_simple-benchmark-LO-Z500-FR1e6")
+data6 = np.genfromtxt("/Users/yasudarikuto/research/icymoon_raytracing/raytrace.tohoku/src/rtc/testing/ray-Peuropa_plume-Mtest_simple-benchmark-LO-Z600-FR1e6")
+data7 = np.genfromtxt("/Users/yasudarikuto/research/icymoon_raytracing/raytrace.tohoku/src/rtc/testing/ray-Peuropa_plume-Mtest_simple-benchmark-LO-Z700-FR1e6")
+data8 = np.genfromtxt("/Users/yasudarikuto/research/icymoon_raytracing/raytrace.tohoku/src/rtc/testing/ray-Peuropa_plume-Mtest_simple-benchmark-LO-Z800-FR1e6")
+data9 = np.genfromtxt("/Users/yasudarikuto/research/icymoon_raytracing/raytrace.tohoku/src/rtc/testing/ray-Peuropa_plume-Mtest_simple-benchmark-LO-Z900-FR1e6")
+data10 = np.genfromtxt("/Users/yasudarikuto/research/icymoon_raytracing/raytrace.tohoku/src/rtc/testing/ray-Peuropa_plume-Mtest_simple-benchmark-LO-Z1000-FR1e6")
 l_2d = len(df)
 
 

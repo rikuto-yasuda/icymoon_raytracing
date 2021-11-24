@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpt
 
-df = np.genfromtxt ('/Users/yasudarikuto/research/raytracing/raytrace.tohoku/src/rtc/tools/map_model/europa_plume_plasma_map')
+df = np.genfromtxt ('/Users/yasudarikuto/research/icymoon_raytracing/raytrace.tohoku/src/rtc/tools/map_model/europa_plume_plasma_map')
 l_2d = len(df)
 
 x = df[:,[0]]

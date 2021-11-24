@@ -24,7 +24,7 @@ for j in range (0,10,1):
     J = str(j)
     for h in range (0,10,1):
         H = str(h)
-        filename = "/Users/yasudarikuto/research/raytracing/tools/result_21_06_02/dice_check_50/ray-Ptest_simple-Mtest_simple-benchmark-LO-X"+J+"."+H
+        filename = "/Users/yasudarikuto/research/icymoon_raytracing/tools/result_21_06_02/dice_check_50/ray-Ptest_simple-Mtest_simple-benchmark-LO-X"+J+"."+H
         data_ = test(filename)
         data_.plot()
 

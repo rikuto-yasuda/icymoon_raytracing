@@ -67,7 +67,7 @@ class test:
     
 # In[]
 
-plasma = np.genfromtxt('/Users/yasudarikuto/research/raytracing/raytrace.tohoku/src/rtc/tools/map_model/europa_nonplume_plasma_map')
+plasma = np.genfromtxt('/Users/yasudarikuto/research/icymoon_raytracing/raytrace.tohoku/src/rtc/tools/map_model/europa_nonplume_plasma_map')
 
 l_2d = len(plasma)
 
@@ -85,7 +85,7 @@ print(z.shape)
 v = plasma[:,3].reshape(c_size, r_size).T
 print(v.shape)
 
-ray = np.genfromtxt('/Users/yasudarikuto/research/raytracing/tools/results/ray_stop/ray-Peuropa_nonplume-Mtest_simple-benchmark-LO-Z100-FR1e6')
+ray = np.genfromtxt('/Users/yasudarikuto/research/icymoon_raytracing/tools/results/ray_stop/ray-Peuropa_nonplume-Mtest_simple-benchmark-LO-Z100-FR1e6')
 
 data1 = test(ray)
 data1.plot_ray()

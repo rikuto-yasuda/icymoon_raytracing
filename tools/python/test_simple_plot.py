@@ -32,7 +32,7 @@ class test:
     
 # In[]
 
-df = np.genfromtxt ('/Users/yasudarikuto/research/raytracing/raytrace.tohoku/src/rtc/tools/map_model/test_simple_plasma_map')
+df = np.genfromtxt ('/Users/yasudarikuto/research/icymoon_raytracing/raytrace.tohoku/src/rtc/tools/map_model/test_simple_plasma_map')
 l_2d = len(df)
 
 idx = np.array(np.where(df[:,0]>-1000)) # np.whereは条件を満たす要素番号を返す　idxはnp.arrayは
@@ -55,7 +55,7 @@ data = []
 for i in range(3,9):
     n = str(i)
     N = i
-    filename = "/Users/yasudarikuto/research/raytracing/tools/results/time_step_error_data/ray-Ptest_simple-Mtest_simple-benchmark-LO-Z1-FR1e6-TIME-RANGE1e-"+n+":1e-13" 
+    filename = "/Users/yasudarikuto/research/icymoon_raytracing/tools/results/time_step_error_data/ray-Ptest_simple-Mtest_simple-benchmark-LO-Z1-FR1e6-TIME-RANGE1e-"+n+":1e-13" 
 
     data_ = test(filename)
     data_.plot(n)

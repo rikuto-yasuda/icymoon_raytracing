@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-step2 = np.genfromtxt("/Users/yasudarikuto/research/raytracing/tools/step2.txt")
+step2 = np.genfromtxt("/Users/yasudarikuto/research/icymoon_raytracing/tools/step2.txt")
 x = step2[:,0]
 y = step2[:,1]
 print (x)

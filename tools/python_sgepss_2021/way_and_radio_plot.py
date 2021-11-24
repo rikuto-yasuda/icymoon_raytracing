@@ -31,7 +31,7 @@ Except = list.exc
 data_name = '../result_sgepss_2021/ganymede_test_simple/para_test_simple.csv'
 
 data = np.loadtxt(
-    '/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/R_P_fulldata.txt',)
+    '/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/R_P_fulldata.txt',)
 
 n = len(data)
 Freq_str = ['3.984813988208770752e5', '4.395893216133117676e5', '4.849380254745483398e5', '5.349649786949157715e5', '5.901528000831604004e5', '6.510338783264160156e5',

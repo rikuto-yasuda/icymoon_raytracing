@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # %% 
-Rdo = np.loadtxt('/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/Radio_data.txt')
+Rdo = np.loadtxt('/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/Radio_data.txt')
 
 ####print(Rdo.shape)
 
@@ -13,7 +13,7 @@ Rdo[:,10:13] = Rdo[:,10:13]*71492
 print(Rdo[0][9])
 
 # %%
-GG = np.loadtxt('/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/GLL_GAN.txt', delimiter=',')
+GG = np.loadtxt('/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/GLL_GAN.txt', delimiter=',')
 ##print(GG)
 
 GG[:,1] = np.radians(GG[:,1]) # gallireo position
@@ -68,17 +68,17 @@ for i in range(lr):
             res[i][2] = np.dot((r3-r2),ex)
 # %%
 
-np.savetxt('/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/R_P_data.txt', res)
+np.savetxt('/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/R_P_data.txt', res)
 
 A = np.where(res[:,3]>0)
 
 res2 = res[A][:]
 print(res2)
 
-np.savetxt('/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/R_P_data2.txt', res2)
+np.savetxt('/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/R_P_data2.txt', res2)
 
 # %%
-res2 =np.loadtxt('/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/R_P_data2.txt')
+res2 =np.loadtxt('/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/R_P_data2.txt')
 plt.yscale('log')
 plt.scatter(res2[:,0], res2[:,1])
 plt.plot()

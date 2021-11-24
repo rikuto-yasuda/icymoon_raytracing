@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
  
 
-step2 = np.genfromtxt("/Users/yasudarikuto/research/raytracing/tools/results/reflect_check_result.txt")
+step2 = np.genfromtxt("/Users/yasudarikuto/research/icymoon_raytracing/tools/results/reflect_check_result.txt")
 x = step2[:,0]
 y = step2[:,2]
 print (x)

@@ -19,7 +19,7 @@ from matplotlib.colors import LogNorm
 data_name = '../result_sgepss_2021/ganymede_test_simple/para_test_simple.csv'
 
 data = np.loadtxt(
-    '/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/R_P_fulldata2.txt',)
+    '/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/R_P_fulldata2.txt',)
 Radio_Range = pd.read_csv(data_name, header=0)
 
 n = len(data)
@@ -142,7 +142,7 @@ data4 = np.loadtxt(
 detail_data4 = data4.copy()
 date = np.arange(0, 10801, 60)
 galdata = np.loadtxt(
-    '/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/GLL_GAN_2.txt')
+    '/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/GLL_GAN_2.txt')
 DataA = np.zeros(len(date)*(len(Freq_num)+1)
                  ).reshape(len(Freq_num)+1, len(date))
 DataB = np.zeros(len(date)*(len(Freq_num)+1)

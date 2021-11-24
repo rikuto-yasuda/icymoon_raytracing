@@ -10,7 +10,7 @@ import datetime
 # %%
 data_name = '../result_sgepss_2021/ganymede_test_simple/para_test_simple.csv'
 
-data = np.loadtxt('/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/R_P_fulldata.txt',)
+data = np.loadtxt('/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/R_P_fulldata.txt',)
 Radio_Range = pd.read_csv(data_name, header=0)
 
 n = len(data)
@@ -128,7 +128,7 @@ print("complete")
 # %%
 data4 = np.loadtxt('../result_sgepss_2021/ganymede_test_simple/ganymede_noreflection_occultaion_data_longver1.txt') #電波源の経度を含
 detail_data4=data4.copy()
-galdata=np.loadtxt('/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/GLL_GAN_2.txt')
+galdata=np.loadtxt('/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/GLL_GAN_2.txt')
 date = np.arange('1996-06-27 05:30:00', '1996-06-27 08:31:00',np.timedelta64(1,'m'), dtype='datetime64')
 DataA= np.zeros(len(date)*(len(Freq_num)+1)).reshape(len(Freq_num)+1,len(date))
 DataB= np.zeros(len(date)*(len(Freq_num)+1)).reshape(len(Freq_num)+1,len(date))

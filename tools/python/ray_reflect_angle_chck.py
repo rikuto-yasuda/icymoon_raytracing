@@ -45,7 +45,7 @@ class test:
 result = []
 for j in range (5,90,5):
     J = str(j)
-    filename ="/Users/yasudarikuto/research/raytracing/tools/results/ray_reflection_check/ray-Ptest_simple-Mtest_simple-benchmark-LO-Deg"+J
+    filename ="/Users/yasudarikuto/research/icymoon_raytracing/tools/results/ray_reflection_check/ray-Ptest_simple-Mtest_simple-benchmark-LO-Deg"+J
 
     data_ = test(filename)
     data_.first_angle()

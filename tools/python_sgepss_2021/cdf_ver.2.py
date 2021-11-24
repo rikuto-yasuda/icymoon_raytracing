@@ -5,7 +5,7 @@ import numpy as np
 import re
 
 # %% 
-cdf_file=cdflib.CDF('/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/expres_gll_jupiter_0d-30r_jrm09_lossc-wid1deg_5kev_19960627_v11.cdf')
+cdf_file=cdflib.CDF('/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/expres_gll_jupiter_0d-30r_jrm09_lossc-wid1deg_5kev_19960627_v11.cdf')
 
 x= cdf_file.varget("SrcPosition", startrec =0, endrec = 180) #epoch frequency longtitude source position
 
@@ -117,6 +117,6 @@ print(position5.shape)
 DATA = np.hstack((TIME,FRES,LONGS,POLS,position))
 
 print(DATA.shape)
-np.savetxt('/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/All_Gnymede_Radio_data.txt', DATA, fmt="%s")
+np.savetxt('/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/All_Gnymede_Radio_data.txt', DATA, fmt="%s")
 
 # %%

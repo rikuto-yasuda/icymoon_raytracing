@@ -9,7 +9,7 @@ import math
 
 # %%
 Rdo = np.loadtxt(
-    '/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/All_Gnymede_Radio_data2.txt')  # ???
+    '/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/All_Gnymede_Radio_data2.txt')  # ???
 
 # print(Rdo.shape)
 
@@ -18,7 +18,7 @@ Rdo[:, 12:15] = Rdo[:, 12:15]*71492
 
 # %%
 GG = np.loadtxt(
-    '/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/GLL_GAN_2.txt')
+    '/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/GLL_GAN_2.txt')
 
 
 # %%
@@ -89,7 +89,7 @@ for i in range(lr):
     res[i][5] = np.dot((r3-r2), ex)
 
 np.savetxt(
-    '/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/R_P_fulldata2.txt', res)
+    '/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/R_P_fulldata2.txt', res)
 
 # %%
 """
@@ -98,11 +98,11 @@ A = np.where(res[:,3]>0)
 res2 = res[A][:]
 print(res2)
 
-np.savetxt('/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/R_P_data2.txt', res2)
+np.savetxt('/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/R_P_data2.txt', res2)
 
 # %%
 
-res2 =np.loadtxt('/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/R_P_data2.txt')
+res2 =np.loadtxt('/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/R_P_data2.txt')
 plt.yscale('log')
 plt.scatter(res2[:,0], res2[:,1])
 plt.plot()

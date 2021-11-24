@@ -14,7 +14,7 @@ for j in range (3,9):
             Deg = l
             DEG = str(l)
 
-            filename ="/Users/yasudarikuto/research/raytracing/tools/results/time_step_error_data2/ray-Ptest_simple-Mtest_simple-benchmark-LO-Z1-FR1e6-TIME-RANGE"+COE+"e-"+ORDER+":1e-13-PITCH"+DEG 
+            filename ="/Users/yasudarikuto/research/icymoon_raytracing/tools/results/time_step_error_data2/ray-Ptest_simple-Mtest_simple-benchmark-LO-Z1-FR1e6-TIME-RANGE"+COE+"e-"+ORDER+":1e-13-PITCH"+DEG 
             data = np.genfromtxt(filename)
             l_2d = len(data) 
             change = 0

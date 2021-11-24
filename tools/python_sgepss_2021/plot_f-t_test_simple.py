@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # %% 
-data = np.loadtxt('/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/R_P_data2.txt',)
+data = np.loadtxt('/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/R_P_data2.txt',)
 n = len(data)
 list1 = ['3.984813988208770752e5','4.395893216133117676e5','5.349649786949157715e5','5.901528000831604004e5','6.510338783264160156e5',\
     '7.181954979896545410e5','7.922856807708740234e5','8.740190267562866211e5','9.641842246055603027e5','1.063650846481323242e6',\

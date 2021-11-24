@@ -9,7 +9,7 @@ from matplotlib.colors import LogNorm
 
 # In[]
 
-df = np.genfromtxt('/Users/yasudarikuto/research/raytracing/raytrace.tohoku/src/rtc/tools/map_model/europa_nonplume_plasma_map')
+df = np.genfromtxt('/Users/yasudarikuto/research/icymoon_raytracing/raytrace.tohoku/src/rtc/tools/map_model/europa_nonplume_plasma_map')
 l_2d = len(df)
 idx = np.array(np.where(df[:,0]>-1000))
 print(idx[0,0])
@@ -79,7 +79,7 @@ plt.plot(n, c, color = "black")
 for i in range(100,1301,100):
     n = str(i)
     N = i
-    filename = np.genfromtxt("/Users/yasudarikuto/research/raytracing/tools/results/for_JpGU_2021/europa_reflection_1MHz/ray-Peuropa_nonplume-Mtest_simple-benchmark-LO-Z"+n+"-FR1e6")
+    filename = np.genfromtxt("/Users/yasudarikuto/research/icymoon_raytracing/tools/results/for_JpGU_2021/europa_reflection_1MHz/ray-Peuropa_nonplume-Mtest_simple-benchmark-LO-Z"+n+"-FR1e6")
     
     x1 = filename[:,[1]]
     z1 = filename[:,[3]]

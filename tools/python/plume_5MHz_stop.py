@@ -9,7 +9,7 @@ from matplotlib.colors import LogNorm
 
 # In[]
 
-df = np.genfromtxt('/Users/yasudarikuto/research/raytracing/raytrace.tohoku/src/rtc/tools/map_model/europa_plume_plasma_map')
+df = np.genfromtxt('/Users/yasudarikuto/research/icymoon_raytracing/raytrace.tohoku/src/rtc/tools/map_model/europa_plume_plasma_map')
 l_2d = len(df)
 idx = np.array(np.where(df[:,0]>-1500))
 print(idx[0,0])
@@ -115,7 +115,7 @@ plt.fill_between(t, c, n, facecolor='black')
 for i in range(100,1301,100):
     n = str(i)
     N = i
-    filename = np.genfromtxt("/Users/yasudarikuto/research/raytracing/tools/results/for_JpGU_2021/europa_plume_stop_5MHz/ray-Peuropa_plume-Mtest_simple-benchmark-LO-Z"+n+"-FR5e6")
+    filename = np.genfromtxt("/Users/yasudarikuto/research/icymoon_raytracing/tools/results/for_JpGU_2021/europa_plume_stop_5MHz/ray-Peuropa_plume-Mtest_simple-benchmark-LO-Z"+n+"-FR5e6")
     
     x1 = filename[:,[1]]
     z1 = filename[:,[3]]

@@ -24,7 +24,7 @@ data_name = '../result_sgepss_2021/'+object_name+'_'+highest_plasma+'_' + \
     plasma_scaleheight+'/para_'+highest_plasma+'_'+plasma_scaleheight+'.csv'
 
 data = np.loadtxt(
-    '/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/R_P_fulldata.txt',)
+    '/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/R_P_fulldata.txt',)
 
 
 # %%
@@ -158,7 +158,7 @@ data4 = np.loadtxt('../result_sgepss_2021/'+object_name+'_'+highest_plasma+'_'+p
 # data4 = np.loadtxt('../result_for_yasudaetal2022/'+object_name+'_'+highest_plasma+'_'+plasma_scaleheight +
 #                   '/' + object_name+'_'+highest_plasma+'_'+plasma_scaleheight+'_dectable_radio_data.txt')
 galdata = np.loadtxt(
-    '/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/GLL_GAN_2.txt')
+    '/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/GLL_GAN_2.txt')
 
 # date = np.arange('1996-06-27 05:30:00', '1996-06-27 08:31:00',np.timedelta64(1,'m'), dtype='datetime64')
 date = np.arange(0, 10801, 60)

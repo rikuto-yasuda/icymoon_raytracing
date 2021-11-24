@@ -15,7 +15,7 @@ plasma_scaleheight='6e2' #単位は(km) 1.5e2/3e2/6e2
 # %%
 data_name = '../result_sgepss_2021/'+object_name+'_'+highest_plasma+'_'+plasma_scaleheight+'/para_'+highest_plasma+'_'+plasma_scaleheight+'.csv'
 
-data = np.loadtxt('/Users/yasudarikuto/research/raytracing/tools/result_sgepss_2021/R_P_data2.txt',)
+data = np.loadtxt('/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/R_P_data2.txt',)
 list = pd.read_csv(data_name, header=0)
 
 n = len(data)
