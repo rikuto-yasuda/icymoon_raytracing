@@ -8,8 +8,8 @@ import pandas as pd
 # In[]
 object_name = 'ganymede'  # ganydeme/
 
-highest_plasma = '1.5e2'  # 単位は(/cc) 2e2/4e2/16e2
-plasma_scaleheight = '6e2'  # 単位は(km) 1.5e2/3e2/6e2
+highest_plasma = '2e2'  # 単位は(/cc) 2e2/4e2/16e2
+plasma_scaleheight = '1.5e2'  # 単位99は(km) 1.5e2/3e2/6e2
 
 x_farthest = 26680.87663426876
 z_farthest = 8112.669988476546
