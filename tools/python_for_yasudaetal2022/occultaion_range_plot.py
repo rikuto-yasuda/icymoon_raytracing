@@ -9,13 +9,13 @@ import pandas as pd
 object_name = 'ganymede'  # ganydeme/
 
 highest_plasma = '1.5e2'  # 単位は(/cc) 2e2/4e2/16e2
-plasma_scaleheight = '1e2'  # 単位は(km) 1.5e2/3e2/6e2
+plasma_scaleheight = '6e2'  # 単位は(km) 1.5e2/3e2/6e2
 
 x_farthest = 26680.87663426876
 z_farthest = 8112.669988476546
 
 raytrace_lowest_altitude = -300  # レイトレーシングの下端の初期高度(km) 100の倍数で
-raytrace_highest_altitude = 1600  # レイトレーシングの下端の初期高度(km) 500の倍数で
+raytrace_highest_altitude = 2100  # レイトレーシングの下端の初期高度(km) 500の倍数で
 
 
 data_name = '../result_for_yasudaetal2022/tracing_range_'+object_name+'/para_' + \
@@ -221,8 +221,8 @@ def Replace_csv(Rowname, replace_list):
 
 def main():
 
-    # MakeFolder()
-    # MoveFile()
+    MakeFolder()
+    MoveFile()
 
     with Pool(processes=3) as pool:
         lowest_altitude_list = list(pool.map(Calc_lowest, kinds_freq))

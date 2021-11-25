@@ -11,7 +11,7 @@ import os
 
 object_name = 'ganymede'  # ganydeme/
 highest_plasma = '1.5e2'  # 単位は(/cc) 2e2/4e2/16e22
-plasma_scaleheight = '1e2'  # 単位は(km) 1.5e2/3e2/6e2
+plasma_scaleheight = '6e2'  # 単位は(km) 1.5e2/3e2/6e2
 
 boundary_intensity = [0.5e-15]
 
@@ -354,7 +354,7 @@ def Evaluate_data_coutour():
     plt.hist(using_galileo_data, range=(1e-18, 1e-12),
              bins=np.logspace(-18, -12, 30))
     plt.gca().set_xscale("log")
-    plt.show()
+    # plt.show()
 
 
 def idx_of_the_nearest(data, value):
@@ -429,7 +429,7 @@ def Evaluate_galileo_data():
     ax.set_xticklabels(
         ["05:30", "05:45", "06:00", "06:15", "06:30", "06:45", "07;00"])
 
-    plt.show()
+    # plt.show()
 
     np.savetxt('../result_for_yasudaetal2022/'+object_name +
                '_ingress_time_data.txt', ingress_time_list)
@@ -527,25 +527,25 @@ def main():
     """
 
     # MakeFolder()
-    """
-    MoveFile()
+
+    # MoveFile()
 
     with Pool(processes=8) as pool:
         result_list = list(pool.map(Judge_occultation, total_radio_number))
         # pool.map(calc,args)
         # pool.map(proc,[0,1,2])
         # args = list(np.arange(0,n,1))
-    """
-    # detectable_radio = Replace_Save(result_list, Radio_observer_position)
+
+    detectable_radio = Replace_Save(result_list, Radio_observer_position)
 
     detectable_radio = np.loadtxt('../result_for_yasudaetal2022/'+object_name+'_'+highest_plasma+'_' +
                                   plasma_scaleheight+'/' + object_name+'_'+highest_plasma+'_'+plasma_scaleheight+'_dectable_radio_data.txt')
     detectable_A, detectable_B, detectable_C, detectable_D = Prepare_Figure(
         detectable_radio)
 
-    # Make_FT_full(detectable_A, detectable_B, detectable_C, detectable_D)
+    Make_FT_full(detectable_A, detectable_B, detectable_C, detectable_D)
 
-    Evaluate_data_coutour()
+    # Evaluate_data_coutour()
 
     ingress_time, egress_time = Evaluate_galileo_data()
 
