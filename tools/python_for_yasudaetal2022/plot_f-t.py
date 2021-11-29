@@ -10,10 +10,10 @@ import os
 # あらかじめ ../result_sgepss_2021/~/~ に必要なレイトレーシング結果とパラメータセットを入れること
 
 object_name = 'ganymede'  # ganydeme/
-highest_plasma = '4e2'  # 単位は(/cc) 2e2/4e2/16e22
-plasma_scaleheight = '6e2'  # 単位は(km) 1.5e2/3e2/6e2
+highest_plasma = '0.125e2'  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = '1.5e2'  # 単位は(km) 1.5e2/3e2/6e2
 
-boundary_intensity = [0.5e-15]
+boundary_intensity = [1e-15]
 
 
 Radio_name_cdf = '../result_for_yasudaetal2022/tracing_range_' + \
@@ -354,7 +354,7 @@ def Evaluate_data_coutour():
     plt.hist(using_galileo_data, range=(1e-18, 1e-12),
              bins=np.logspace(-18, -12, 30))
     plt.gca().set_xscale("log")
-    # plt.show()
+    plt.show()
 
 
 def idx_of_the_nearest(data, value):
@@ -538,6 +538,7 @@ def main():
 
     detectable_radio = Replace_Save(result_list, Radio_observer_position)
     """
+
     detectable_radio = np.loadtxt('../result_for_yasudaetal2022/'+object_name+'_'+highest_plasma+'_' +
                                   plasma_scaleheight+'/' + object_name+'_'+highest_plasma+'_'+plasma_scaleheight+'_dectable_radio_data.txt')
     detectable_A, detectable_B, detectable_C, detectable_D = Prepare_Figure(

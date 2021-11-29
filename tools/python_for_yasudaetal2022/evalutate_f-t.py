@@ -1,26 +1,29 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
+####################################################
 object_name = 'ganymede'  # ganydeme
 
+"""lowest frequency and highest_freqency(MHz)"""
+# using_frequency_range = [8.5e-1, 6]  # ingress
+using_frequency_range = [6e-1, 6]  # egress
+
 highest_density_str = ['0.125e2', '0.25e2', '0.5e2', '1e2', '2e2', '4e2']
+plasma_scaleheight_str = ['1.5e2', '3e2', '6e2', '9e2']
+
+occultaion_type = 'egress'  # 'ingress' or 'egress'
+radio_type = 'A'  # 'A' or 'B' or 'C' or 'D'
+
+####################################################
+
 highest_density_num = []
 for idx in highest_density_str:
     highest_density_num.append(float(idx))
 
-plasma_scaleheight_str = ['1.5e2', '3e2', '6e2', '9e2']
-
-
 plasma_scaleheight_num = []
 for idx in plasma_scaleheight_str:
     highest_density_num.append(float(idx))
-
-occultaion_type = 'ingress'  # 'ingress' or 'egress'
-radio_type = 'A'  # 'A' or 'B' or 'C' or 'D'
-
-# lowest frequency and highest_freqency(MHz)
-using_frequency_range = [8e-1, 6]  # ingress
-# using_frequency_range = [5.5e-1, 6]  # egress
 
 max = []
 scale = []
@@ -59,9 +62,12 @@ def main():
     plt.xscale('log')
     plt.yscale('log')
     plt.colorbar()
-    plt.show()
+    plt.xlabel("Max density (/cc)")
+    plt.ylabel("Scale height (km)")
+    plt.title(object_name+'_'+occultaion_type+'_'+radio_type+'_f-t_evaluate')
     plt.savefig(os.path.join('../result_for_yasudaetal2022/evaluate_f-t_diagram_plot',
-                             object_name+'_'+occultaion_type+'_'+radio_type+'_ingress_f-t.png'))
+                             object_name+'_'+occultaion_type+'_'+radio_type+'_f-t_evaluate.png'))
+    plt.show()
 
     return 0
 
