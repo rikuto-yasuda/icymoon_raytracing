@@ -10,8 +10,8 @@ import os
 # あらかじめ ../result_sgepss_2021/~/~ に必要なレイトレーシング結果とパラメータセットを入れること
 
 object_name = 'ganymede'  # ganydeme/
-highest_plasma = '0.125e2'  # 単位は(/cc) 2e2/4e2/16e22
-plasma_scaleheight = '1.5e2'  # 単位は(km) 1.5e2/3e2/6e2
+highest_plasma = '2e2'  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = '15e2'  # 単位は(km) 1.5e2/3e2/6e2
 
 boundary_intensity = [1e-15]
 
@@ -529,7 +529,7 @@ def main():
     # MakeFolder()
 
     # MoveFile()
-    """
+
     with Pool(processes=8) as pool:
         result_list = list(pool.map(Judge_occultation, total_radio_number))
         # pool.map(calc,args)
@@ -537,7 +537,6 @@ def main():
         # args = list(np.arange(0,n,1))
 
     detectable_radio = Replace_Save(result_list, Radio_observer_position)
-    """
 
     detectable_radio = np.loadtxt('../result_for_yasudaetal2022/'+object_name+'_'+highest_plasma+'_' +
                                   plasma_scaleheight+'/' + object_name+'_'+highest_plasma+'_'+plasma_scaleheight+'_dectable_radio_data.txt')

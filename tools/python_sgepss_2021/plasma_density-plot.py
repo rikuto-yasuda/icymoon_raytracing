@@ -8,8 +8,8 @@ import math
 
 radg = np.arange(1, 2.7, 0.01)
 radkm = radg*2634.1
-eldensity1 = 100*np.exp(-(radkm-2634.1)/300)
-eldensity2 = 100*np.exp(-(radkm-2634.1)/600)
+eldensity1 = 100*np.exp(-(radkm-2634.1)/150)
+eldensity2 = 100*np.exp(-(radkm-2634.1)/300)
 eldensity3 = 200*np.exp(-(radkm-2634.1)/600)
 eldensity4 = 200*np.exp(-(radkm-2634.1)/900)
 

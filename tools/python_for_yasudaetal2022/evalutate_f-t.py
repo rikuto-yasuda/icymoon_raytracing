@@ -13,7 +13,7 @@ highest_density_str = ['0.125e2', '0.25e2', '0.5e2', '1e2', '2e2', '4e2']
 plasma_scaleheight_str = ['1.5e2', '3e2', '6e2', '9e2']
 
 occultaion_type = 'egress'  # 'ingress' or 'egress'
-radio_type = 'A'  # 'A' or 'B' or 'C' or 'D'
+radio_type = 'D'  # 'A' or 'B' or 'C' or 'D'
 
 ####################################################
 
@@ -39,13 +39,14 @@ def plot_difference(highest, scaleheight):
         (time_diffrence_index[0][:] > using_frequency_range[0]) & (time_diffrence_index[0][:] < using_frequency_range[1])))
     limited_time_minimum = limited_time_list[0][0]
     limited_time_maximum = limited_time_list[0][len(limited_time_list[0][:])-1]
+    print()
 
-    total_difference_time = sum(
-        time_diffrence_index[1][limited_time_minimum: limited_time_maximum+1])
+    average_difference_time = sum(
+        time_diffrence_index[1][limited_time_minimum: limited_time_maximum+1])/(limited_time_maximum+1-limited_time_minimum)
 
     max.append(float(highest))
     scale.append(float(scaleheight))
-    dif.append(float(total_difference_time))
+    dif.append(float(average_difference_time))
 
     return 0
 
@@ -58,7 +59,7 @@ def main():
                 highest_density_str[i], plasma_scaleheight_str[j])
 
     plt.scatter(max, scale, s=100, c=dif,
-                cmap='rainbow_r')
+                cmap='rainbow_r', vmax=180, vmin=0)
     plt.xscale('log')
     plt.yscale('log')
     plt.colorbar()

@@ -277,3 +277,25 @@ plt.title("No reflection")
 
 fig.savefig('ganymede_noreflection_fig2.png')
 # %%
+fig, ax = plt.subplots(1, 1)
+
+pcm = ax.pcolor(xx, yy, DDF, norm=mpl.colors.LogNorm(
+    vmin=1e-16, vmax=1e-12), cmap='Spectral_r')
+fig.colorbar(pcm, extend='max')
+plt.contour(date, FREQ, DataA, levels=[0.5], colors='white')
+plt.contour(date, FREQ, DataB, levels=[0.5], colors='lightgray')
+plt.contour(date, FREQ, DataC, levels=[0.5], colors='darkgray')
+plt.contour(date, FREQ, DataD, levels=[0.5], colors='black')
+plt.yscale("log")
+# plt.ylim(100000,5000000)
+plt.xlabel("Time of 27 June 1996")
+plt.ylabel("Frequency (MHz)")
+plt.yscale('log')
+plt.xlim(600, 2400)
+plt.ylim(0.1, 5.0)
+ax.set_xticks([600, 1200, 1800, 2400, ])
+ax.set_xticklabels(["05:40", "05:50", "06:00", "06:10"])
+plt.title("No reflection")
+
+fig.savefig('ganymede_noreflection_fig2.png')
+# %%
