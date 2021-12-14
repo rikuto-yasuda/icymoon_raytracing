@@ -10,8 +10,8 @@ import os
 # あらかじめ ../result_sgepss_2021/~/~ に必要なレイトレーシング結果とパラメータセットを入れること
 
 object_name = 'ganymede'  # ganydeme/
-highest_plasma = '2e2'  # 単位は(/cc) 2e2/4e2/16e22
-plasma_scaleheight = '15e2'  # 単位は(km) 1.5e2/3e2/6e2
+highest_plasma = '1e2'  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = '7.5e2'  # 単位は(km) 1.5e2/3e2/6e2
 
 boundary_intensity = [1e-15]
 
@@ -528,7 +528,7 @@ def main():
 
     # MakeFolder()
 
-    # MoveFile()
+    MoveFile()
 
     with Pool(processes=8) as pool:
         result_list = list(pool.map(Judge_occultation, total_radio_number))

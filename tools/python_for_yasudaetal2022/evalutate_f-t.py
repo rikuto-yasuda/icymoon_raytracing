@@ -9,11 +9,14 @@ object_name = 'ganymede'  # ganydeme
 # using_frequency_range = [8.5e-1, 6]  # ingress
 using_frequency_range = [6e-1, 6]  # egress
 
-highest_density_str = ['0.125e2', '0.25e2', '0.5e2', '1e2', '2e2', '4e2']
-plasma_scaleheight_str = ['1.5e2', '3e2', '6e2', '9e2']
+highest_density_str = ['1e2', '2e2', '4e2']
+plasma_scaleheight_str = ['3e2', '6e2', '9e2', '15e2']
+"""
+plasma_distribution_list = np.loadtxt() # 工事中
+"""
 
 occultaion_type = 'egress'  # 'ingress' or 'egress'
-radio_type = 'D'  # 'A' or 'B' or 'C' or 'D'
+radio_type = 'A'  # 'A' or 'B' or 'C' or 'D'
 
 ####################################################
 
@@ -24,6 +27,13 @@ for idx in highest_density_str:
 plasma_scaleheight_num = []
 for idx in plasma_scaleheight_str:
     highest_density_num.append(float(idx))
+
+"""
+for idx in len(plasma_distribution_list): #工事中
+    highest_density_num.append(float(plasma_distribution_list[idx][0]))
+    highest_density_num.append(float(plasma_distribution_list[idx][1]))
+"""
+
 
 max = []
 scale = []
@@ -57,6 +67,13 @@ def main():
 
             plot_difference(
                 highest_density_str[i], plasma_scaleheight_str[j])
+
+    """
+    for i in range(len(highest_density_num)):
+        plot_difference(highest_de)
+    
+    
+    """
 
     plt.scatter(max, scale, s=100, c=dif,
                 cmap='rainbow_r', vmax=180, vmin=0)
