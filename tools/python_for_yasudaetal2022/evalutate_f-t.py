@@ -84,7 +84,7 @@ def main():
     plt.ylabel("Scale height (km)")
     plt.title(object_name+'_'+occultaion_type+'_'+radio_type+'_f-t_evaluate')
     plt.savefig(os.path.join('../result_for_yasudaetal2022/evaluate_f-t_diagram_plot',
-                             object_name+'_'+occultaion_type+'_'+radio_type+'_f-t_evaluate.png'))
+                             object_name+'_'+occultaion_type+'_'+radio_type+'_f-t_evaluate_1.png'))
     plt.show()
 
     return 0
