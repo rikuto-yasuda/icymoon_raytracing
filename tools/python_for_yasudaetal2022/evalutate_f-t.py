@@ -9,8 +9,8 @@ object_name = 'ganymede'  # ganydeme
 # using_frequency_range = [8.5e-1, 6]  # ingress
 using_frequency_range = [6e-1, 6]  # egress
 
-highest_density_str = ['1e2', '2e2', '4e2']
-plasma_scaleheight_str = ['3e2', '6e2', '9e2', '15e2']
+highest_density_str = ['0.125e2', '0.25e2', '0.5e2', '1e2', '2e2', '4e2']
+plasma_scaleheight_str = ['1.5e2', '3e2', '6e2', '9e2']
 """
 plasma_distribution_list = np.loadtxt() # 工事中
 """
@@ -76,10 +76,10 @@ def main():
     """
 
     plt.scatter(max, scale, s=100, c=dif,
-                cmap='rainbow_r', vmax=180, vmin=0)
+                cmap='rainbow_r', vmax=80, vmin=20)
     plt.xscale('log')
     plt.yscale('log')
-    plt.colorbar()
+    plt.colorbar(label='average time difference (sec)')
     plt.xlabel("Max density (/cc)")
     plt.ylabel("Scale height (km)")
     plt.title(object_name+'_'+occultaion_type+'_'+radio_type+'_f-t_evaluate')

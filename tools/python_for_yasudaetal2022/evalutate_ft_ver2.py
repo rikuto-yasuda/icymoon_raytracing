@@ -11,15 +11,16 @@ import glob
 object_name = 'ganymede'  # ganydeme
 
 """lowest frequency and highest_freqency(MHz)"""
-# using_frequency_range = [8.5e-1, 6]  # ingress
-using_frequency_range = [6e-1, 6]  # egress
-
+# using_frequency_range = [8.5e-1, 4]  # ingress
+using_frequency_range = [5.5e-1, 6]  # egress
+boundary_intensity_str = '1e-15'
 occultaion_type = 'egress'  # 'ingress' or 'egress'
 radio_type = 'A'  # 'A' or 'B' or 'C' or 'D'
 
 # %%
+
 use_files = glob.glob('../result_for_yasudaetal2022/f-t_'+object_name+'_'+occultaion_type +
-                      '_difference/'+object_name+'_*_'+occultaion_type+'_defference_time_data'+radio_type+'.txt')
+                      '_difference/'+object_name+'_*_'+occultaion_type+'_defference_time_data'+radio_type+'_'+boundary_intensity_str+'.txt')
 
 max = []
 scale = []
@@ -37,7 +38,7 @@ def maxandscale(file):
 
 def plot_difference(highest, scaleheight):
     time_diffrence_index = np.loadtxt('../result_for_yasudaetal2022/f-t_'+object_name+'_'+occultaion_type+'_difference/'+object_name+'_' +
-                                      highest+'_'+scaleheight+'_'+occultaion_type+'_defference_time_data'+radio_type+'.txt')
+                                      highest+'_'+scaleheight+'_'+occultaion_type+'_defference_time_data'+radio_type+'_'+boundary_intensity_str+'.txt')
 
     print(time_diffrence_index)
     limited_time_list = np.array(np.where(
@@ -65,15 +66,15 @@ def main():
             highest_density_str, plasma_scaleheight_str)
 
     plt.scatter(max, scale, s=100, c=dif,
-                cmap='rainbow_r', vmax=120, vmin=0)
+                cmap='rainbow_r', vmax=80, vmin=20)
     plt.xscale('log')
     plt.yscale('log')
-    plt.colorbar()
+    plt.colorbar(label='average time difference (sec)')
     plt.xlabel("Max density (/cc)")
     plt.ylabel("Scale height (km)")
     plt.title(object_name+'_'+occultaion_type+'_'+radio_type+'_f-t_evaluate')
     plt.savefig(os.path.join('../result_for_yasudaetal2022/evaluate_f-t_diagram_plot',
-                             object_name+'_'+occultaion_type+'_'+radio_type+'_f-t_evaluate.png'))
+                             object_name+'_'+occultaion_type+'_'+radio_type+'_'+boundary_intensity_str+'_f-t_evaluate.png'))
     plt.show()
 
     return 0
