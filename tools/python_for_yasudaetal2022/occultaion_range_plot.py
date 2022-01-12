@@ -8,14 +8,14 @@ import pandas as pd
 # In[]
 object_name = 'ganymede'  # ganydeme/
 
-highest_plasma = '2.5e2'  # 単位は(/cc) 2e2/4e2/16e2
-plasma_scaleheight = '1e2'  # 単位99は(km) 1.5e2/3e2/6e2
+highest_plasma = '4e2'  # 単位は(/cc) 2e2/4e2/16e2
+plasma_scaleheight = '12e2'  # 単位99は(km) 1.5e2/3e2/6e2
 
 x_farthest = 26680.87663426876
 z_farthest = 8112.669988476546
 
 raytrace_lowest_altitude = -500  # レイトレーシングの下端の初期高度(km) 100の倍数で
-raytrace_highest_altitude = 3600  # レイトレーシングの下端の初期高度(km) 500の倍数で
+raytrace_highest_altitude = 4600  # レイトレーシングの下端の初期高度(km) 500の倍数で
 
 
 data_name = '../result_for_yasudaetal2022/tracing_range_'+object_name+'/para_' + \
