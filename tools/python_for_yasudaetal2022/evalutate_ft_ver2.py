@@ -14,13 +14,13 @@ object_name = 'ganymede'  # ganydeme
 using_frequency_range = [8.5e-1, 4]  # ingress
 # using_frequency_range = [5.5e-1, 6]  # egress
 boundary_intensity_str = '7e-16'  # '7e-16' '1e-15'
-occultaion_type = 'egress'  # 'ingress' or 'egress'
-radio_type = 'A'  # 'A' or 'B' or 'C' or 'D'
+occultaion_type = 'ingress'  # 'ingress' or 'egress'
+radio_type = 'B'  # 'A' or 'B' or 'C' or 'D'
 
 # %%
 
-use_files = glob.glob('../result_for_yasudaetal2022/f-t_'+object_name+'_'+occultaion_type +
-                      '_difference/'+object_name+'_*_'+occultaion_type+'_defference_time_data'+radio_type+'_'+boundary_intensity_str+'.txt')
+use_files = sorted(glob.glob('../result_for_yasudaetal2022/f-t_'+object_name+'_'+occultaion_type +
+                             '_difference/'+object_name+'_*_'+occultaion_type+'_defference_time_data'+radio_type+'_'+boundary_intensity_str+'.txt'))
 
 max = []
 scale = []
@@ -65,9 +65,14 @@ def main():
         plot_difference(
             highest_density_str, plasma_scaleheight_str)
 
+    output_array = np.array(max + scale + dif)
+    output_array = output_array.reshape(3, int(len(output_array)/3)).T
+    print(output_array)
+    np.savetxt('../result_for_yasudaetal2022/evaluate_f-t_diagram_plot/ganymede_'+occultaion_type +
+               '_radiointensity_'+boundary_intensity_str+'_'+occultaion_type+'_'+radio_type+'_output_array.csv', output_array, fmt='%.2f', delimiter=',')
     plt.scatter(max, scale, s=100, c=dif,
                 cmap='rainbow_r', vmax=80, vmin=20)
-    plt.xscale('log')
+    # plt.xscale('log')
     plt.yscale('log')
     plt.colorbar(label='average time difference (sec)')
     plt.xlabel("Max density (/cc)")
