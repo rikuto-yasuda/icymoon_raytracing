@@ -11,11 +11,11 @@ import glob
 object_name = 'ganymede'  # ganydeme
 
 """lowest frequency and highest_freqency(MHz)"""
-using_frequency_range = [8.5e-1, 4]  # ingress
-# using_frequency_range = [5.5e-1, 6]  # egress
+# using_frequency_range = [8.5e-1, 4]  # ingress
+using_frequency_range = [5.5e-1, 6]  # egress
 boundary_intensity_str = '7e-16'  # '7e-16' '1e-15'
-occultaion_type = 'ingress'  # 'ingress' or 'egress'
-radio_type = 'B'  # 'A' or 'B' or 'C' or 'D'
+occultaion_type = 'egress'  # 'ingress' or 'egress'
+radio_type = 'A'  # 'A' or 'B' or 'C' or 'D'
 
 # %%
 

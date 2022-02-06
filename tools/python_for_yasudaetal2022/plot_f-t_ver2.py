@@ -11,9 +11,9 @@ import os
 
 object_name = 'ganymede'  # ganydeme/
 highest_plasma = '3.5e2'  # 単位は(/cc) 2e2/4e2/16e22
-plasma_scaleheight = '10e2'  # 単位は(km) 1.5e2/3e2/6e2
+plasma_scaleheight = '0.5e2'  # 単位は(km) 1.5e2/3e2/6e2
 boundary_intensity_str = '7e-16'
-#boundary_intensity_str = '1e-15'
+# boundary_intensity_str = '1e-15'
 
 
 boundary_intensity = float(boundary_intensity_str)
@@ -369,7 +369,6 @@ def Evaluate_data_coutour():
 
     plt.hist(using_galileo_data, range=(1e-18, 1e-12),
              bins=np.logspace(-18, -12, 30))
-    plt.gca().set_xscale("log")
     plt.show()
 
 
@@ -520,7 +519,7 @@ def main():
     """
 
     # MakeFolder()
-    """
+
     MoveFile()
 
     with Pool(processes=8) as pool:
@@ -530,7 +529,7 @@ def main():
         # args = list(np.arange(0,n,1))
 
     detectable_radio = Replace_Save(result_list, Radio_observer_position)
-    """
+
     detectable_radio = np.loadtxt('../result_for_yasudaetal2022/'+object_name+'_'+highest_plasma+'_' +
                                   plasma_scaleheight+'/' + object_name+'_'+highest_plasma+'_'+plasma_scaleheight+'_dectable_radio_data.txt')
     detectable_A, detectable_B, detectable_C, detectable_D = Prepare_Figure(

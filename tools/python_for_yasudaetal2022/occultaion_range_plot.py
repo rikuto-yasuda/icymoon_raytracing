@@ -9,7 +9,7 @@ import pandas as pd
 object_name = 'ganymede'  # ganydeme/
 
 highest_plasma = '3.5e2'  # 単位は(/cc) 2e2/4e2/16e2
-plasma_scaleheight = '12e2'  # 単位99は(km) 1.5e2/3e2/6e2
+plasma_scaleheight = '0.5e2'  # 単位99は(km) 1.5e2/3e2/6e2
 
 x_farthest = 26680.87663426876
 z_farthest = 8112.669988476546
