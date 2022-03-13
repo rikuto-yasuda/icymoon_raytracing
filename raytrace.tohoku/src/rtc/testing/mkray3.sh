@@ -66,7 +66,7 @@ CAVITY_LIST=(                      \
 ) # cavityの数だけオプションを指定
 
 ## 出力ファイル名を指定する。
-OUTPUT="ray-P${PLASMA}_1.5e2_4e2-M${MAGNET}-${PLANET}-${MODE}-Z${SZ}-FR${FREQ}"
+OUTPUT="ray-P${PLASMA}_2.5e2_4e2-M${MAGNET}-${PLANET}-${MODE}-Z${SZ}-FR${FREQ}"
 ##OUTPUT="ray-P${PLASMA}-M${MAGNET}-${PLANET}-${MODE}-X${SX}-FR${FREQ}-PITCH${PITCH}"
 LOG="${0}.log"
 
