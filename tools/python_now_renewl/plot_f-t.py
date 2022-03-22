@@ -1,31 +1,60 @@
 # %%
+from re import S
+from socket import TIPC_MEDIUM_IMPORTANCE
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import pandas as pd
 from multiprocessing import Pool
 import os
+import time
+import glob
 
 # %%
-# あらかじめ ../result_sgepss_2021/~/~ に必要なレイトレーシング結果とパラメータセットを入れること
-
-object_name = 'ganymede'  # ganydeme/
-highest_plasma = '2.5e2'  # 単位は(/cc) 2e2/4e2/16e22
-plasma_scaleheight = '3e2'  # 単位は(km) 1.5e2/3e2/6e2
-
-boundary_intensity = [1e-15]
+# あらかじめ ../result_sgepss2021/~/~ に必要なレイトレーシング結果とパラメータセットを入れること
 
 
-Radio_name_cdf = '../result_for_yasudaetal2022/tracing_range_' + \
-    object_name+'/para_'+highest_plasma+'_'+plasma_scaleheight+'.csv'
+object_name = 'ganymede'  # ganydeme/europa/calisto``
+spacecraft_name = "galileo"  # galileo/JUICE(?)
+time_of_flybies = 1  # ..th flyby
+highest_plasma = '4e2'  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = '6e2'  # 単位は(km) 1.5e2/3e2/6e2
+
+information_list = ['year', 'month', 'start_day', 'end_day',
+                    'start_hour', 'end_hour', 'start_min', 'end_min']
+
+
+Radio_name_cdf = '../result_for_yasudaetal2022/tracing_range_'+spacecraft_name+'_'+object_name + \
+    '_'+str(time_of_flybies)+'_flybys/para_' + \
+    highest_plasma+'_'+plasma_scaleheight+'.csv'
 Radio_Range = pd.read_csv(Radio_name_cdf, header=0)
+# [0 hour,1 min,2 frequency(MHz),3 電波源データの磁力線(根本)の経度  orイオの場合は(-1000),4 電波源の南北,5 座標変換した時のx(tangential point との水平方向の距離),6 座標変換した時のy(tangential pointからの高さ方向の距離),7 電波源の実際の経度]
+Radio_observer_position = np.loadtxt('../result_for_yasudaetal2022/calculated_expres_detectable_radio_data_of_each_flyby/calculated_all_' +
+                                     spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_Radio_data.txt')  # 電波源の経度を含む
 
-Radio_observer_position = np.loadtxt(
-    '/Users/yasudarikuto/research/icymoon_raytracing/tools/result_for_yasudaetal2022/R_P_'+object_name+'_fulldata.txt',)  # 電波源の経度を含む
+Freq_str = ['3.984813988208770752e5', '4.395893216133117676e5', '4.849380254745483398e5', '5.349649786949157715e5', '5.901528000831604004e5', '6.510338783264160156e5',
+            '7.181954979896545410e5', '7.922856807708740234e5', '8.740190267562866211e5', '9.641842246055603027e5', '1.063650846481323242e6',
+            '1.173378825187683105e6', '1.294426321983337402e6', '1.427961349487304688e6', '1.575271964073181152e6', '1.737779378890991211e6',
+            '1.917051434516906738e6', '2.114817380905151367e6', '2.332985162734985352e6', '2.573659420013427734e6', '2.839162111282348633e6',
+            '3.132054328918457031e6', '3.455161809921264648e6', '3.811601638793945312e6', '4.204812526702880859e6', '4.638587474822998047e6',
+            '5.117111206054687500e6', '5.644999980926513672e6', ]
+
+Freq_num = []
+for idx in Freq_str:
+    Freq_num.append(float(idx)/1000000)
+
+Highest = Radio_Range.highest
+Lowest = Radio_Range.lowest
+Except = Radio_Range.exc
+
+n = len(Radio_observer_position)
+total_radio_number = list(np.arange(n))
 
 
-galdata = np.loadtxt(
-    '/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/GLL_GAN_2.txt')
+boundary_intensity_str = '7e-16'
+# boundary_intensity_str = '1e-15'
+
+boundary_intensity = float(boundary_intensity_str)
 
 gal_rad_row = pd.read_csv(
     '../result_sgepss_2021/Survey_Electric_1996-06-27T05-30_1996-06-27T07-00.csv', header=None)
@@ -42,175 +71,101 @@ gal_fleq_tag_row = [5.620e+00, 1.000e+01, 1.780e+01, 3.110e+01, 4.213e+01, 4.538
                     1.776e+06, 1.960e+06, 2.162e+06, 2.385e+06, 2.631e+06, 2.902e+06, 3.201e+06, 3.532e+06, 3.896e+06, 4.298e+06, 4.741e+06, 5.231e+06, 5.770e+06]
 
 
-n = len(Radio_observer_position)
-Freq_str = ['3.984813988208770752e5', '4.395893216133117676e5', '4.849380254745483398e5', '5.349649786949157715e5', '5.901528000831604004e5', '6.510338783264160156e5',
-            '7.181954979896545410e5', '7.922856807708740234e5', '8.740190267562866211e5', '9.641842246055603027e5', '1.063650846481323242e6',
-            '1.173378825187683105e6', '1.294426321983337402e6', '1.427961349487304688e6', '1.575271964073181152e6', '1.737779378890991211e6',
-            '1.917051434516906738e6', '2.114817380905151367e6', '2.332985162734985352e6', '2.573659420013427734e6', '2.839162111282348633e6',
-            '3.132054328918457031e6', '3.455161809921264648e6', '3.811601638793945312e6', '4.204812526702880859e6', '4.638587474822998047e6',
-            '5.117111206054687500e6', '5.644999980926513672e6', ]
-
-raytrace_time = np.arange(0, 10801, 60)  # エクスプレスコードで計算している時間幅（sec)を60で割る
-
-Freq_num = []
-for idx in Freq_str:
-    Freq_num.append(float(idx)/1000000)
-
-
-Highest = Radio_Range.highest
-Lowest = Radio_Range.lowest
-Except = Radio_Range.exc
 res = Radio_observer_position.copy()
-total_radio_number = list(np.arange(n))
 
 
 # %%
 
-def MakeFolder():
-    os.makedirs('../result_for_yasudaetal2022/' + object_name +
-                '_'+highest_plasma+'_'+plasma_scaleheight)
+def Pick_up_cdf():
+    flyby_list_path = '../result_for_yasudaetal2022/occultation_flyby_list.csv'
+    flyby_list = pd.read_csv(flyby_list_path)
+
+    # csvファイルにフライバイごとで使う軌道データを記入しておく　上記のパラメータから必要なデータのファイル名が選ばれて読み込まれる
+    # queryが数値非対応なのでまずはフライバイ数で絞り込み
+    selected_flyby_list = flyby_list[flyby_list['flyby_time']
+                                     == time_of_flybies]
+    complete_selecred_flyby_list = selected_flyby_list.query(
+        'object == "'+object_name+'" & spacecraft == "'+spacecraft_name+'"')  # queryでフライバイ数以外を絞り込み
+
+    complete_selecred_flyby_list.index.tolist()[0]
+
+    # csvから時刻データを抽出
+    time_information = []
+    for i in information_list:
+        time_information.append(str(complete_selecred_flyby_list[i][0]))
+
+    return time_information
 
 
-def MoveFile():
-    for l in range(len(Freq_num)):
-        for j in range(Lowest[l], Highest[l], 2):
-            k = str(j)
-            os.replace('../../raytrace.tohoku/src/rtc/testing/ray-P'+object_name+'_nonplume_'+highest_plasma+'_'+plasma_scaleheight+'-Mtest_simple-benchmark-LO-Z' +
-                       k+'-FR'+Freq_str[l], '../result_for_yasudaetal2022/'+object_name+'_'+highest_plasma+'_'+plasma_scaleheight+'/ray-P'+object_name+'_nonplume_'+highest_plasma+'_'+plasma_scaleheight+'-Mtest_simple-benchmark-LO-Z' + k+'-FR'+Freq_str[l])
+def Time_step(time):
+    day_range = int(time[3])-int(time[2])
+    hour_range = int(time[5])-int(time[4])
+    min_range = int(time[7])-int(time[6])
+
+    step_count = day_range*1440*60 + hour_range*60*60 + min_range*60 + \
+        1  # フライバイリストからステップ数を計算（今は1step1minを仮定してステップ数を計算）
+    # フライバイリストのステップ数と位置データのステップ数が一致する確認（今は1step1minを仮定してステップ数を計算）
+
+    return step_count
 
 
-def Judge_occultation(i):
-    aa = 0
-    print(i)
-    if Radio_observer_position[i][5] < 0:
-        res[i][6] = 0
-        aa = 1  # ukaru
+def Pick_up_spacecraft_csv():
 
-    else:
-        for l in range(len(Freq_num)):
-            if Radio_observer_position[i][2] == Freq_num[l]:
-                for j in range(Lowest[l], Highest[l], 2):
-                    k = str(j)
-                    Radio_propagation_route = np.genfromtxt("../result_for_yasudaetal2022/"+object_name+"_"+highest_plasma+"_"+plasma_scaleheight +
-                                                            "/ray-P"+object_name+"_nonplume_"+highest_plasma+"_"+plasma_scaleheight+"-Mtest_simple-benchmark-LO-Z"+k+"-FR"+Freq_str[l])
-                    n2 = len(Radio_propagation_route)
-                    aa = 0
+    flyby_list_path = '../result_for_yasudaetal2022/occultation_flyby_list.csv'
+    flyby_list = pd.read_csv(flyby_list_path)
 
-                    if Radio_propagation_route.ndim == 2:
+    # csvファイルにフライバイごとで使う軌道データを記入しておく　上記のパラメータから必要なデータのファイル名が選ばれて読み込まれる
+    # queryが数値非対応なのでまずはフライバイ数で絞り込み
+    selected_flyby_list = flyby_list[flyby_list['flyby_time']
+                                     == time_of_flybies]
+    complete_selecred_flyby_list = selected_flyby_list.query(
+        'object == "'+object_name+'" & spacecraft == "'+spacecraft_name+'"')  # queryでフライバイ数以外を絞り込み
+    complete_selecred_flyby_list = complete_selecred_flyby_list.reset_index(
+        drop=True)  # index振り直し
+    # 使うcsvファイルの名前を取得
+    csv_name = str(complete_selecred_flyby_list['spacecraft_ephemeris_csv'][0])
 
-                        if Radio_propagation_route[n2-1][1] < 0:
-                            continue
+    # csvから時刻データを抽出
+    time_information = []
+    for i in information_list:
+        time_information.append(str(complete_selecred_flyby_list[i][0]))
 
-                        for h in range(n2):
+    spacecraft_csv_path = '../result_for_yasudaetal2022/spacecraft_ephemeris/' + csv_name
+    spacecraft_ephemeris_csv = pd.read_csv(
+        spacecraft_csv_path, header=13, skipfooter=7)  # ヘッダーの位置と末端のデータの位置をheaderとskipfooterで設定
 
-                            if Radio_propagation_route[h][1] > Radio_observer_position[i][5] and Radio_propagation_route[h-1][3] < Radio_observer_position[i][6]:
-                                para = np.abs(
-                                    Radio_propagation_route[h][1]-Radio_observer_position[i][5])
-                                hight = Radio_propagation_route[h][3] - \
-                                    Radio_observer_position[i][6]
-                                x1 = Radio_propagation_route[h][1]
-                                z1 = Radio_propagation_route[h][3]
-                                x2 = Radio_propagation_route[h-1][1]
-                                z2 = Radio_propagation_route[h-1][3]
-
-                                while (para > 10):
-                                    ddx = (x1+x2)/2
-                                    ddz = (z1+z2)/2
-
-                                    if ddx > Radio_observer_position[i][5]:
-                                        x1 = ddx
-                                        z1 = ddz
-                                    else:
-                                        x2 = ddx
-                                        z2 = ddz
-
-                                    para = np.abs(
-                                        x1-Radio_observer_position[i][5])
-                                    hight = z1-Radio_observer_position[i][6]
-
-                                if hight < 0:
-                                    # res[i][6]=0
-                                    aa = 1
-                                    break
-
-                        if aa == 1:
-                            break
-
-                    else:
-                        print(Freq_str[l], k)
-                        """
-                        if str(j) not in str(Except[l]):
-                            if Radio_propagation_route[n2-1][1] < 0:
-                                continue
-
-                            for h in range(n2):
-                                if Radio_propagation_route[h][1] > Radio_observer_position[i][5] and Radio_propagation_route[h-1][3] < Radio_observer_position[i][6]:
-                                    para = np.abs(
-                                        Radio_propagation_route[h][1]-Radio_observer_position[i][5])
-                                    hight = Radio_propagation_route[h][3] - \
-                                        Radio_observer_position[i][6]
-                                    x1 = Radio_propagation_route[h][1]
-                                    z1 = Radio_propagation_route[h][3]
-                                    x2 = Radio_propagation_route[h-1][1]
-                                    z2 = Radio_propagation_route[h-1][3]
-
-                                    while (para > 10):
-                                        ddx = (x1+x2)/2
-                                        ddz = (z1+z2)/2
-
-                                        if ddx > Radio_observer_position[i][5]:
-                                            x1 = ddx
-                                            z1 = ddz
-                                        else:
-                                            x2 = ddx
-                                            z2 = ddz
-
-                                        para = np.abs(
-                                            x1-Radio_observer_position[i][5])
-                                        hight = z1 - \
-                                            Radio_observer_position[i][6]
-
-                                    if hight < 0:
-                                        # res[i][6]=0 #ukaru
-                                        aa = 1
-                                        break
-
-                        if aa == 1:
-                            break
-                        """
-    return aa
+    return spacecraft_ephemeris_csv, time_information
 
 
-def Replace_Save(judgement, all_radio_data):
-    occultaion_aray = np.array(judgement)
-    judge_array = np.where(occultaion_aray[:] == 1)
-    all_detectable_radio = all_radio_data[judge_array][:]
-    np.savetxt('../result_for_yasudaetal2022/'+object_name+'_'+highest_plasma+'_'+plasma_scaleheight+'/' +
-               object_name+'_'+highest_plasma+'_'+plasma_scaleheight+'_dectable_radio_data.txt', all_detectable_radio)
+def Prepare_Figure(judgement, time_information):
 
-    return all_detectable_radio
+    time_step = Time_step(time_information)
+    time_step_list = np.arange(0, time_step, 60)
+    # (周波数の数 +1) ×(時間数（正確には開始時刻からの秒数の数) ）の0配列を４つ用意
+    DataA = np.zeros(len(time_step_list)*(len(Freq_num)+1)
+                     ).reshape(len(Freq_num)+1, len(time_step_list))
+    DataB = np.zeros(len(time_step_list)*(len(Freq_num)+1)
+                     ).reshape(len(Freq_num)+1, len(time_step_list))
+    DataC = np.zeros(len(time_step_list)*(len(Freq_num)+1)
+                     ).reshape(len(Freq_num)+1, len(time_step_list))
+    DataD = np.zeros(len(time_step_list)*(len(Freq_num)+1)
+                     ).reshape(len(Freq_num)+1, len(time_step_list))
 
-
-def Prepare_Figure(judgement):
-    DataA = np.zeros(len(raytrace_time)*(len(Freq_num)+1)
-                     ).reshape(len(Freq_num)+1, len(raytrace_time))
-    DataB = np.zeros(len(raytrace_time)*(len(Freq_num)+1)
-                     ).reshape(len(Freq_num)+1, len(raytrace_time))
-    DataC = np.zeros(len(raytrace_time)*(len(Freq_num)+1)
-                     ).reshape(len(Freq_num)+1, len(raytrace_time))
-    DataD = np.zeros(len(raytrace_time)*(len(Freq_num)+1)
-                     ).reshape(len(Freq_num)+1, len(raytrace_time))
+    spacecraft_csv, t = Pick_up_spacecraft_csv
+    spacecraft_longitude_rad = np.array(spacecraft_csv['Longitude (deg)'])
 
     for k in range(len(judgement)):
-        Num = int(judgement[k][0]*60+judgement[k][1]-330)
-        if np.abs(galdata[Num][2]+360-judgement[k][7]) < np.abs(galdata[Num][2]-judgement[k][7]):
-            Lon = galdata[Num][2]+360 - judgement[k][7]
+        Num = int(judgement[k][0]*60+judgement[k][1] -
+                  time_information[4]*60-time_information[6])
 
-        elif np.abs(judgement[k][7]+360-galdata[Num][2]) < np.abs(judgement[k][7]-galdata[Num][2]):
-            Lon = galdata[Num][2]-360 - judgement[k][7]
+        if np.abs(spacecraft_longitude_rad[Num][2]+360-judgement[k][7]) < np.abs(spacecraft_longitude_rad[Num][2]-judgement[k][7]):
+            Lon = spacecraft_longitude_rad[Num][2]+360 - judgement[k][7]
+
+        elif np.abs(judgement[k][7]+360-spacecraft_longitude_rad[Num][2]) < np.abs(judgement[k][7]-spacecraft_longitude_rad[Num][2]):
+            Lon = spacecraft_longitude_rad[Num][2]-360 - judgement[k][7]
 
         else:
-            Lon = galdata[Num][2] - judgement[k][7]
+            Lon = spacecraft_longitude_rad[Num][2] - judgement[k][7]
 
         Lat = judgement[k][4]
 
@@ -230,8 +185,11 @@ def Prepare_Figure(judgement):
 
     return DataA, DataB, DataC, DataD
 
+# 修正ここから
 
-# ガリレオ探査機の周波数一覧（Hz)とダウンロードした電波強度電波を代入（das2をcsvに変換）あああ
+# ガリレオ探査機の周波数一覧（Hz)とダウンロードした電波強度電波を代入（das2をcsvに変換）
+
+
 def Prepare_Galileo_data(fleq_tag, rad_row_data):
     gal_fleq_tag = np.array(fleq_tag, dtype='float64')/1000000
 
@@ -253,7 +211,51 @@ def Prepare_Galileo_data(fleq_tag, rad_row_data):
     return gal_time_tag, gal_fleq_tag, DDF
 
 
-def Make_FT_full(DataA, DataB, DataC, DataD):
+def Make_FT_full(DataA, DataB, DataC, DataD, raytrace_time):
+
+    galileo_data_time, galileo_data_freq, galileo_radio_intensity = Prepare_Galileo_data(
+        gal_fleq_tag_row, gal_rad_row)
+
+    galileo_radio_intensity_row = galileo_radio_intensity.copy()
+
+    galileo_radio_intensity[boundary_intensity
+                            < galileo_radio_intensity] = 1
+    galileo_radio_intensity[galileo_radio_intensity <
+                            boundary_intensity] = 0
+    # print(galileo_data_time.shape)
+    # print(galileo_radio_intensity.shape)
+
+    occulted_time = int(np.where(galileo_data_time > 2400)[0][0])
+    ingress_time_list = galileo_data_freq.copy()
+    egress_time_list = galileo_data_freq.copy()
+
+    for k in range(len(galileo_data_freq)):
+        over_judge_time_list = np.array(np.where(
+            (galileo_radio_intensity[k][:] > boundary_intensity)))
+        # print(over_judge_time_list)
+        A = over_judge_time_list[over_judge_time_list < occulted_time]
+        B = over_judge_time_list[over_judge_time_list > occulted_time]
+
+        if len(B) > 0:
+            b = B[0]
+            egress_time_list = np.append(
+                egress_time_list, ((galileo_data_time[b] + galileo_data_time[b-1])/2))
+
+        else:
+            egress_time_list = np.append(egress_time_list, -100000)
+
+        if len(A) > 0:
+            a = A[len(A)-1]
+            ingress_time_list = np.append(ingress_time_list, ((
+                galileo_data_time[a] + galileo_data_time[a+1])/2))
+
+        else:
+            ingress_time_list = np.append(ingress_time_list, 100000)
+
+    ingress_time_list = ingress_time_list.reshape(
+        2, int(len(ingress_time_list)/2))
+    egress_time_list = egress_time_list.reshape(
+        2, int(len(egress_time_list)/2))
 
     FREQ = np.insert(np.array(Freq_num), 0, 0.36122)
 
@@ -261,6 +263,9 @@ def Make_FT_full(DataA, DataB, DataC, DataD):
     xx, yy = np.meshgrid(x, y)
 
     fig, ax = plt.subplots(1, 1)
+
+    plt.contour(xx, yy, galileo_radio_intensity,
+                levels=[0.5], colors='red')
 
     pcm = ax.pcolor(xx, yy, DDF, norm=mpl.colors.LogNorm(
         vmin=1e-16, vmax=1e-12), cmap='Spectral_r')
@@ -275,7 +280,7 @@ def Make_FT_full(DataA, DataB, DataC, DataD):
     plt.ylabel("Frequency (MHz)")
     plt.yscale('log')
     plt.xlim(0, 5400)
-    plt.ylim(0.1, 5.0)
+    plt.ylim(0.1, 6.0)
     ax.set_xticks([0, 900, 1800, 2700, 3600, 4500, 5400])
     ax.set_xticklabels(
         ["05:30", "05:45", "06:00", "06:15", "06:30", "06:45", "07;00"])
@@ -283,14 +288,17 @@ def Make_FT_full(DataA, DataB, DataC, DataD):
               "(/cc) scale height "+plasma_scaleheight+"(km)")
 
     fig.savefig(os.path.join('../result_for_yasudaetal2022/' + object_name+'_'+highest_plasma +
-                '_'+plasma_scaleheight+'/', object_name+'_'+highest_plasma+'_'+plasma_scaleheight+'_f-t.png'))
+                '_'+plasma_scaleheight+'/', object_name+'_'+highest_plasma+'_'+plasma_scaleheight+'_'+boundary_intensity_str+'_f-t.png'))
 
     fig.savefig(os.path.join('../result_for_yasudaetal2022/f-t_plot_'+object_name+'/',
-                object_name+'_'+highest_plasma+'_'+plasma_scaleheight+'_f-t.png'))
+                object_name+'_'+highest_plasma+'_'+plasma_scaleheight+'_'+boundary_intensity_str+'_f-t.png'))
 
     plt.show()
 
     fig, ax = plt.subplots(1, 1)
+
+    plt.contour(xx, yy, galileo_radio_intensity,
+                levels=[0.5], colors='red')
 
     pcm = ax.pcolor(xx, yy, DDF, norm=mpl.colors.LogNorm(
         vmin=1e-16, vmax=1e-12), cmap='Spectral_r')
@@ -304,18 +312,21 @@ def Make_FT_full(DataA, DataB, DataC, DataD):
     plt.ylabel("Frequency (MHz)")
     plt.yscale('log')
     plt.xlim(2400, 3600)
-    plt.ylim(0.1, 5.0)
+    plt.ylim(0.1, 6.0)
     ax.set_xticks([2400, 3000, 3600])
     ax.set_xticklabels(["06:10", "06:20", "06:30"])
     plt.title("max density "+highest_plasma +
               "(/cc) scale height "+plasma_scaleheight+"(km)")
     fig.savefig(os.path.join('../result_for_yasudaetal2022/' + object_name+'_'+highest_plasma +
-                '_'+plasma_scaleheight+'/', object_name+'_'+highest_plasma+'_'+plasma_scaleheight+'_egress_f-t.png'))
+                '_'+plasma_scaleheight+'/', object_name+'_'+highest_plasma+'_'+plasma_scaleheight+'_'+boundary_intensity_str+'_egress_f-t.png'))
 
     fig.savefig(os.path.join('../result_for_yasudaetal2022/f-t_plot_'+object_name+'_egress/',
-                object_name+'_'+highest_plasma+'_'+plasma_scaleheight+'_egress_f-t.png'))
+                object_name+'_'+highest_plasma+'_'+plasma_scaleheight+'_'+boundary_intensity_str+'_egress_f-t.png'))
 
     fig, ax = plt.subplots(1, 1)
+
+    plt.contour(xx, yy, galileo_radio_intensity,
+                levels=[0.5], colors='red')
 
     pcm = ax.pcolor(xx, yy, DDF, norm=mpl.colors.LogNorm(
         vmin=1e-16, vmax=1e-12), cmap='Spectral_r')
@@ -329,17 +340,17 @@ def Make_FT_full(DataA, DataB, DataC, DataD):
     plt.ylabel("Frequency (MHz)")
     plt.yscale('log')
     plt.xlim(600, 2400)
-    plt.ylim(0.1, 5.0)
+    plt.ylim(0.1, 6.0)
     ax.set_xticks([600, 1200, 1800, 2400])
     ax.set_xticklabels(["05:40", "05:50", "06:00", "06:10"])
     plt.title("max density "+highest_plasma +
               "(/cc) scale height "+plasma_scaleheight+"(km)")
 
     fig.savefig(os.path.join('../result_for_yasudaetal2022/' + object_name+'_'+highest_plasma +
-                '_'+plasma_scaleheight+'/', object_name+'_'+highest_plasma+'_'+plasma_scaleheight+'_ingress_f-t.png'))
+                '_'+plasma_scaleheight+'/', object_name+'_'+highest_plasma+'_'+plasma_scaleheight+'_'+boundary_intensity_str+'_ingress_f-t.png'))
 
     fig.savefig(os.path.join('../result_for_yasudaetal2022/f-t_plot_'+object_name+'_ingress/',
-                object_name+'_'+highest_plasma+'_'+plasma_scaleheight+'_ingress_f-t.png'))
+                object_name+'_'+highest_plasma+'_'+plasma_scaleheight+'_'+boundary_intensity_str+'_ingress_f-t.png'))
 
     return 0
 
@@ -353,7 +364,6 @@ def Evaluate_data_coutour():
 
     plt.hist(using_galileo_data, range=(1e-18, 1e-12),
              bins=np.logspace(-18, -12, 30))
-    plt.gca().set_xscale("log")
     plt.show()
 
 
@@ -369,77 +379,54 @@ def Evaluate_galileo_data():
 
     galileo_radio_intensity_row = galileo_radio_intensity.copy()
 
-    for i in range(len(boundary_intensity)):
-        galileo_radio_intensity[boundary_intensity[i]
-                                < galileo_radio_intensity] = 1
-        galileo_radio_intensity[galileo_radio_intensity <
-                                boundary_intensity[i]] = 0
-        # print(galileo_data_time.shape)
-        # print(galileo_radio_intensity.shape)
+    galileo_radio_intensity[boundary_intensity
+                            < galileo_radio_intensity] = 1
+    galileo_radio_intensity[galileo_radio_intensity <
+                            boundary_intensity] = 0
+    # print(galileo_data_time.shape)
+    # print(galileo_radio_intensity.shape)
 
-        occulted_time = int(np.where(galileo_data_time > 2400)[0][0])
-        ingress_time_list = galileo_data_freq.copy()
-        egress_time_list = galileo_data_freq.copy()
+    occulted_time = int(np.where(galileo_data_time > 2400)[0][0])
+    ingress_time_list = galileo_data_freq.copy()
+    egress_time_list = galileo_data_freq.copy()
 
-        for k in range(len(galileo_data_freq)):
-            over_judge_time_list = np.array(np.where(
-                (galileo_radio_intensity[k][:] > boundary_intensity[i])))
-            # print(over_judge_time_list)
-            A = over_judge_time_list[over_judge_time_list < occulted_time]
-            B = over_judge_time_list[over_judge_time_list > occulted_time]
+    for k in range(len(galileo_data_freq)):
+        over_judge_time_list = np.array(np.where(
+            (galileo_radio_intensity[k][:] > boundary_intensity)))
+        # print(over_judge_time_list)
+        A = over_judge_time_list[over_judge_time_list < occulted_time]
+        B = over_judge_time_list[over_judge_time_list > occulted_time]
 
-            if len(B) > 0:
-                b = B[0]
-                egress_time_list = np.append(
-                    egress_time_list, ((galileo_data_time[b] + galileo_data_time[b-1])/2))
+        if len(B) > 0:
+            b = B[0]
+            egress_time_list = np.append(
+                egress_time_list, ((galileo_data_time[b] + galileo_data_time[b-1])/2))
 
-            else:
-                egress_time_list = np.append(egress_time_list, -100000)
+        else:
+            egress_time_list = np.append(egress_time_list, -100000)
 
-            if len(A) > 0:
-                a = A[len(A)-1]
-                ingress_time_list = np.append(ingress_time_list, ((
-                    galileo_data_time[a] + galileo_data_time[a+1])/2))
+        if len(A) > 0:
+            a = A[len(A)-1]
+            ingress_time_list = np.append(ingress_time_list, ((
+                galileo_data_time[a] + galileo_data_time[a+1])/2))
 
-            else:
-                ingress_time_list = np.append(ingress_time_list, 100000)
+        else:
+            ingress_time_list = np.append(ingress_time_list, 100000)
 
     ingress_time_list = ingress_time_list.reshape(
         2, int(len(ingress_time_list)/2))
     egress_time_list = egress_time_list.reshape(
         2, int(len(egress_time_list)/2))
 
-    xx, yy = np.meshgrid(galileo_data_time, galileo_data_freq)
-
-    fig, ax = plt.subplots(1, 1)
-
-    pcm = ax.pcolor(xx, yy, galileo_radio_intensity_row, norm=mpl.colors.LogNorm(
-        vmin=1e-16, vmax=1e-12), cmap='Spectral_r')
-    fig.colorbar(pcm, extend='max')
-    plt.contour(xx, yy, galileo_radio_intensity,
-                levels=[0.5], colors='red')
-
-    plt.ylim(100000, 5000000)
-    plt.xlabel("Time of 27 June 1996")
-    plt.ylabel("Frequency (MHz)")
-    plt.yscale('log')
-    plt.xlim(0, 5400)
-    plt.ylim(0.1, 5.0)
-    ax.set_xticks([0, 900, 1800, 2700, 3600, 4500, 5400])
-    ax.set_xticklabels(
-        ["05:30", "05:45", "06:00", "06:15", "06:30", "06:45", "07;00"])
-
-    plt.show()
-
     np.savetxt('../result_for_yasudaetal2022/'+object_name +
-               '_ingress_time_data.txt', ingress_time_list)
+               '_'+boundary_intensity_str+'_ingress_time_data.txt', ingress_time_list)
     np.savetxt('../result_for_yasudaetal2022/'+object_name +
-               '_ingress_time_data.txt', egress_time_list)
+               '_'+boundary_intensity_str+'_ingress_time_data.txt', egress_time_list)
 
     return ingress_time_list, egress_time_list
 
 
-def ingress(data):
+def ingress(data, raytrace_time):
     raytrace_freq = np.insert(np.array(Freq_num), 0, 0.36122)
     occulted_time = int(np.where(raytrace_time > 2400)[0][0])
     ingress_time_list = raytrace_freq.copy()
@@ -465,7 +452,7 @@ def ingress(data):
     return ingress_time_list
 
 
-def egress(data):
+def egress(data, raytrace_time):
     raytrace_freq = np.insert(np.array(Freq_num), 0, 0.36122)
     occulted_time = int(np.where(raytrace_time > 2400)[0][0])
     egress_time_list = raytrace_freq.copy()
@@ -493,10 +480,10 @@ def egress(data):
 
 class Evaluate_raytrace_data:
 
-    def __init__(self, Data):
+    def __init__(self, Data, time_data):
         self.data = Data
-        self.ingress = ingress(Data)
-        self.egress = egress(Data)
+        self.ingress = ingress(Data, time_data)
+        self.egress = egress(Data, time_data)
 
 
 def Evaluate_ionosphere_density(raytrace_data, galileo_data):
@@ -518,32 +505,20 @@ def Evaluate_ionosphere_density(raytrace_data, galileo_data):
 
 
 def main():
-    """`
-    global res
-    with tqdm(total=n) as t:
-        pool = Pool(processes=8)
-        for _ in pool.imap_unordered(calc, range(n)):
-            t.update(1)
-    """
+    time_information = Pick_up_cdf()
+    time_step = Time_step(time_information)
+    print(time_step)
 
-    # MakeFolder()
+    time_list = np.arange(0, time_step, 60)  # エクスプレスコードで計算している時間幅（sec)を60で割る
 
-    MoveFile()
+    detectable_radio = np.loadtxt('../result_for_yasudaetal2022/raytracing_'+object_name+'_results/'+object_name+'_'+highest_plasma+'_'+plasma_scaleheight +
+                                  '/' + object_name+'_'+spacecraft_name+'_'+str(time_of_flybies)+'_'+highest_plasma+'_'+plasma_scaleheight+'_dectable_radio_data.txt')
 
-    with Pool(processes=8) as pool:
-        result_list = list(pool.map(Judge_occultation, total_radio_number))
-        # pool.map(calc,args)
-        # pool.map(proc,[0,1,2])
-        # args = list(np.arange(0,n,1))
-
-    detectable_radio = Replace_Save(result_list, Radio_observer_position)
-
-    detectable_radio = np.loadtxt('../result_for_yasudaetal2022/'+object_name+'_'+highest_plasma+'_' +
-                                  plasma_scaleheight+'/' + object_name+'_'+highest_plasma+'_'+plasma_scaleheight+'_dectable_radio_data.txt')
     detectable_A, detectable_B, detectable_C, detectable_D = Prepare_Figure(
-        detectable_radio)
+        detectable_radio, time_information)
 
-    Make_FT_full(detectable_A, detectable_B, detectable_C, detectable_D)
+    Make_FT_full(detectable_A, detectable_B,
+                 detectable_C, detectable_D, time_list)
 
     Evaluate_data_coutour()
 
@@ -555,7 +530,7 @@ def main():
     detectable_data_str = ['dataA', 'dataB', 'dataC', 'dataD']
 
     for i in range(4):
-        evaluated_data = Evaluate_raytrace_data(detectable_data[i])
+        evaluated_data = Evaluate_raytrace_data(detectable_data[i], time_list)
         time_defference_ingress = Evaluate_ionosphere_density(
             evaluated_data.ingress, ingress_time)
 
@@ -567,14 +542,14 @@ def main():
         print(time_defference_egress)
 
         np.savetxt('../result_for_yasudaetal2022/f-t_'+object_name+'_ingress_difference/'+object_name+'_' +
-                   highest_plasma+'_'+plasma_scaleheight+'_ingress_defference_time_'+detectable_data_str[i]+'.txt', time_defference_ingress)
+                   highest_plasma+'_'+plasma_scaleheight+'_ingress_defference_time_'+detectable_data_str[i]+'_'+boundary_intensity_str+'.txt', time_defference_ingress)
         np.savetxt('../result_for_yasudaetal2022/f-t_'+object_name+'_egress_difference/'+object_name+'_' +
-                   highest_plasma+'_'+plasma_scaleheight+'_egress_defference_time_'+detectable_data_str[i]+'.txt', time_defference_egress)
-
+                   highest_plasma+'_'+plasma_scaleheight+'_egress_defference_time_'+detectable_data_str[i]+'_'+boundary_intensity_str+'.txt', time_defference_egress)
     return 0
 
 
 if __name__ == "__main__":
     main()
+
 
 # %%
