@@ -21,6 +21,7 @@ CC_FLAG = -c -O2          \
     -D_REENTRANT          \
     -finline-functions    \
     -funroll-loops        \
+	-lboost_system        \
 
 #    -march=`arch`
 
@@ -33,6 +34,7 @@ include common.mak
 ##################################################
 $(PCH):
 	$(CC) $(PCH_FLAG) $(STDHEADER) -o $@
+
 
 local-clean:
 	rm -f ./$(PCH)
