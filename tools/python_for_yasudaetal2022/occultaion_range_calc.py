@@ -1,5 +1,4 @@
 # In[]
-
 from mmap import PROT_READ
 import numpy as np
 import os
@@ -10,11 +9,11 @@ import pandas as pd
 # In[]
 object_name = 'europa'   # europa/ganymde/callisto
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 14  # ..th flyby
-highest_plasma = '0.25e2'  # 単位は(/cc) 2e2/4e2/16e2
-plasma_scaleheight = '4e2'  # 単位は(km) 1.5e2/3e2/6e2
-raytrace_lowest_altitude = -300  # レイトレーシングの下端の初期高度(km) 100の倍数で
-raytrace_highest_altitude = 2600  # レイトレーシング上端の初期高度(km) 500の倍数+100で
+time_of_flybies = 12  # ..th flyby
+highest_plasma = '10e2'  # 単位は(/cc) 2e2/4e2/16e2
+plasma_scaleheight = '3e2'  # 単位は(km) 1.5e2/3e2/6e2
+raytrace_lowest_altitude = -700  # レイトレーシングの下端の初期高度(km) 100の倍数で
+raytrace_highest_altitude = 5600  # レイトレーシング上端の初期高度(km) 500の倍数+100で
 
 information_list = ['year', 'month', 'start_day', 'end_day',
                     'start_hour', 'end_hour', 'start_min', 'end_min']

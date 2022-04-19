@@ -188,7 +188,7 @@ double cosmos::getHight(const vector &r) const //////”½Ë—p‹@”\@•W‚‚ğ“ü—ÍiŒÅ‘
 {
 	///	double h = r(2);  ///z=0‚Ì•½–Ê
 	double h = std::sqrt((pow(r(0), 2.0)) + (pow(r(1), 2.0)) + (pow(r(2) + 1.601e6, 2.0))) - 1.601e6; // ƒGƒEƒƒp•\–ÊiŠ®‘S‹…j
-																									  ///	double h = std::sqrt((pow(r(0),2.0))+(pow(r(1),2.0))+(pow(r(2)+2.6341e6,2.0))) - 2.6341e6; // ƒKƒjƒƒf•\–ÊiŠ®‘S‹…j
+	/// double h = std::sqrt((pow(r(0), 2.0)) + (pow(r(1), 2.0)) + (pow(r(2) + 2.6341e6, 2.0))) - 2.6341e6; // ƒKƒjƒƒf•\–ÊiŠ®‘S‹…j
 	return h;
 }
 

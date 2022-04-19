@@ -13,9 +13,9 @@ import glob
 
 object_name = 'europa'  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 14  # ..th flyby
-highest_plasma = '0.25e2'  # 単位は(/cc) 2e2/4e2/16e22
-plasma_scaleheight = '4e2'  # 単位は(km) 1.5e2/3e2/6e2
+time_of_flybies = 12  # ..th flyby
+highest_plasma = '10e2'  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = '3e2'  # 単位は(km) 1.5e2/3e2/6e2
 
 
 Radio_name_cdf = '../result_for_yasudaetal2022/tracing_range_'+spacecraft_name+'_'+object_name + \
@@ -79,7 +79,7 @@ def Judge_occultation(i):
         for j in range(Lowest[freq], Highest[freq], 2):
             k = str(j)
             # 高度が低い電波源の電波から取得
-            Radio_propagation_route = np.genfromtxt("../result_for_yasudaetal2022/"+object_name+"_"+highest_plasma+"_"+plasma_scaleheight +
+            Radio_propagation_route = np.genfromtxt("../result_for_yasudaetal2022/raytracing_"+object_name+"_results/"+object_name+"_"+highest_plasma+"_"+plasma_scaleheight +
                                                     "/ray-P"+object_name+"_nonplume_"+highest_plasma+"_"+plasma_scaleheight+"-Mtest_simple-benchmark-LO-Z"+k+"-FR"+Freq_str[freq])
             # たまにレイパスが計算できない初期条件になって入りう時があるのでそのデータを除外
             if Radio_propagation_route.ndim == 2:
@@ -160,18 +160,18 @@ def Replace_Save(judgement, all_radio_data):
 
 def main():
 
-    # MakeFolder() #フォルダ作成　基本的にはoccultation_range_plot.py で移動しているから基本使わない
+    # MakeFolder()  # フォルダ作成　基本的にはoccultation_range_plot.py で移動しているから基本使わない
 
-    MoveFile()  # ファイル移動　
+    # MoveFile()  # ファイル移動　
 
     # 受かっているかの検証　processesの引数で並列数を指定
-    """
-    with Pool(processes=8) as pool:
+
+    with Pool(processes=20) as pool:
         result_list = list(pool.map(Judge_occultation, total_radio_number))
 
     # 受かっている電波のみを保存
     Replace_Save(result_list, Radio_observer_position)
-    """
+
     return 0
 
 

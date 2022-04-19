@@ -12,17 +12,20 @@ import glob
 # あらかじめ ../result_sgepss2021/~/~ に必要なレイトレーシング結果とパラメータセットを入れること
 
 
-object_name = 'ganymede'  # ganydeme/europa/calisto``
+object_name = 'europa'  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 1  # ..th flyby
-highest_plasma = '4e2'  # 単位は(/cc) 2e2/4e2/16e22
-plasma_scaleheight = '6e2'  # 単位は(km) 1.5e2/3e2/6e2
+time_of_flybies = 12  # ..th flyby
+highest_plasma = '10e2'  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = '4e2'  # 単位は(km) 1.5e2/3e2/6e2
 boundary_intensity_str = '7e-16'  # boundary_intensity_str = '1e-15'
 
-plot_time_step_sec = [0, 900, 1800, 2700, 3600, 4500, 5400]
-plot_time_step_label = ["05:30", "05:45",
-                        "06:00", "06:15", "06:30", "06:45", "07;00"]
+#plot_time_step_sec = [0, 900, 1800, 2700, 3600, 4500, 5400]
+#plot_time_step_label = ["05:30", "05:45", "06:00", "06:15", "06:30", "06:45", "07;00"]
 
+plot_time_step_sec = [6300, 6600, 6900,
+                      7200, 7500, 7800, 8100, 8400, 8700]
+plot_time_step_label = ["11:45", "11:50",
+                        "11:55", "12:00", "12:05", "12:10", "12:15", "12:20", "12:25"]
 
 information_list = ['year', 'month', 'start_day', 'end_day',
                     'start_hour', 'end_hour', 'start_min', 'end_min', 'occultaton_center_day', 'occultaton_center_hour', 'occultaton_center_min']
@@ -78,7 +81,12 @@ def Pick_up_cdf():
     complete_selecred_flyby_list = selected_flyby_list.query(
         'object == "'+object_name+'" & spacecraft == "'+spacecraft_name+'"')  # queryでフライバイ数以外を絞り込み
 
-    complete_selecred_flyby_list.index.tolist()[0]
+    complete_selecred_flyby_list = complete_selecred_flyby_list.reset_index(
+        drop=True)
+
+    #complete_selecred_flyby_list = complete_selecred_flyby_list.index.tolist()
+
+    # print(complete_selecred_flyby_list)
 
     # csvから時刻データを抽出['year', 'month', 'start_day', 'end_day','start_hour', 'end_hour', 'start_min', 'end_min','occultaton_center_day','occultaton_center_hour','occultaton_center_min']
     time_information = []
@@ -425,8 +433,8 @@ def Make_FT_full(DataA, DataB, DataC, DataD, raytrace_time_information, radio_da
 
     plot_and_save(int(plot_time_step_sec[0]), int(
         plot_time_step_sec[-1]), "full")
-    plot_and_save(middle_time, middle_time+1800, "egress")
-    plot_and_save(middle_time-1800, middle_time, "ingress")
+    plot_and_save(middle_time, int(plot_time_step_sec[-1]), "egress")
+    plot_and_save(int(plot_time_step_sec[0]), middle_time, "ingress")
 
     # 以下は電波データにおける掩蔽タイミングを決めるものなので、閾値を買えない限りは毎回やる必要はない
     np.savetxt('../result_for_yasudaetal2022/radio_data_occultation_timing_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby/'+object_name +
@@ -484,9 +492,6 @@ def ingress(data, raytrace_time_information):
     ingress_time_list = ingress_time_list.reshape(
         2, int(len(ingress_time_list)/2))
     # レイトレーシングデータにおける掩蔽開始時刻 [[周波数一覧][掩蔽開始時刻一覧]]の二次元データ　⇨保存（電子密度を変えるたびに異なる値になる・閾値は関係ない）
-    np.savetxt('../result_for_yasudaetal2022/raytracing_occultation_timing_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby/' +
-               spacecraft_name+'_' + object_name+'_'+str(time_of_flybies)+'_'+highest_plasma+'_'+plasma_scaleheight+'_ingress_time_list.txt', ingress_time_list)
-
     return ingress_time_list
 
 
@@ -538,9 +543,6 @@ def egress(data, raytrace_time_information):
         2, int(len(egress_time_list)/2))
 
     # レイトレーシングデータにおける掩蔽終了時刻 [[周波数一覧][掩蔽終了時刻一覧]]の二次元データ　⇨保存（電子密度を変えるたびに異なる値になる・閾値は関係ない）
-    np.savetxt('../result_for_yasudaetal2022/raytracing_occultation_timing_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby/' +
-               spacecraft_name+'_' + object_name+'_'+str(time_of_flybies)+'_'+highest_plasma+'_'+plasma_scaleheight+'_egress_time_list.txt', egress_time_list)
-
     return egress_time_list
 
 
@@ -622,6 +624,13 @@ def main():
     for i in range(4):
         evaluated_data = Evaluate_raytrace_data(
             detectable_data[i], time_information)
+
+        # レイトレーシングデータにおける掩蔽開始時刻 [[周波数一覧][掩蔽開始時刻一覧]]の二次元データ　⇨保存（電子密度を変えるたびに異なる値になる・閾値は関係ない）
+        np.savetxt('../result_for_yasudaetal2022/raytracing_occultation_timing_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby/' + spacecraft_name +
+                   '_' + object_name+'_'+str(time_of_flybies)+'_'+highest_plasma+'_'+plasma_scaleheight+'_ingress_'+detectable_data_str[i]+'_time_list.txt', evaluated_data.ingress)
+
+        np.savetxt('../result_for_yasudaetal2022/raytracing_occultation_timing_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby/' + spacecraft_name +
+                   '_' + object_name+'_'+str(time_of_flybies)+'_'+highest_plasma+'_'+plasma_scaleheight+'_egress_'+detectable_data_str[i]+'_time_list.txt', evaluated_data.egress)
 
         time_defference_ingress = Evaluate_ionosphere_density(
             evaluated_data.ingress, ingress_time)  # 掩蔽開始タイミングの差分  [[周波数一覧][掩蔽開始時刻一覧(秒)]]の二次元データ

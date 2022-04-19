@@ -84,7 +84,7 @@ def MoveFile():
 
 def Judge_occultation(i):
     aa = 0
-
+    print(i)
     if Radio_observer_position[i][5] < 0:
         res[i][6] = 0
         aa = 1  # ukaru
@@ -427,7 +427,7 @@ def Evaluate_galileo_data():
     np.savetxt('../result_for_yasudaetal2022/'+object_name +
                '_'+boundary_intensity_str+'_ingress_time_data.txt', ingress_time_list)
     np.savetxt('../result_for_yasudaetal2022/'+object_name +
-               '_'+boundary_intensity_str+'_ingress_time_data.txt', egress_time_list)
+               '_'+boundary_intensity_str+'_egress_time_data.txt', egress_time_list)
 
     return ingress_time_list, egress_time_list
 
@@ -542,6 +542,7 @@ def main():
 
     for i in range(4):
         evaluated_data = Evaluate_raytrace_data(detectable_data[i])
+
         time_defference_ingress = Evaluate_ionosphere_density(
             evaluated_data.ingress, ingress_time)
 
