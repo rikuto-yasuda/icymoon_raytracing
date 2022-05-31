@@ -44,7 +44,7 @@ double plasma::europa_nonplume::getDensity(const vector &point) const //////////
 	const double
 		rxy = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)));
 	const double
-		t = std::fabs(10e8 * exp(-(r - 1.601e6) / 3e5)); //////////////エウロパ静水圧平行モデル 地表面で4.0*10^2(/cc) スケールハイト600km
+		t = std::fabs(4.5e8 * exp(-(r - 1.601e6) / 6e5)); //////////////エウロパ静水圧平行モデル 地表面で4.0*10^2(/cc) スケールハイト600km
 	;
 
 	return t;

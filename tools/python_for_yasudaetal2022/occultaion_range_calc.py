@@ -10,8 +10,9 @@ import pandas as pd
 object_name = 'europa'   # europa/ganymde/callisto
 spacecraft_name = "galileo"  # galileo/JUICE(?)
 time_of_flybies = 12  # ..th flyby
-highest_plasma = '10e2'  # 単位は(/cc) 2e2/4e2/16e2
-plasma_scaleheight = '3e2'  # 単位は(km) 1.5e2/3e2/6e2
+highest_plasma = '4.5e2'  # 単位は(/cc) 2e2/4e2/16e2
+plasma_scaleheight = '6e2'  # 単位は(km) 1.5e2/3e2/6e2
+
 raytrace_lowest_altitude = -700  # レイトレーシングの下端の初期高度(km) 100の倍数で
 raytrace_highest_altitude = 5600  # レイトレーシング上端の初期高度(km) 500の倍数+100で
 

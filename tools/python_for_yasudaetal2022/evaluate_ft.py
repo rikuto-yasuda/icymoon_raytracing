@@ -19,8 +19,8 @@ time_of_flybies = 12  # ..th flyby
 # using_frequency_range = [5.5e-1, 6]  # G1 egress
 using_frequency_range = [2, 6]  # E12
 boundary_intensity_str = '7e-16'  # '7e-16' '1e-15'
-occultaion_type = 'egress'  # 'ingress' or 'egress'
-radio_type = 'A'  # 'A' or 'B' or 'C' or 'D'
+occultaion_type = 'ingress'  # 'ingress' or 'egress'
+radio_type = 'D'  # 'A' or 'B' or 'C' or 'D'
 
 # %%
 
@@ -89,6 +89,7 @@ def main():
                 cmap='rainbow_r', vmax=80, vmin=20)
     # plt.xscale('log')
     plt.yscale('log')
+    plt.ylim(200, 1000)
     plt.colorbar(label='average time difference (sec)')
     plt.xlabel("Max density (/cc)")
     plt.ylabel("Scale height (km)")

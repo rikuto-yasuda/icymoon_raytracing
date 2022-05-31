@@ -9,9 +9,9 @@ import math
 
 # %%
 
-object_name = "europa"  # europa/ganymde/callisto
+object_name = "callisto"  # europa/ganymde/callisto
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 12  # ..th flyby
+time_of_flybies = 30  # ..th flyby
 information_list = ['year', 'month', 'start_day', 'end_day',
                     'start_hour', 'end_hour', 'start_min', 'end_min']
 
