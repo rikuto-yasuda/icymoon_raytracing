@@ -10,7 +10,7 @@ double plasma::test_null_plasma::getDensity(const vector &point) const
 	return 0;
 }
 
-double plasma::test_simple::getDensity(const vector &point) const ///////////////V‚µ‚¢ƒvƒ‰ƒYƒ}ƒ‚ƒfƒ‹iz²•ûŒü‚Éexp‚ÅŒ¸­j
+double plasma::test_simple::getDensity(const vector &point) const ///////////////ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Yï¿½}ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½izï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½expï¿½ÅŒï¿½ï¿½ï¿½ï¿½j
 {
 	/*	const double
 		h = std::fabs(0.5e5*point(2));
@@ -20,16 +20,16 @@ double plasma::test_simple::getDensity(const vector &point) const //////////////
 	return 1.0e3;
 }
 
-double plasma::europa_plume::getDensity(const vector &point) const ///////////////V‚µ‚¢ƒvƒ‰ƒYƒ}ƒ‚ƒfƒ‹iz²•ûŒü‚Éexp‚ÅŒ¸­j
+double plasma::europa_plume::getDensity(const vector &point) const ///////////////ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Yï¿½}ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½izï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½expï¿½ÅŒï¿½ï¿½ï¿½ï¿½j
 {
 	const double
-		r = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)) + (pow(point(2) + 1.601e6, 2.0)));
+		r = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)) + (pow(point(2) + 1.5608e6, 2.0)));
 	const double
 		rxy = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)));
 	const double
-		plume = std::fabs(1.0e12 * exp(-(r - 1.601e6) / 1.5e5) * exp(-((atan2(rxy, point(2))) / 0.261799) * ((atan2(rxy, point(2))) / 0.261799)));
+		plume = std::fabs(1.0e12 * exp(-(r - 1.5608e6) / 1.5e5) * exp(-((atan2(rxy, point(2))) / 0.261799) * ((atan2(rxy, point(2))) / 0.261799)));
 	const double
-		t = std::fabs(9e9 * exp(-(r - 1.601e6) / 2.4e5)); //////////////ƒGƒEƒƒpÃ…ˆ³•½sƒ‚ƒfƒ‹ ’n•\–Ê‚Å9.0*10^3(/cc) ƒXƒP[ƒ‹ƒnƒCƒg240km
+		t = std::fabs(9e9 * exp(-(r - 1.5608e6) / 2.4e5)); //////////////ï¿½Gï¿½Eï¿½ï¿½ï¿½pï¿½Ãï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½fï¿½ï¿½ ï¿½nï¿½\ï¿½Ê‚ï¿½9.0*10^3(/cc) ï¿½Xï¿½Pï¿½[ï¿½ï¿½ï¿½nï¿½Cï¿½g240km
 	const double
 		d = t + plume;
 	;
@@ -37,41 +37,53 @@ double plasma::europa_plume::getDensity(const vector &point) const /////////////
 	return d;
 }
 
-double plasma::europa_nonplume::getDensity(const vector &point) const ///////////////V‚µ‚¢ƒvƒ‰ƒYƒ}ƒ‚ƒfƒ‹iz²•ûŒü‚Éexp‚ÅŒ¸­j
+double plasma::europa_nonplume::getDensity(const vector &point) const ///////////////ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Yï¿½}ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½izï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½expï¿½ÅŒï¿½ï¿½ï¿½ï¿½j
 {
 	const double
-		r = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)) + (pow(point(2) + 1.601e6, 2.0)));
+		r = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)) + (pow(point(2) + 1.5608e6, 2.0)));
 	const double
 		rxy = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)));
 	const double
-		t = std::fabs(4.5e8 * exp(-(r - 1.601e6) / 6e5)); //////////////ƒGƒEƒƒpÃ…ˆ³•½sƒ‚ƒfƒ‹ ’n•\–Ê‚Å4.0*10^2(/cc) ƒXƒP[ƒ‹ƒnƒCƒg600km
+		t = std::fabs(4.5e8 * exp(-(r - 1.5608e6) / 6e5)); //////////////ï¿½Gï¿½Eï¿½ï¿½ï¿½pï¿½Ãï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½fï¿½ï¿½ ï¿½nï¿½\ï¿½Ê‚ï¿½4.0*10^2(/cc) ï¿½Xï¿½Pï¿½[ï¿½ï¿½ï¿½nï¿½Cï¿½g600km
 	;
 
 	return t;
 }
 /*
-double plasma::ganymede_nonplume::getDensity( const vector& point ) const               ///////////////V‚µ‚¢ƒvƒ‰ƒYƒ}ƒ‚ƒfƒ‹iz²•ûŒü‚Éexp‚ÅŒ¸­j
+double plasma::ganymede_nonplume::getDensity( const vector& point ) const               ///////////////ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Yï¿½}ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½izï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½expï¿½ÅŒï¿½ï¿½ï¿½ï¿½j
 {
 	const double
 		r = std::sqrt((pow(point(0),2.0))+(pow(point(1),2.0))+(pow(point(2)+2.6341e6,2.0)));
 	const double
 		rxy = std::sqrt((pow(point(0),2.0))+(pow(point(1),2.0)));
 	const double
-		t = std::fabs(4e8*exp(-(r-2.6341e6)/6.0e5));                                  //////////////ƒKƒjƒƒfÃ…ˆ³•½sƒ‚ƒfƒ‹ ’n•\–Ê‚Å4.0*10^2(/cc) ƒXƒP[ƒ‹ƒnƒCƒg600km  ƒƒ“ƒOverÏ‚İ
+		t = std::fabs(4e8*exp(-(r-2.6341e6)/6.0e5));                                  //////////////ï¿½Kï¿½jï¿½ï¿½ï¿½fï¿½Ãï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½fï¿½ï¿½ ï¿½nï¿½\ï¿½Ê‚ï¿½4.0*10^2(/cc) ï¿½Xï¿½Pï¿½[ï¿½ï¿½ï¿½nï¿½Cï¿½g600km  ï¿½ï¿½ï¿½ï¿½ï¿½Overï¿½Ï‚ï¿½
 		;
 
 	return t;
 }
 */
-double plasma::ganymede_nonplume::getDensity(const vector &point) const ///////////////V‚µ‚¢ƒvƒ‰ƒYƒ}ƒ‚ƒfƒ‹iz²•ûŒü‚Éexp‚ÅŒ¸­j
+double plasma::ganymede_nonplume::getDensity(const vector &point) const ///////////////ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Yï¿½}ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½izï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½expï¿½ÅŒï¿½ï¿½ï¿½ï¿½j
 {
 	const double
 		r = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)) + (pow(point(2) + 2.6341e6, 2.0)));
 	const double
 		rxy = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)));
 	const double
-		t = std::fabs(3e8 * exp(-(r - 2.6341e6) / 15e5)); //ƒKƒjƒƒfÃ…ˆ³•½sƒ‚ƒfƒ‹ ’n•\–Ê‚Å‚Ì–§“xŒ¸ ’n•\–Ê‚Å3.5*10^2(/cc) ƒXƒP[ƒ‹ƒnƒCƒg100km
+		t = std::fabs(3e8 * exp(-(r - 2.6341e6) / 15e5)); //ï¿½Kï¿½jï¿½ï¿½ï¿½fï¿½Ãï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½fï¿½ï¿½ ï¿½nï¿½\ï¿½Ê‚Å‚Ì–ï¿½ï¿½xï¿½ï¿½ ï¿½nï¿½\ï¿½Ê‚ï¿½3.5*10^2(/cc) ï¿½Xï¿½Pï¿½[ï¿½ï¿½ï¿½nï¿½Cï¿½g100km
 	;
 
+	return t;
+}
+
+double plasma::callisto_nonplume::getDensity(const vector &point) const ///////////////ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Yï¿½}ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½izï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½expï¿½ÅŒï¿½ï¿½ï¿½ï¿½j
+{
+	const double
+		r = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)) + (pow(point(2) + 2.4103e6, 2.0)));
+	const double
+		rxy = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)));
+	const double
+		t = std::fabs(6e8 * exp(-(r - 2.4103e6) / 6e5)); //ï¿½Jï¿½ï¿½ï¿½Xï¿½gï¿½Ãï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½fï¿½ï¿½ ï¿½nï¿½\ï¿½Ê‚Å‚Ì–ï¿½ï¿½xï¿½ï¿½ ï¿½nï¿½\ï¿½Ê‚ï¿½3.5*10^2(/cc) ï¿½Xï¿½Pï¿½[ï¿½ï¿½ï¿½nï¿½Cï¿½g100km
+	;
 	return t;
 }

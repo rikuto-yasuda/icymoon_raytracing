@@ -11,7 +11,6 @@ import glob
 # %%
 # あらかじめ ../result_sgepss2021/~/~ に必要なレイトレーシング結果とパラメータセットを入れること
 
-
 object_name = 'europa'  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
 time_of_flybies = 12  # ..th flyby
@@ -30,19 +29,31 @@ plot_time_step_label = ["11:45", "11:50",
 information_list = ['year', 'month', 'start_day', 'end_day',
                     'start_hour', 'end_hour', 'start_min', 'end_min', 'occultaton_center_day', 'occultaton_center_hour', 'occultaton_center_min']
 
-
 Radio_name_csv = '../result_for_yasudaetal2022/tracing_range_'+spacecraft_name+'_'+object_name + \
     '_'+str(time_of_flybies)+'_flybys/para_' + \
     highest_plasma+'_'+plasma_scaleheight+'.csv'
 Radio_Range = pd.read_csv(Radio_name_csv, header=0)
 # [0 hour,1 min,2 frequency(MHz),3 電波源データの磁力線(根本)の経度  orイオの場合は(-1000),4 電波源の南北,5 座標変換した時のx(tangential point との水平方向の距離),6 座標変換した時のy(tangential pointからの高さ方向の距離),7 電波源の実際の経度]
 
+
+"""修理中europa & ganymede
 Freq_str = ['3.984813988208770752e5', '4.395893216133117676e5', '4.849380254745483398e5', '5.349649786949157715e5', '5.901528000831604004e5', '6.510338783264160156e5',
             '7.181954979896545410e5', '7.922856807708740234e5', '8.740190267562866211e5', '9.641842246055603027e5', '1.063650846481323242e6',
             '1.173378825187683105e6', '1.294426321983337402e6', '1.427961349487304688e6', '1.575271964073181152e6', '1.737779378890991211e6',
             '1.917051434516906738e6', '2.114817380905151367e6', '2.332985162734985352e6', '2.573659420013427734e6', '2.839162111282348633e6',
             '3.132054328918457031e6', '3.455161809921264648e6', '3.811601638793945312e6', '4.204812526702880859e6', '4.638587474822998047e6',
             '5.117111206054687500e6', '5.644999980926513672e6', ]
+
+Freq_underline = 0.36122
+"""
+Freq_str = ['3.612176179885864258e5', '3.984813988208770752e5', '4.395893216133117676e5', '4.849380254745483398e5', '5.349649786949157715e5', '5.901528000831604004e5', '6.510338783264160156e5',
+            '7.181954979896545410e5', '7.922856807708740234e5', '8.740190267562866211e5', '9.641842246055603027e5', '1.063650846481323242e6',
+            '1.173378825187683105e6', '1.294426321983337402e6', '1.427961349487304688e6', '1.575271964073181152e6', '1.737779378890991211e6',
+            '1.917051434516906738e6', '2.114817380905151367e6', '2.332985162734985352e6', '2.573659420013427734e6', '2.839162111282348633e6',
+            '3.132054328918457031e6', '3.455161809921264648e6', '3.811601638793945312e6', '4.204812526702880859e6', '4.638587474822998047e6',
+            '5.117111206054687500e6', '5.644999980926513672e6', ]
+
+Freq_underline = 0.32744
 
 Freq_num = []
 for idx in Freq_str:
@@ -367,7 +378,7 @@ def Make_FT_full(DataA, DataB, DataC, DataD, raytrace_time_information, radio_da
     print(ingress_time_list)
     egress_time_list = egress_time_list.reshape(
         2, int(len(egress_time_list)/2))
-    FREQ = np.insert(np.array(Freq_num), 0, 0.36122)
+    FREQ = np.insert(np.array(Freq_num), 0, Freq_underline)
 
     """
     ここまでで出来上がっている材料たち
@@ -464,7 +475,7 @@ def ingress(data, raytrace_time_information):
                                                                                        raytrace_time_information[4])*3600 + (raytrace_time_information[10]-raytrace_time_information[6]) * 60
 
     # レイトレーシングの周波数リスト(contour plotをする関係で配列の初めに本来はない周波数を挿入しているので周波数の数的には多くなっているので注意)
-    raytrace_freq = np.insert(np.array(Freq_num), 0, 0.36122)
+    raytrace_freq = np.insert(np.array(Freq_num), Freq_underline)
 
     # レイトレーシングの時間間隔の中で初めて掩蔽中時刻を超えるタイミングの配列番号を取得
     occulted_time = int(np.where(raytrace_time > middle_time)[0][0])
@@ -516,7 +527,7 @@ def egress(data, raytrace_time_information):
                                                                                        raytrace_time_information[4])*3600 + (raytrace_time_information[10]-raytrace_time_information[6]) * 60
 
     # レイトレーシングの周波数リスト(contour plotをする関係で配列の初めに本来はない周波数を挿入しているので周波数の数的には多くなているので注意)
-    raytrace_freq = np.insert(np.array(Freq_num), 0, 0.36122)
+    raytrace_freq = np.insert(np.array(Freq_num), 0, Freq_underline)
 
     # レイトレーシングの時間間隔の中で初めて掩蔽中時刻を超えるタイミングの配列番号を取得
     occulted_time = int(np.where(raytrace_time > middle_time)[0][0])

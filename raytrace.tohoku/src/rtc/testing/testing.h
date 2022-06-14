@@ -12,7 +12,8 @@
 #include <boost/format.hpp>
 #include "../raytrace.h"
 
-class testing_env {
+class testing_env
+{
 public:
 	double source_x, source_y, source_z;
 	double freq;
@@ -26,20 +27,22 @@ public:
 
 	unsigned step_count;
 
-	bool   is_plot_startptr;
-	bool   is_back_trace;
-	bool   is_parallel;
+	bool is_plot_startptr;
+	bool is_back_trace;
+	bool is_parallel;
 
-	int    is_verbose;
-	
-	std::list< rtc::cavity > cavity;
+	int is_verbose;
 
-	struct __env_trange {
+	std::list<rtc::cavity> cavity;
+
+	struct __env_trange
+	{
 		double max;
 		double min;
 	} time_range;
 
-	enum testing_execmode {
+	enum testing_execmode
+	{
 		plot_none,
 		plot_raypath,
 		plot_plasma,
@@ -49,14 +52,16 @@ public:
 		plot_error,
 	} exec_mode;
 
-	enum testing_coord {
+	enum testing_coord
+	{
 		source_coord_none,
 		source_coord_euclid,
 		source_coord_polar,
 		source_coord_error,
 	} source_coord;
 
-	enum model {
+	enum model
+	{
 		model_null,
 		model_test_null,
 		model_simple,
@@ -64,6 +69,7 @@ public:
 		model_europa_nonplume,
 		model_europa_plume,
 		model_ganymede_nonplume,
+		model_callisto_nonplume,
 		model_sato_earth,
 		model_nsumei_earth,
 		model_devine_garrett,
@@ -71,24 +77,29 @@ public:
 		model_igrf4,
 		model_vip4,
 		model_error
-	} plasma_model, magnet_model;
+	} plasma_model,
+		magnet_model;
 
-	enum planet_tag {
+	enum planet_tag
+	{
 		planet_earth,
 		planet_jupiter,
 		planet_benchmark,
 		planet_error
 	} planet;
 
-	struct date_time { unsigned 
-		year,  month, day,
-		hour, minute, sec;
+	struct date_time
+	{
+		unsigned
+			year,
+			month, day,
+			hour, minute, sec;
 	} date_time;
 
 	// utility ------------------------------------------------------
-	const char* getModelName( enum model m ) const
+	const char *getModelName(enum model m) const
 	{
-		switch( m )
+		switch (m)
 		{
 		case model_simple:
 			return "simple";
@@ -104,6 +115,9 @@ public:
 
 		case model_ganymede_nonplume:
 			return "ganymede_nonplume";
+
+		case model_callisto_nonplume:
+			return "callisto_nonplume";
 
 		case model_sato_earth:
 			return "sato";
@@ -127,9 +141,9 @@ public:
 			return "unknown";
 		}
 	}
-	const char* getPlanetName( enum planet_tag p ) const 
+	const char *getPlanetName(enum planet_tag p) const
 	{
-		switch(p)
+		switch (p)
 		{
 		case planet_earth:
 			return "earth";
@@ -147,7 +161,7 @@ public:
 };
 
 // 関数テンプレート /////////////////////////////
-testing_env* parseCmdline( int argc, char* argv[] );
+testing_env *parseCmdline(int argc, char *argv[]);
 void printHelp();
 
-#endif//RTC_RAYTRACE_TESTING_H
+#endif // RTC_RAYTRACE_TESTING_H

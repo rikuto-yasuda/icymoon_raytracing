@@ -62,7 +62,8 @@ def Detectable_time_position_fre_long_list(cdf_file):
     TIME2 = cdflib.cdfepoch.breakdown(time[:])
 
     fre = cdf_file.varget("Frequency")  # frequency (important for altitude)
-    # longtitude from which magnetic field line (north 360 and south 360)
+    print('{:.19g}'.format(fre[12]))
+
     long = cdf_file.varget("Src_ID_Label")
 
     # galireo spacecraft can catch the radio or not (if can, where the radio is emitted)
@@ -379,6 +380,20 @@ def Spacecraft_ephemeris_calc(spacecraft_ephemeris_csv, moon_ephemeris_csv, time
 
             if res[i][6] > Ymax:
                 Ymax = res[i][6]
+
+        """
+        if res[i][5] > 0:
+            if res[i][0] > 12:
+                pass
+
+            elif res[i][1] < 15:
+                if res[i][5] > Xmax:
+                    Xmax = res[i][5]
+
+                if res[i][6] > Ymax:
+                    Ymax = res[i][6]
+        """
+
     # res [hour,min,frequency(MHz),電波源データの磁力線(根本)の経度  orイオの場合は(-1000),電波源の南北,座標変換した時のx(tangential point との水平方向の距離),座標変換した時のy(tangential pointからの高さ方向の距離),電波源の実際の経度,探査機の経度]
     # Xmax 座標変換した時のx(tangential point との水平方向の距離)の最大値
     # Ymax 座標変換した時のy(tangential pointからの高さ方向の距離) の最大値
@@ -404,6 +419,7 @@ def Edit_csv(index, x_farthest, z_farthest):
 def main():
     selected_cdf_file, time, index_number = Pick_up_cdf()
     detectable_list = Detectable_time_position_fre_long_list(selected_cdf_file)
+    """
     Check_time_validity_cdf(time, detectable_list)
     Save_detectable_data(detectable_list)
 
@@ -417,7 +433,7 @@ def main():
 
     Save_data(res)
     Edit_csv(index_number, Xmax, Zmax)
-
+    """
     return 0
 
 

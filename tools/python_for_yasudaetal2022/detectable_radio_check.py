@@ -11,10 +11,10 @@ import glob
 # %%
 # あらかじめ ../result_sgepss2021/~/~ に必要なレイトレーシング結果とパラメータセットを入れること
 
-object_name = 'europa'  # ganydeme/europa/calisto``
+object_name = 'callisto'  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 12  # ..th flyby
-highest_plasma = '4.5e2'  # 単位は(/cc) 2e2/4e2/16e22
+time_of_flybies = 30  # ..th flyby
+highest_plasma = '6e2'  # 単位は(/cc) 2e2/4e2/16e22
 plasma_scaleheight = '6e2'  # 単位は(km) 1.5e2/3e2/6e2
 
 
@@ -26,12 +26,21 @@ Radio_Range = pd.read_csv(Radio_name_cdf, header=0)
 Radio_observer_position = np.loadtxt('../result_for_yasudaetal2022/calculated_expres_detectable_radio_data_of_each_flyby/calculated_all_' +
                                      spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_Radio_data.txt')  # 電波源の経度を含む
 
+
+"""修理中 europa & ganymede 
 Freq_str = ['3.984813988208770752e5', '4.395893216133117676e5', '4.849380254745483398e5', '5.349649786949157715e5', '5.901528000831604004e5', '6.510338783264160156e5',
             '7.181954979896545410e5', '7.922856807708740234e5', '8.740190267562866211e5', '9.641842246055603027e5', '1.063650846481323242e6',
             '1.173378825187683105e6', '1.294426321983337402e6', '1.427961349487304688e6', '1.575271964073181152e6', '1.737779378890991211e6',
             '1.917051434516906738e6', '2.114817380905151367e6', '2.332985162734985352e6', '2.573659420013427734e6', '2.839162111282348633e6',
             '3.132054328918457031e6', '3.455161809921264648e6', '3.811601638793945312e6', '4.204812526702880859e6', '4.638587474822998047e6',
             '5.117111206054687500e6', '5.644999980926513672e6', ]
+"""
+Freq_str = ['3.612176179885864258e5', '3.984813988208770752e5', '4.395893216133117676e5', '4.849380254745483398e5', '5.349649786949157715e5', '5.901528000831604004e5', '6.510338783264160156e5',
+            '7.181954979896545410e5', '7.922856807708740234e5', '8.740190267562866211e5', '9.641842246055603027e5', '1.063650846481323242e6',
+            '1.173378825187683105e6', '1.294426321983337402e6', '1.427961349487304688e6', '1.575271964073181152e6', '1.737779378890991211e6',
+            '1.917051434516906738e6', '2.114817380905151367e6', '2.332985162734985352e6', '2.573659420013427734e6', '2.839162111282348633e6',
+            '3.132054328918457031e6', '3.455161809921264648e6', '3.811601638793945312e6', '4.204812526702880859e6', '4.638587474822998047e6',
+            '5.117111206054687500e6', '5.644999980926513672e6']
 
 Freq_num = []
 for idx in Freq_str:
@@ -53,7 +62,6 @@ def MakeFolder():
 
 
 def MoveFile():
-
     for l in range(len(Freq_num)):
         for j in range(Lowest[l], Highest[l], 2):
             k = str(j)
@@ -64,8 +72,7 @@ def MoveFile():
 def Judge_occultation(i):
     # Radio_observation_positionh[0 hour,1 min,2 frequency(MHz),3 電波源データの磁力線(根本)の経度  orイオの場合は(-1000),4 電波源の南北,5 座標変換した時のx(tangential point との水平方向の距離),6 座標変換した時のy(tangential pointからの高さ方向の距離),7 電波源の実際の経度]
     # aa  受かるときは1 受からないとき0を出力
-
-    print(i)
+    # print(i)
 
     aa = 0
     detectable_obsever_position_x = Radio_observer_position[i][5]
@@ -74,7 +81,11 @@ def Judge_occultation(i):
     if detectable_obsever_position_z > 0 or detectable_obsever_position_x < 0:  # z座標が0以下のものは受かる可能性がレイパスを見る必要もなし
         detectable_frequency = Radio_observer_position[i][2]  # 使うレイの周波数を取得
         # レイの周波数と周波数リスト（Freq＿num）の値が一致する場所を取得　周波数リスト（Freq＿num）とcsvファイルの週数リストが一致しているのでそこからその周波数における電波源の幅を取得
-        freq = int(np.where(Freq_num == detectable_frequency)[0])
+        print(i)
+        print(detectable_frequency)
+        print(np.where(Freq_num == detectable_frequency)[0][0])
+
+        freq = int(np.where(Freq_num == detectable_frequency)[0][0])
 
         for j in range(Lowest[freq], Highest[freq], 2):
             k = str(j)
