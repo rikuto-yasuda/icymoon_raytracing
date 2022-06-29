@@ -11,20 +11,22 @@ import glob
 # %%
 # あらかじめ ../result_sgepss2021/~/~ に必要なレイトレーシング結果とパラメータセットを入れること
 
-object_name = 'europa'  # ganydeme/europa/calisto``
+object_name = 'callisto'  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 12  # ..th flyby
-highest_plasma = '9e2'  # 単位は(/cc) 2e2/4e2/16e22
-plasma_scaleheight = '3e2'  # 単位は(km) 1.5e2/3e2/6e2
+time_of_flybies = 30  # ..th flyby
+highest_plasma = '3e2'  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = '6e2'  # 単位は(km) 1.5e2/3e2/6e2
 boundary_intensity_str = '7e-16'  # boundary_intensity_str = '1e-15'
 
 #plot_time_step_sec = [0, 900, 1800, 2700, 3600, 4500, 5400]
 #plot_time_step_label = ["05:30", "05:45", "06:00", "06:15", "06:30", "06:45", "07;00"]
 
-plot_time_step_sec = [6300, 6600, 6900,
-                      7200, 7500, 7800, 8100, 8400, 8700]
-plot_time_step_label = ["11:45", "11:50",
-                        "11:55", "12:00", "12:05", "12:10", "12:15", "12:20", "12:25"]
+#plot_time_step_sec = [6300, 6600, 6900, 7200, 7500, 7800, 8100, 8400, 8700]
+#plot_time_step_label = ["11:45", "11:50", "11:55", "12:00", "12:05", "12:10", "12:15", "12:20", "12:25"]
+
+plot_time_step_sec = [0, 1800, 3600, 5400, 7200, 9000, 10800]
+plot_time_step_label = ["10:00", "10:30",
+                        "11:00", "11:30", "12:00", "12:30", "13:00"]
 
 information_list = ['year', 'month', 'start_day', 'end_day',
                     'start_hour', 'end_hour', 'start_min', 'end_min', 'occultaton_center_day', 'occultaton_center_hour', 'occultaton_center_min']
@@ -378,6 +380,8 @@ def Make_FT_full(DataA, DataB, DataC, DataD, raytrace_time_information, radio_da
     print(ingress_time_list)
     egress_time_list = egress_time_list.reshape(
         2, int(len(egress_time_list)/2))
+    print("array=", np.array(Freq_num))
+    print("underline=", Freq_underline)
     FREQ = np.insert(np.array(Freq_num), 0, Freq_underline)
 
     """
@@ -475,7 +479,7 @@ def ingress(data, raytrace_time_information):
                                                                                        raytrace_time_information[4])*3600 + (raytrace_time_information[10]-raytrace_time_information[6]) * 60
 
     # レイトレーシングの周波数リスト(contour plotをする関係で配列の初めに本来はない周波数を挿入しているので周波数の数的には多くなっているので注意)
-    raytrace_freq = np.insert(np.array(Freq_num), Freq_underline)
+    raytrace_freq = np.insert(np.array(Freq_num), 0, Freq_underline)
 
     # レイトレーシングの時間間隔の中で初めて掩蔽中時刻を超えるタイミングの配列番号を取得
     occulted_time = int(np.where(raytrace_time > middle_time)[0][0])
