@@ -14,7 +14,7 @@ import glob
 object_name = 'callisto'  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
 time_of_flybies = 30  # ..th flyby
-highest_plasma = '3e2'  # 単位は(/cc) 2e2/4e2/16e22
+highest_plasma = '6.5e2'  # 単位は(/cc) 2e2/4e2/16e22
 plasma_scaleheight = '6e2'  # 単位は(km) 1.5e2/3e2/6e2
 boundary_intensity_str = '7e-16'  # boundary_intensity_str = '1e-15'
 
@@ -35,7 +35,7 @@ Radio_name_csv = '../result_for_yasudaetal2022/tracing_range_'+spacecraft_name+'
     '_'+str(time_of_flybies)+'_flybys/para_' + \
     highest_plasma+'_'+plasma_scaleheight+'.csv'
 Radio_Range = pd.read_csv(Radio_name_csv, header=0)
-# [0 hour,1 min,2 frequency(MHz),3 電波源データの磁力線(根本)の経度  orイオの場合は(-1000),4 電波源の南北,5 座標変換した時のx(tangential point との水平方向の距離),6 座標変換した時のy(tangential pointからの高さ方向の距離),7 電波源の実際の経度]
+# [0 hour,1 min,2 frequency(MHz),3 電波源データの磁力線(根本)の経度  orイオの場合は(-1000),4 電波源の南北,5 座標変換した時のx(tangential point との水平方向の距離),6 座標変換した時のy(tangential pointからの高さ方向の距離),7 電波源の実際の経度,8 探査機の経度]
 
 
 """修理中europa & ganymede
@@ -147,7 +147,7 @@ def Prepare_Figure(judgement, time_information):
     DataD = np.zeros(len(time_step_list)*(len(Freq_num)+1)
                      ).reshape(len(Freq_num)+1, len(time_step_list))
 
-    # judgement [0 hour,1 min,2 frequency(MHz),3 電波源データの磁力線(根本)の経度  orイオの場合は(-1000),4 電波源の南北,5 座標変換した時のx(tangential point との水平方向の距離),6 座標変換した時のy(tangential pointからの高さ方向の距離),7 電波源の実際の経度]
+    # judgement [0 hour,1 min,2 frequency(MHz),3 電波源データの磁力線(根本)の経度  orイオの場合は(-1000),4 電波源の南北,5 座標変換した時のx(tangential point との水平方向の距離),6 座標変換した時のy(tangential pointからの高さ方向の距離),7 電波源の実際の経度,8 探査機の経度]
 
     for k in range(len(judgement)):
 
@@ -618,7 +618,7 @@ def Evaluate_data_coutour(radio_data_name):
 def main():
     time_information, radio_data = Pick_up_cdf()
     print(time_information, radio_data)
-    # [0 hour,1 min,2 frequency(MHz),3 電波源データの磁力線(根本)の経度  orイオの場合は(-1000),4 電波源の南北,5 座標変換した時のx(tangential point との水平方向の距離),6 座標変換した時のy(tangential pointからの高さ方向の距離),7 電波源の実際の経度]
+    # [0 hour,1 min,2 frequency(MHz),3 電波源データの磁力線(根本)の経度  orイオの場合は(-1000),4 電波源の南北,5 座標変換した時のx(tangential point との水平方向の距離),6 座標変換した時のy(tangential pointからの高さ方向の距離),7 電波源の実際の経度,8 探査機の経度]
 
     detectable_radio = np.loadtxt('../result_for_yasudaetal2022/raytracing_'+object_name+'_results/'+object_name+'_'+highest_plasma+'_'+plasma_scaleheight +
                                   '/' + object_name+'_'+spacecraft_name+'_'+str(time_of_flybies)+'_'+highest_plasma+'_'+plasma_scaleheight+'_dectable_radio_data.txt')

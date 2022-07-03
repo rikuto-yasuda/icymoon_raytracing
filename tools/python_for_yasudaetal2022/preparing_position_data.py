@@ -419,7 +419,7 @@ def Edit_csv(index, x_farthest, z_farthest):
 def main():
     selected_cdf_file, time, index_number = Pick_up_cdf()
     detectable_list = Detectable_time_position_fre_long_list(selected_cdf_file)
-    """
+
     Check_time_validity_cdf(time, detectable_list)
     Save_detectable_data(detectable_list)
 
@@ -433,7 +433,7 @@ def main():
 
     Save_data(res)
     Edit_csv(index_number, Xmax, Zmax)
-    """
+
     return 0
 
 

@@ -20,11 +20,11 @@ time_of_flybies = 30  # ..th flyby
 # using_frequency_range = [2, 6]  # E12
 
 # using_frequency_range = [6.0e-1, 6]  # C30 ingress
-using_frequency_range = [4.5e-1, 3.5]  # C30 egress
+using_frequency_range = [4.0e-1, 3.5]  # C30 egress
 
 boundary_intensity_str = '7e-16'  # '7e-16' '1e-15'
 occultaion_type = 'egress'  # 'ingress' or 'egress'
-radio_type = 'D'  # 'A' or 'B' or 'C' or 'D'
+radio_type = 'A'  # 'A' or 'B' or 'C' or 'D'
 
 # %%
 
