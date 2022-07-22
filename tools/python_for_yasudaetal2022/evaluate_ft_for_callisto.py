@@ -20,7 +20,7 @@ time_of_flybies = 30  # ..th flyby
 # using_frequency_range = [2, 6]  # E12
 
 # using_frequency_range = [6.0e-1, 6]  # C30 ingress
-using_frequency_range = [7.0e-1, 3.5]  # C30 egress
+using_frequency_range = [4.5e-1, 6]  # C30 egress
 
 boundary_intensity_str = '7e-16'  # '7e-16' '1e-15'
 occultaion_type = 'egress'  # 'ingress' or 'egress
@@ -28,7 +28,7 @@ radio_type = 'A'  # 'A' or 'B' or 'C' or 'D'
 # %%
 
 use_files = sorted(glob.glob('../result_for_yasudaetal2022/radio_raytracing_occultation_timing_def_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies) +
-                   '_flyby_radioint_'+boundary_intensity_str+'/'+object_name+'_*_'+occultaion_type+'_defference_time_data'+radio_type+'_'+boundary_intensity_str+'.txt'))
+                   '_flyby_radioint_'+boundary_intensity_str+'_examine/'+object_name+'_*_'+occultaion_type+'_defference_time_data'+radio_type+'_'+boundary_intensity_str+'_examine.txt'))
 
 
 max = []
@@ -45,8 +45,8 @@ def maxandscale(file):
     filename = file
     sep = '_'
     t = filename.split(sep)
-    max_density = t[13]
-    scale_height = t[14]
+    max_density = t[14]
+    scale_height = t[15]
     print(max_density, scale_height)
     return max_density, scale_height
 
@@ -54,7 +54,7 @@ def maxandscale(file):
 def plot_difference(highest, scaleheight):
 
     time_diffrence_index = np.loadtxt('../result_for_yasudaetal2022/radio_raytracing_occultation_timing_def_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby_radioint_' +
-                                      boundary_intensity_str+'/'+object_name+'_' + highest+'_'+scaleheight+'_'+occultaion_type+'_defference_time_data'+radio_type+'_'+boundary_intensity_str+'.txt')
+                                      boundary_intensity_str+'_examine/'+object_name+'_' + highest+'_'+scaleheight+'_'+occultaion_type+'_defference_time_data'+radio_type+'_'+boundary_intensity_str+'_examine.txt')
 
     print(time_diffrence_index)
     limited_time_list = np.array(np.where(
@@ -87,7 +87,7 @@ def main():
     output_array = output_array.reshape(3, int(len(output_array)/3)).T
     print(output_array)
     np.savetxt('../result_for_yasudaetal2022/evaluate_f-t_diagram_plot_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby_radioint_'+boundary_intensity_str+'/'+spacecraft_name +
-               '_'+object_name+'_'+str(time_of_flybies)+'flyby_radiointensity_'+boundary_intensity_str+'_'+occultaion_type+'_'+radio_type+'_'+str(using_frequency_range)+'output_array.csv', output_array, fmt='%.2f', delimiter=',')
+               '_'+object_name+'_'+str(time_of_flybies)+'flyby_radiointensity_'+boundary_intensity_str+'_'+occultaion_type+'_'+radio_type+'_'+str(using_frequency_range)+'output_array_examine.csv', output_array, fmt='%.2f', delimiter=',')
     plt.scatter(max, scale, s=100, c=dif,
                 cmap='rainbow_r', vmax=300, vmin=20)
     # plt.xscale('log')
@@ -98,7 +98,7 @@ def main():
     plt.ylabel("Scale height (km)")
     plt.title(object_name+'_'+occultaion_type+'_'+radio_type+'_f-t_evaluate')
     plt.savefig(os.path.join('../result_for_yasudaetal2022/evaluate_f-t_diagram_plot_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby_radioint_'+boundary_intensity_str,
-                             spacecraft_name + '_'+object_name+'_'+str(time_of_flybies)+'flyby_radiointensity_'+boundary_intensity_str+'_'+occultaion_type+'_'+radio_type+'_'+str(using_frequency_range)+'_f-t_evaluate.png'))
+                             spacecraft_name + '_'+object_name+'_'+str(time_of_flybies)+'flyby_radiointensity_'+boundary_intensity_str+'_'+occultaion_type+'_'+radio_type+'_'+str(using_frequency_range)+'_f-t_evaluate_examine.png'))
     plt.show()
 
     return 0

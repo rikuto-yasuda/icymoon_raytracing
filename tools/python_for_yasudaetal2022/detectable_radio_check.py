@@ -14,8 +14,8 @@ import glob
 object_name = 'callisto'  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
 time_of_flybies = 30  # ..th flyby
-highest_plasma = '6.5e2'  # 単位は(/cc) 2e2/4e2/16e22
-plasma_scaleheight = '6e2'  # 単位は(km) 1.5e2/3e2/6e2
+highest_plasma = '2.5e2'  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = '4e2'  # 単位は(km) 1.5e2/3e2/6e2
 
 
 Radio_name_cdf = '../result_for_yasudaetal2022/tracing_range_'+spacecraft_name+'_'+object_name + \
@@ -173,7 +173,7 @@ def main():
 
     # MakeFolder()  # フォルダ作成　基本的にはoccultation_range_plot.py で移動しているから基本使わない
 
-    # MoveFile()  # ファイル移動　
+    MoveFile()  # ファイル移動　
 
     # 受かっているかの検証　processesの引数で並列数を指定
 

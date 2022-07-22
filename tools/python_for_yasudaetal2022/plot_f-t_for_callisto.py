@@ -14,15 +14,15 @@ import glob
 object_name = 'callisto'  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
 time_of_flybies = 30  # ..th flyby
-highest_plasma = '2.5e2'  # 単位は(/cc) 2e2/4e2/16e22
+highest_plasma = '2.5e2'  # 単位は(/cc) 2e2/4e2/16e2
 plasma_scaleheight = '4e2'  # 単位は(km) 1.5e2/3e2/6e2
 boundary_intensity_str = '7e-16'  # boundary_intensity_str = '1e-15'
 
-#plot_time_step_sec = [0, 900, 1800, 2700, 3600, 4500, 5400]
-#plot_time_step_label = ["05:30", "05:45", "06:00", "06:15", "06:30", "06:45", "07;00"]
+# plot_time_step_sec = [0, 900, 1800, 2700, 3600, 4500, 5400]
+# plot_time_step_label = ["05:30", "05:45", "06:00", "06:15", "06:30", "06:45", "07;00"]
 
-#plot_time_step_sec = [6300, 6600, 6900, 7200, 7500, 7800, 8100, 8400, 8700]
-#plot_time_step_label = ["11:45", "11:50", "11:55", "12:00", "12:05", "12:10", "12:15", "12:20", "12:25"]
+# plot_time_step_sec = [6300, 6600, 6900, 7200, 7500, 7800, 8100, 8400, 8700]
+# plot_time_step_label = ["11:45", "11:50", "11:55", "12:00", "12:05", "12:10", "12:15", "12:20", "12:25"]
 
 plot_time_step_sec = [0, 1800, 3600, 5400, 7200, 9000, 10800]
 plot_time_step_label = ["10:00", "10:30",
@@ -97,7 +97,7 @@ def Pick_up_cdf():
     complete_selecred_flyby_list = complete_selecred_flyby_list.reset_index(
         drop=True)
 
-    #complete_selecred_flyby_list = complete_selecred_flyby_list.index.tolist()
+    # complete_selecred_flyby_list = complete_selecred_flyby_list.index.tolist()
 
     # print(complete_selecred_flyby_list)
 
@@ -324,10 +324,14 @@ def Make_FT_full(DataA, DataB, DataC, DataD, raytrace_time_information, radio_da
     galileo_radio_intensity_row = galileo_radio_intensity.copy()
 
     # ガリレオ電波データが閾値より大きいとこは1 それ以外0
+    galileo_radio_intensity[134:145, 306:355] = 1e-17
+    np.savetxt('aaa.txt', galileo_radio_intensity, fmt='%.3e')
+
     galileo_radio_intensity[boundary_intensity
                             < galileo_radio_intensity] = 1
     galileo_radio_intensity[galileo_radio_intensity <
                             boundary_intensity] = 0
+
     # print(galileo_data_time.shape)
     # print(galileo_radio_intensity.shape)
 
@@ -357,6 +361,7 @@ def Make_FT_full(DataA, DataB, DataC, DataD, raytrace_time_information, radio_da
         # 電波強度が十分であればAもBも複数ヒットするはず...
         if len(B) > 0:
             b = B[0]
+
             # 初めて閾値を超える強度が観測される時刻（正確にはstart時刻からの差分（秒））がgalileo_data_time[b]
             # その１つ前の時刻 galileo_data_time[b-1]なので、その真ん中の時間がegress_time_listに加わる（要するに終了タイミング）
             egress_time_list = np.append(
@@ -441,22 +446,18 @@ def Make_FT_full(DataA, DataB, DataC, DataD, raytrace_time_information, radio_da
                      "(/cc) scale height "+plasma_scaleheight+"(km)")
 
         fig.savefig(os.path.join('../result_for_yasudaetal2022/raytracing_'+object_name+'_results/' + object_name+'_'+highest_plasma +
-                                 '_'+plasma_scaleheight+'/', spacecraft_name+'_' + object_name+'_'+str(time_of_flybies)+'_'+highest_plasma+'_'+plasma_scaleheight+'_boundary_int='+boundary_intensity_str+'_'+name+'_f-t.png'))
+                                 '_'+plasma_scaleheight+'/', spacecraft_name+'_' + object_name+'_'+str(time_of_flybies)+'_'+highest_plasma+'_'+plasma_scaleheight+'_boundary_int='+boundary_intensity_str+'_'+name+'_f-t_examine.png'))
 
-        fig.savefig(os.path.join('../result_for_yasudaetal2022/f-t_plot_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby/radio_boundary_intensity_'+boundary_intensity_str,
-                                 spacecraft_name+'_' + object_name+'_'+str(time_of_flybies)+'_'+highest_plasma+'_'+plasma_scaleheight+'_boundary_int='+boundary_intensity_str+'_'+name+'_f-t.png'))
+        fig.savefig(os.path.join('../result_for_yasudaetal2022/f-t_plot_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby/radio_boundary_intensity_'+boundary_intensity_str+'_examine/',
+                                 spacecraft_name+'_' + object_name+'_'+str(time_of_flybies)+'_'+highest_plasma+'_'+plasma_scaleheight+'_boundary_int='+boundary_intensity_str+'_'+name+'_f-t_examine.png'))
 
-    plot_and_save(int(plot_time_step_sec[0]), int(
-        plot_time_step_sec[-1]), "full")
     plot_and_save(middle_time, int(plot_time_step_sec[-1]), "egress")
-    plot_and_save(int(plot_time_step_sec[0]), middle_time, "ingress")
 
     # 以下は電波データにおける掩蔽タイミングを決めるものなので、閾値を買えない限りは毎回やる必要はない
     # print(ingress_time_list)
+
     np.savetxt('../result_for_yasudaetal2022/radio_data_occultation_timing_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby/'+object_name +
-               '_'+boundary_intensity_str+'_ingress_time_data.txt', ingress_time_list)
-    np.savetxt('../result_for_yasudaetal2022/radio_data_occultation_timing_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby/'+object_name +
-               '_'+boundary_intensity_str+'_egress_time_data.txt', egress_time_list)
+               '_'+boundary_intensity_str+'_egress_time_data_examine.txt', egress_time_list)
 
     return ingress_time_list, egress_time_list
 
@@ -641,23 +642,14 @@ def main():
         evaluated_data = Evaluate_raytrace_data(
             detectable_data[i], time_information)
 
-        # レイトレーシングデータにおける掩蔽開始時刻 [[周波数一覧][掩蔽開始時刻一覧]]の二次元データ　⇨保存（電子密度を変えるたびに異なる値になる・閾値は関係ない）
-        np.savetxt('../result_for_yasudaetal2022/raytracing_occultation_timing_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby/' + spacecraft_name +
-                   '_' + object_name+'_'+str(time_of_flybies)+'_'+highest_plasma+'_'+plasma_scaleheight+'_ingress_'+detectable_data_str[i]+'_time_list.txt', evaluated_data.ingress)
-
-        np.savetxt('../result_for_yasudaetal2022/raytracing_occultation_timing_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby/' + spacecraft_name +
-                   '_' + object_name+'_'+str(time_of_flybies)+'_'+highest_plasma+'_'+plasma_scaleheight+'_egress_'+detectable_data_str[i]+'_time_list.txt', evaluated_data.egress)
-
         time_defference_ingress = Evaluate_ionosphere_density(
             evaluated_data.ingress, ingress_time)  # 掩蔽開始タイミングの差分  [[周波数一覧][掩蔽開始時刻一覧(秒)]]の二次元データ
 
         time_defference_egress = Evaluate_ionosphere_density(
             evaluated_data.egress, egress_time)  # 掩蔽終了タイミングの差分  [[周波数一覧][掩蔽開始時刻一覧(秒)]]の二次元データ
 
-        np.savetxt('../result_for_yasudaetal2022/radio_raytracing_occultation_timing_def_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby_radioint_'+boundary_intensity_str+'/'+object_name+'_' +
-                   highest_plasma+'_'+plasma_scaleheight+'_ingress_defference_time_'+detectable_data_str[i]+'_'+boundary_intensity_str+'.txt', time_defference_ingress)
-        np.savetxt('../result_for_yasudaetal2022/radio_raytracing_occultation_timing_def_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby_radioint_'+boundary_intensity_str+'/'+object_name+'_' +
-                   highest_plasma+'_'+plasma_scaleheight+'_egress_defference_time_'+detectable_data_str[i]+'_'+boundary_intensity_str+'.txt', time_defference_egress)
+        np.savetxt('../result_for_yasudaetal2022/radio_raytracing_occultation_timing_def_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby_radioint_'+boundary_intensity_str+'_examine/'+object_name+'_' +
+                   highest_plasma+'_'+plasma_scaleheight+'_egress_defference_time_'+detectable_data_str[i]+'_'+boundary_intensity_str+'_examine.txt', time_defference_egress)
     return 0
 
 
