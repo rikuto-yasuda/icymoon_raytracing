@@ -24,7 +24,7 @@ using_frequency_range = [4.5e-1, 6]  # C30 egress
 
 boundary_intensity_str = '7e-16'  # '7e-16' '1e-15'
 occultaion_type = 'egress'  # 'ingress' or 'egress
-radio_type = 'A'  # 'A' or 'B' or 'C' or 'D'
+radio_type = 'D'  # 'A' or 'B' or 'C' or 'D'
 # %%
 
 use_files = sorted(glob.glob('../result_for_yasudaetal2022/radio_raytracing_occultation_timing_def_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies) +

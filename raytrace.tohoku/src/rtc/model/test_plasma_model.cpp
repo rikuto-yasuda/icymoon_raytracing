@@ -83,7 +83,7 @@ double plasma::callisto_nonplume::getDensity(const vector &point) const ////////
 	const double
 		rxy = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)));
 	const double
-		t = std::fabs(2.5e8 * exp(-(r - 2.4103e6) / 4e5)); //�J���X�g�Ð������s���f�� �n�\�ʂł̖��x�� �n�\�ʂ�3.5*10^2(/cc) �X�P�[���n�C�g100km
+		t = std::fabs(11e8 * exp(-(r - 2.4103e6) / 4e5)); //�J���X�g�Ð������s���f�� �n�\�ʂł̖��x�� �n�\�ʂ�3.5*10^2(/cc) �X�P�[���n�C�g100km
 	;
 	return t;
 }

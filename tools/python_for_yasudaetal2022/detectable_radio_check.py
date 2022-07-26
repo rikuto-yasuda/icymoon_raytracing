@@ -14,8 +14,8 @@ import glob
 object_name = 'callisto'  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
 time_of_flybies = 30  # ..th flyby
-highest_plasma = '2.5e2'  # 単位は(/cc) 2e2/4e2/16e22
-plasma_scaleheight = '4e2'  # 単位は(km) 1.5e2/3e2/6e2
+highest_plasma = '13e2'  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = '6e2'  # 単位は(km) 1.5e2/3e2/6e2
 
 
 Radio_name_cdf = '../result_for_yasudaetal2022/tracing_range_'+spacecraft_name+'_'+object_name + \
