@@ -14,8 +14,8 @@ import glob
 object_name = 'callisto'  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
 time_of_flybies = 30  # ..th flyby
-highest_plasma = '13e2'  # 単位は(/cc) 2e2/4e2/16e22
-plasma_scaleheight = '6e2'  # 単位は(km) 1.5e2/3e2/6e2
+highest_plasma = '29e2'  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = '4e2'  # 単位は(km) 1.5e2/3e2/6e2
 
 
 Radio_name_cdf = '../result_for_yasudaetal2022/tracing_range_'+spacecraft_name+'_'+object_name + \
@@ -177,7 +177,7 @@ def main():
 
     # 受かっているかの検証　processesの引数で並列数を指定
 
-    with Pool(processes=20) as pool:
+    with Pool(processes=10) as pool:
         result_list = list(pool.map(Judge_occultation, total_radio_number))
 
     # 受かっている電波のみを保存

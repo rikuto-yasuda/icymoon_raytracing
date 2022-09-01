@@ -10,12 +10,13 @@ import glob
 
 # %%
 # あらかじめ ../result_sgepss2021/~/~ に必要なレイトレーシング結果とパラメータセットを入れること
+# 326行目で電波データを書き換えている
 
 object_name = 'callisto'  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
 time_of_flybies = 30  # ..th flyby
-highest_plasma = '11e2'  # 単位は(/cc) 2e2/4e2/16e2
-plasma_scaleheight = '6e2'  # 単位は(km) 1.5e2/3e2/6e2
+highest_plasma = '29e2'  # 単位は(/cc) 2e2/4e2/16e2
+plasma_scaleheight = '4e2'  # 単位は(km) 1.5e2/3e2/6e2
 boundary_intensity_str = '7e-16'  # boundary_intensity_str = '1e-15'
 
 # plot_time_step_sec = [0, 900, 1800, 2700, 3600, 4500, 5400]
@@ -323,7 +324,7 @@ def Make_FT_full(DataA, DataB, DataC, DataD, raytrace_time_information, radio_da
 
     galileo_radio_intensity_row = galileo_radio_intensity.copy()
 
-    # ガリレオ電波データが閾値より大きいとこは1 それ以外0
+    # ガリレオ電波データが閾値より大きいとこは1 それ以外0 ここで0うめしてる
     galileo_radio_intensity[134:145, 306:355] = 1e-17
     np.savetxt('aaa.txt', galileo_radio_intensity, fmt='%.3e')
 
