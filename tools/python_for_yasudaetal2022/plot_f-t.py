@@ -11,22 +11,30 @@ import glob
 # %%
 # あらかじめ ../result_sgepss2021/~/~ に必要なレイトレーシング結果とパラメータセットを入れること
 
-object_name = 'callisto'  # ganydeme/europa/calisto``
+object_name = 'europa'  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 30  # ..th flyby
-highest_plasma = '29e2'  # 単位は(/cc) 2e2/4e2/16e22
-plasma_scaleheight = '4e2'  # 単位は(km) 1.5e2/3e2/6e2
+time_of_flybies = 12  # ..th flyby
+highest_plasma = '4e2'  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = '6e2'  # 単位は(km) 1.5e2/3e2/6e2
 boundary_intensity_str = '7e-16'  # boundary_intensity_str = '1e-15'
+# boundary_intensity_str = '0'  # boundary_intensity_str = '1e-15'
 
-#plot_time_step_sec = [0, 900, 1800, 2700, 3600, 4500, 5400]
-#plot_time_step_label = ["05:30", "05:45", "06:00", "06:15", "06:30", "06:45", "07;00"]
+# G1 flyby
+# plot_time_step_sec = [0, 900, 1800, 2700, 3600, 4500, 5400]
+# plot_time_step_label = ["05:30", "05:45", "06:00", "06:15", "06:30", "06:45", "07;00"]
 
-#plot_time_step_sec = [6300, 6600, 6900, 7200, 7500, 7800, 8100, 8400, 8700]
-#plot_time_step_label = ["11:45", "11:50", "11:55", "12:00", "12:05", "12:10", "12:15", "12:20", "12:25"]
+# E12 flyby
+plot_time_step_sec = [6300, 6600, 6900, 7200, 7500, 7800, 8100, 8400, 8700]
+plot_time_step_label = ["11:45", "11:50", "11:55",
+                        "12:00", "12:05", "12:10", "12:15", "12:20", "12:25"]
 
-plot_time_step_sec = [0, 1800, 3600, 5400, 7200, 9000, 10800]
-plot_time_step_label = ["10:00", "10:30",
-                        "11:00", "11:30", "12:00", "12:30", "13:00"]
+# C30 flyby
+#plot_time_step_sec = [0, 1800, 3600, 5400, 7200, 9000, 10800]
+#plot_time_step_label = ["10:00", "10:30","11:00", "11:30", "12:00", "12:30", "13:00"]
+
+# C9 flyby
+#plot_time_step_sec = [0, 1800, 3600, 5400, 7200, 9000, 10800]
+#plot_time_step_label = ["12:00", "12:30","13:00", "13:30", "14:00", "14:30", "15:00"]
 
 information_list = ['year', 'month', 'start_day', 'end_day',
                     'start_hour', 'end_hour', 'start_min', 'end_min', 'occultaton_center_day', 'occultaton_center_hour', 'occultaton_center_min']
@@ -38,7 +46,8 @@ Radio_Range = pd.read_csv(Radio_name_csv, header=0)
 # [0 hour,1 min,2 frequency(MHz),3 電波源データの磁力線(根本)の経度  orイオの場合は(-1000),4 電波源の南北,5 座標変換した時のx(tangential point との水平方向の距離),6 座標変換した時のy(tangential pointからの高さ方向の距離),7 電波源の実際の経度,8 探査機の経度]
 
 
-"""修理中europa & ganymede
+# europa & ganymede
+
 Freq_str = ['3.984813988208770752e5', '4.395893216133117676e5', '4.849380254745483398e5', '5.349649786949157715e5', '5.901528000831604004e5', '6.510338783264160156e5',
             '7.181954979896545410e5', '7.922856807708740234e5', '8.740190267562866211e5', '9.641842246055603027e5', '1.063650846481323242e6',
             '1.173378825187683105e6', '1.294426321983337402e6', '1.427961349487304688e6', '1.575271964073181152e6', '1.737779378890991211e6',
@@ -47,6 +56,10 @@ Freq_str = ['3.984813988208770752e5', '4.395893216133117676e5', '4.8493802547454
             '5.117111206054687500e6', '5.644999980926513672e6', ]
 
 Freq_underline = 0.36122
+
+####
+
+# callisto
 """
 Freq_str = ['3.612176179885864258e5', '3.984813988208770752e5', '4.395893216133117676e5', '4.849380254745483398e5', '5.349649786949157715e5', '5.901528000831604004e5', '6.510338783264160156e5',
             '7.181954979896545410e5', '7.922856807708740234e5', '8.740190267562866211e5', '9.641842246055603027e5', '1.063650846481323242e6',
@@ -56,6 +69,8 @@ Freq_str = ['3.612176179885864258e5', '3.984813988208770752e5', '4.3958932161331
             '5.117111206054687500e6', '5.644999980926513672e6', ]
 
 Freq_underline = 0.32744
+"""
+####
 
 Freq_num = []
 for idx in Freq_str:
@@ -97,7 +112,7 @@ def Pick_up_cdf():
     complete_selecred_flyby_list = complete_selecred_flyby_list.reset_index(
         drop=True)
 
-    #complete_selecred_flyby_list = complete_selecred_flyby_list.index.tolist()
+    # complete_selecred_flyby_list = complete_selecred_flyby_list.index.tolist()
 
     # print(complete_selecred_flyby_list)
 
@@ -240,8 +255,8 @@ def Prepare_Galileo_data(time_info, data_name):
     df = pd.DataFrame(rad_row_data.iloc[:, 1:])
 
     DDF = np.array(df).astype(np.float64).T
-    print(DDF)
-    print(len(gal_fleq_tag), len(gal_time_tag), DDF.shape)
+    # print(DDF)
+    #print(len(gal_fleq_tag), len(gal_time_tag), DDF.shape)
 
     # ガリレオ探査機のデータ取得開始時刻からの経過時間（sec) , ガリレオ探査機のデータ取得周波数（MHz), ガリレオ探査機の取得した電波強度（代入したデータと同じ単位）
     return gal_time_tag, gal_fleq_tag, DDF
@@ -406,22 +421,22 @@ def Make_FT_full(DataA, DataB, DataC, DataD, raytrace_time_information, radio_da
         fig, ax = plt.subplots(1, 1)
 
         # ガリレオ探査機の電波強度をカラーマップへ
-        pcm = ax.pcolor(xx, yy, galileo_radio_intensity_row, norm=mpl.colors.LogNorm(
+        pcm = ax.pcolormesh(xx, yy, galileo_radio_intensity_row, norm=mpl.colors.LogNorm(
             vmin=1e-16, vmax=1e-12), cmap='Spectral_r')
+        print(xx)
         fig.colorbar(pcm, extend='max')
 
-        # ガリレオ探査機の電波強度の閾値を赤線で
-        ax.contour(xx, yy, galileo_radio_intensity,
-                   levels=[0.5], colors='red')
+        # ガリレオ探査機の電波強度の閾値を赤線＃
 
         # レイトレーシングの結果をコンタープロットで表示
         ax.contour(time_list, FREQ, DataA, levels=[0.5], colors='white')
         ax.contour(time_list, FREQ, DataB, levels=[0.5], colors='lightgray')
         ax.contour(time_list, FREQ, DataC, levels=[0.5], colors='darkgray')
         ax.contour(time_list, FREQ, DataD, levels=[0.5], colors='black')
-
+        ax.contour(xx, yy, galileo_radio_intensity, levels=[0.5], colors='red')
         ax.set_yscale("log")
         ax.set_ylim(0.1, 6.0)
+
         ax.set_ylabel("Frequency (MHz)")
 
         # raytrace_time_information ['year', 'month', 'start_day', 'end_day','start_hour', 'end_hour', 'start_min', 'end_min','occultaton_center_day','occultaton_center_hour','occultaton_center_min']
@@ -601,16 +616,20 @@ def Evaluate_ionosphere_density(raytrace_data, galileo_data):
     return time_defference_index
 
 
-def Evaluate_data_coutour(radio_data_name):
+def Evaluate_data_coutour(time_data, radio_data_name):
 
     galileo_data_time, galileo_data_freq, galileo_radio_intensity = Prepare_Galileo_data(
-        radio_data_name)
+        time_data, radio_data_name)
     using_galileo_data = galileo_radio_intensity[np.where(
         galileo_data_freq > 1e-1)][:].flatten()
 
-    plt.hist(using_galileo_data, range=(1e-18, 1e-12),
-             bins=np.logspace(-18, -12, 30))
-    plt.show()
+    fig, ax = plt.subplots(1, 1)
+    # ax.hist(using_galileo_data, range=(1e-18, 1e-12),bins=np.logspace(-18, -12, 30))
+    ax.hist(using_galileo_data, bins=np.logspace(-17, -12, 50))
+    ax.set_xscale('log')
+    fig.savefig('A')
+
+    return 0
 
 
 # %%
@@ -618,7 +637,7 @@ def Evaluate_data_coutour(radio_data_name):
 
 def main():
     time_information, radio_data = Pick_up_cdf()
-    print(time_information, radio_data)
+    #print(time_information, radio_data)
     # [0 hour,1 min,2 frequency(MHz),3 電波源データの磁力線(根本)の経度  orイオの場合は(-1000),4 電波源の南北,5 座標変換した時のx(tangential point との水平方向の距離),6 座標変換した時のy(tangential pointからの高さ方向の距離),7 電波源の実際の経度,8 探査機の経度]
 
     detectable_radio = np.loadtxt('../result_for_yasudaetal2022/raytracing_'+object_name+'_results/'+object_name+'_'+highest_plasma+'_'+plasma_scaleheight +
@@ -630,7 +649,9 @@ def main():
     ingress_time, egress_time = Make_FT_full(detectable_A, detectable_B,
                                              detectable_C, detectable_D, time_information, radio_data)
 
-    # Evaluate_data_coutour(radio_data)
+    Evaluate_data_coutour(time_information, radio_data)
+
+    # PLOT 用
 
     detectable_data = [detectable_A, detectable_B,
                        detectable_C, detectable_D]
@@ -658,6 +679,7 @@ def main():
                    highest_plasma+'_'+plasma_scaleheight+'_ingress_defference_time_'+detectable_data_str[i]+'_'+boundary_intensity_str+'.txt', time_defference_ingress)
         np.savetxt('../result_for_yasudaetal2022/radio_raytracing_occultation_timing_def_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby_radioint_'+boundary_intensity_str+'/'+object_name+'_' +
                    highest_plasma+'_'+plasma_scaleheight+'_egress_defference_time_'+detectable_data_str[i]+'_'+boundary_intensity_str+'.txt', time_defference_egress)
+
     return 0
 
 

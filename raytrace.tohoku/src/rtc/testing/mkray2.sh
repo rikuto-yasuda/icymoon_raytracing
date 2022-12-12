@@ -1,12 +1,3 @@
-for ORDER in 1 2 3 4 5 6 7 8 9 0 
-
-do
-
-
-for COE in 0 1 2 3 4 5 6 7 8 9
-
-
-do
 
 RAYTRACE='./testing'
 
@@ -23,9 +14,9 @@ COORD="euclid" # (euclid|polar)
 #SZ=2e6         # (source.z|altitude)
 #SZ=1.1e8        # (source.z|altitude)
 
-SX=${COE}.${ORDER}
+SX=0
 SY=0
-SZ=5
+SZ=7400
 
 
 ## モデルを選択 ##

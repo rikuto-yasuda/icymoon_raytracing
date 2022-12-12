@@ -9,23 +9,26 @@ import pandas as pd
 # In[]
 object_name = 'callisto'   # europa/ganymde/callisto
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 30  # ..th flyby
-highest_plasma = '16.5e2'  # 単位は(/cc) 2e2/4e2/16e2
-plasma_scaleheight = '4e2'  # 単位は(km) 1.5e2/3e2/6e2
+time_of_flybies = 12  # ..th flyby
+highest_plasma = '90e2'  # 単位は(/cc) 2e2/4e2/16e2
+plasma_scaleheight = '2.4e2'  # 単位は(km) 1.5e2/3e2/6e2
 
-raytrace_lowest_altitude = -1200  # レイトレーシングの下端の初期高度(km) 100の倍数で
-raytrace_highest_altitude = 5600  # レイトレーシング上端の初期高度(km) 500の倍数+100で
+raytrace_lowest_altitude = -1000  # レイトレーシングの下端の初期高度(km) 100の倍数で
+raytrace_highest_altitude = 8100  # レイトレーシング上端の初期高度(km) 500の倍数+100で
 
 information_list = ['year', 'month', 'start_day', 'end_day',
                     'start_hour', 'end_hour', 'start_min', 'end_min']
 
-"""修理中 europa & ganymede
+# 修理中 europa & ganymede
+
 Freq_str = ['3.984813988208770752e5', '4.395893216133117676e5', '4.849380254745483398e5', '5.349649786949157715e5', '5.901528000831604004e5', '6.510338783264160156e5',
             '7.181954979896545410e5', '7.922856807708740234e5', '8.740190267562866211e5', '9.641842246055603027e5', '1.063650846481323242e6',
             '1.173378825187683105e6', '1.294426321983337402e6', '1.427961349487304688e6', '1.575271964073181152e6', '1.737779378890991211e6',
             '1.917051434516906738e6', '2.114817380905151367e6', '2.332985162734985352e6', '2.573659420013427734e6', '2.839162111282348633e6',
             '3.132054328918457031e6', '3.455161809921264648e6', '3.811601638793945312e6', '4.204812526702880859e6', '4.638587474822998047e6',
             '5.117111206054687500e6', '5.644999980926513672e6', ]
+
+# 修理中　callisto
 """
 Freq_str = ['3.612176179885864258e5', '3.984813988208770752e5', '4.395893216133117676e5', '4.849380254745483398e5', '5.349649786949157715e5', '5.901528000831604004e5', '6.510338783264160156e5',
             '7.181954979896545410e5', '7.922856807708740234e5', '8.740190267562866211e5', '9.641842246055603027e5', '1.063650846481323242e6',
@@ -33,7 +36,7 @@ Freq_str = ['3.612176179885864258e5', '3.984813988208770752e5', '4.3958932161331
             '1.917051434516906738e6', '2.114817380905151367e6', '2.332985162734985352e6', '2.573659420013427734e6', '2.839162111282348633e6',
             '3.132054328918457031e6', '3.455161809921264648e6', '3.811601638793945312e6', '4.204812526702880859e6', '4.638587474822998047e6',
             '5.117111206054687500e6', '5.644999980926513672e6']
-
+"""
 Freq_num = []
 for i in Freq_str:
     Freq_num.append(float(i)/1000000)
@@ -152,7 +155,7 @@ def Calc_lowest(l):
     for i in range(raytrace_lowest_altitude, 0, 100):
         k = str(i)
         ray_path = np.genfromtxt("../result_for_yasudaetal2022/raytracing_"+object_name+"_results/"+object_name+'_'+highest_plasma+'_'+plasma_scaleheight+"/ray-P" +
-                                 object_name+"_nonplume_"+highest_plasma+"_"+plasma_scaleheight+"-Mtest_simple-benchmark-LO-Z"+k+"-FR"+Freq_str[l])
+                                 object_name+"_nonplume_"+highest_plasma+"_"+plasma_scaleheight+"-Mtest_simple-benchmark-LO-Z"+k+"-FR"+Freq_str[l])  # ray_path[n2][1] x座標   ray_path[n2][3] z座標
         # 初期ベクトルと背景磁場・プラズマ密度分布の関係から、電波の伝搬経路が解なしになることもあるのでその時のデータは無視するためのif文
         if ray_path.ndim == 2:
             Check_too_nearby(ray_path)  # 電波の計算が十分遠方から行われて入れるかの確認
@@ -277,8 +280,8 @@ def Replace_csv(lowest_list, highest_list):
 
 def main():
 
-    Raytrace_result_makefolder()  # レイトレーシングの結果を格納するフォルダを生成
-    MoveFile()  # レイトレーシングの結果を移動
+    # Raytrace_result_makefolder()  # レイトレーシングの結果を格納するフォルダを生成
+    # MoveFile()  # レイトレーシングの結果を移動
 
     with Pool(processes=3) as pool:
         lowest_altitude_list = list(pool.map(Calc_lowest, kinds_freq))

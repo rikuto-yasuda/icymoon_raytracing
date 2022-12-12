@@ -11,7 +11,7 @@ import math
 
 object_name = "callisto"  # europa/ganymde/callisto
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 30  # ..th flyby
+time_of_flybies = 9  # ..th flyby
 information_list = ['year', 'month', 'start_day', 'end_day',
                     'start_hour', 'end_hour', 'start_min', 'end_min']
 
@@ -43,6 +43,8 @@ def Pick_up_cdf():
 
     cdf_file = cdflib.CDF(
         '../result_for_yasudaetal2022/expres_cdf_data/'+cdf_name)
+
+    print(time_information)
 
     return cdf_file, time_information, index_number
 
@@ -146,6 +148,8 @@ def Check_time_validity_cdf(time, cdf_data):
 
     if float(time[3]) != cdf_data[-1][2] or float(time[4]) != cdf_data[0][3] or float(time[5]) != cdf_data[-1][3] or float(time[6]) != cdf_data[0][4] or float(time[7]) != cdf_data[-1][4]:
         print("wrong time!!!!!")
+        print("cdf_end_day:"+str(cdf_data[-1][2])+"cdf_start_hour:"+str(cdf_data[0][3])+"cdf_end_hour:"+str(
+            cdf_data[-1][3])+"cdf_start_min"+str(cdf_data[0][4])+"cdf_end_min"+str(cdf_data[-1][4]))
 
 
 def Save_detectable_data(data):
@@ -228,12 +232,12 @@ def Check_time_range_validity(time, csv_data):
 
     # 位置データにおける初めの時刻の文字列から時刻データを抽出　フライバイリストの情報と一致しているか確認
     if int(re.findall(r'\d+', first_str)[0]) != int(time[0]) or int(re.findall(r'\d+', first_str)[1]) != int(time[1]) or int(re.findall(r'\d+', first_str)[2]) != int(time[2]) or int(re.findall(r'\d+', first_str)[3]) != int(time[4]) or int(re.findall(r'\d+', first_str)[4]) != int(time[6]):
-        print("wrong time!!!!!")
+        print("wrong time!!")
 
     # 位置データにおける最後の時刻の文字列から時刻データを抽出　フライバイリストの情報と一致しているか確認
     if int(re.findall(r'\d+', last_str)[3]) != int(time[3]) or int(re.findall(r'\d+', last_str)[4]) != int(time[5]) or int(re.findall(r'\d+', last_str)[5]) != int(time[7]):
         print(int(re.findall(r'\d+', first_str)[0]))
-        print("wrong time!!!!!")
+        print("wrong time!!!")
 
     else:
         print("data range is correct")

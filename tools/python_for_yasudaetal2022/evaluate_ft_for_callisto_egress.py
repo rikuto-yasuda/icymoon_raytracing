@@ -20,11 +20,13 @@ time_of_flybies = 30  # ..th flyby
 # using_frequency_range = [2, 6]  # E12
 
 # using_frequency_range = [6.0e-1, 6]  # C30 ingress
-using_frequency_range = [4.0e-1, 6]  # C30 egress
+using_frequency_range = [4.0e-1, 6]  # C30 egress A
+# using_frequency_range = [4.5e-1, 6]  # C30 egress D
+# using_frequency_range = [7.0e-1, 6]  # C30 egress B&C
 
 boundary_intensity_str = '7e-16'  # '7e-16' '1e-15'
 occultaion_type = 'egress'  # 'ingress' or 'egress
-radio_type = 'D'  # 'A' or 'B' or 'C' or 'D'
+radio_type = 'A'  # 'A' or 'B' or 'C' or 'D'
 # %%
 
 use_files = sorted(glob.glob('../result_for_yasudaetal2022/radio_raytracing_occultation_timing_def_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies) +
@@ -88,14 +90,16 @@ def main():
     print(output_array)
     np.savetxt('../result_for_yasudaetal2022/evaluate_f-t_diagram_plot_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby_radioint_'+boundary_intensity_str+'/'+spacecraft_name +
                '_'+object_name+'_'+str(time_of_flybies)+'flyby_radiointensity_'+boundary_intensity_str+'_'+occultaion_type+'_'+radio_type+'_'+str(using_frequency_range)+'output_array_examine.csv', output_array, fmt='%.2f', delimiter=',')
-    plt.scatter(max, scale, s=25, c=dif, cmap='rainbow_r', vmax=300, vmin=20)
+    plt.figure(figsize=(9, 4))
+    plt.scatter(max, scale, s=25, c=dif, cmap='rainbow_r', vmax=150, vmin=20)
     # plt.xscale('log')
     plt.yscale('log')
-    plt.ylim(200, 1000)
+    plt.ylim(350, 1000)
     plt.colorbar(label='average time difference (sec)')
-    plt.xlabel("Max density (/cc)")
-    plt.ylabel("Scale height (km)")
-    plt.title(object_name+'_'+occultaion_type+'_'+radio_type+'_f-t_evaluate')
+    plt.xlabel("Max density (/cc)", fontsize="large")
+    plt.ylabel("Scale height (km)", fontsize="large")
+    plt.title(object_name+'_'+occultaion_type+'_' +
+              radio_type+'_f-t_evaluate', fontsize="large")
     plt.savefig(os.path.join('../result_for_yasudaetal2022/evaluate_f-t_diagram_plot_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby_radioint_'+boundary_intensity_str,
                              spacecraft_name + '_'+object_name+'_'+str(time_of_flybies)+'flyby_radiointensity_'+boundary_intensity_str+'_'+occultaion_type+'_'+radio_type+'_'+str(using_frequency_range)+'_f-t_evaluate_examine.png'))
     plt.show()

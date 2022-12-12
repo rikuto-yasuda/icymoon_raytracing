@@ -9,12 +9,16 @@ import time
 import glob
 # %%
 # あらかじめ ../result_sgepss2021/~/~ に必要なレイトレーシング結果とパラメータセットを入れること
+# 下の方に使う周波数と時刻を入れるとこがあるので注意
 
-object_name = 'ganymede'  # ganydeme/europa/calisto``
+object_name = 'callisto'  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 1  # ..th flyby
+time_of_flybies = 9  # ..th flyby
 
-radio_type = 'B'  # 'A' or 'B' or 'C' or 'D'
+radio_type = "D"  # 'A' or 'B' or 'C' or 'D'
+
+maximum_subsolar_long = 83.93602662
+minimum_subsolar_long = 81.22316967
 
 information_list = ['year', 'month', 'start_day', 'end_day',
                     'start_hour', 'end_hour', 'start_min', 'end_min', 'occultaton_center_day', 'occultaton_center_hour', 'occultaton_center_min']
@@ -28,22 +32,24 @@ Tangential_point = np.genfromtxt(Tangential_point_txt)
 
 # [0 hour,1 min,2 frequency(MHz),3 電波源データの磁力線(根本)の経度  orイオの場合は(-1000),4 電波源の南北,5 tangential pointでの衛星経度,6 tangential pointでの衛星緯度,7 tangential pointから探査機方向に伸ばした時の衛星経度,8 tangential pointから探査機方向に伸ばした時の衛星緯度, 9 電波源の実際の経度,10 探査機の経度, 11 z座標]
 
-"""callisto
+"""
 Freq_str = ['3.984813988208770752e5', '4.395893216133117676e5', '4.849380254745483398e5', '5.349649786949157715e5', '5.901528000831604004e5', '6.510338783264160156e5',
             '7.181954979896545410e5', '7.922856807708740234e5', '8.740190267562866211e5', '9.641842246055603027e5', '1.063650846481323242e6',
             '1.173378825187683105e6', '1.294426321983337402e6', '1.427961349487304688e6', '1.575271964073181152e6', '1.737779378890991211e6',
             '1.917051434516906738e6', '2.114817380905151367e6', '2.332985162734985352e6', '2.573659420013427734e6', '2.839162111282348633e6',
             '3.132054328918457031e6', '3.455161809921264648e6', '3.811601638793945312e6', '4.204812526702880859e6', '4.638587474822998047e6',
             '5.117111206054687500e6', '5.644999980926513672e6', ]
-"""
+
 # europa & ganymede
+"""
+
 Freq_str = ['3.612176179885864258e5', '3.984813988208770752e5', '4.395893216133117676e5', '4.849380254745483398e5', '5.349649786949157715e5', '5.901528000831604004e5', '6.510338783264160156e5',
             '7.181954979896545410e5', '7.922856807708740234e5', '8.740190267562866211e5', '9.641842246055603027e5', '1.063650846481323242e6',
             '1.173378825187683105e6', '1.294426321983337402e6', '1.427961349487304688e6', '1.575271964073181152e6', '1.737779378890991211e6',
             '1.917051434516906738e6', '2.114817380905151367e6', '2.332985162734985352e6', '2.573659420013427734e6', '2.839162111282348633e6',
             '3.132054328918457031e6', '3.455161809921264648e6', '3.811601638793945312e6', '4.204812526702880859e6', '4.638587474822998047e6',
             '5.117111206054687500e6', '5.644999980926513672e6', ]
-
+# callisto
 
 Freq_num = []
 for idx in Freq_str:
@@ -151,19 +157,21 @@ def Prepare_Figure(judgement, time_information):
 
     ##############
 
-    hour_select1 = np.where(
-        (selected_data[:, 0] == 5) & (selected_data[:, 1] > 51))
+    hour_select = np.where(selected_data[:, 0] == 13)
 
-    hour_select2 = np.where(
-        (selected_data[:, 0] == 6) & (selected_data[:, 1] < 5))
+    selected_hour_data = (selected_data[hour_select, :])[0]
 
-    hour_select = np.hstack((hour_select1, hour_select2))
+    minute_select = np.where(
+        (40 < selected_hour_data[:, 1]) & (selected_hour_data[:, 1] < 46))
+
+    selected_time_data = (selected_hour_data[minute_select, :])[0]
     print(hour_select)
-    selected_time_data = (selected_data[hour_select1, :])[0]
 
-    # using_frequency_range = [5.5e-1, 6]  # G1 egress [8.5e-1, 4] Ingress
+    # using_frequency_range
+    # C6 egress D [0.45, 6]
+
     freq_select = np.where(
-        (8.5e-1 < selected_time_data[:, 2]) & (selected_time_data[:, 2] < 4))
+        (5.3e-1 < selected_time_data[:, 2]) & (selected_time_data[:, 2] < 5.5))
 
     selected_freq_data = (selected_time_data[freq_select, :])[0]
 
@@ -171,11 +179,11 @@ def Prepare_Figure(judgement, time_information):
     selected_detectable_data = (selected_freq_data[detectable_select, :])[0]
 
     ax = plt.subplot(111, projection="polar")
-
     x = np.deg2rad(selected_detectable_data[:, 5])
-    y = selected_detectable_data[:, 6]
+    y = selected_detectable_data[:, 6]*-1
     plt.ylim([0, 90])
     ax.scatter(x, y, s=1)
+    print(x, y)
     ax.invert_yaxis()
     ax.set_theta_direction(-1)
     ax.set_theta_zero_location("N")
@@ -184,10 +192,24 @@ def Prepare_Figure(judgement, time_information):
     ax.set_thetagrids(np.arange(0, 360, 30),
                       labels=["0 (Jovian)", "", "", "90 \n      (Leading)", "", "",
                               "180  (Anti-Jovian)", "", "", "270 \n(Trailing)     ", "", ""])
-    ax.set_title('Ingress (North)')
+
+    ax.set_title('Egress (North)')
+    ax.vlines(np.deg2rad(maximum_subsolar_long+90),
+              0, 90, color='0.5', linestyles='solid')
+    ax.vlines(np.deg2rad(maximum_subsolar_long-90),
+              0, 90, color='0.5', linestyles='solid')
+    ax.vlines(np.deg2rad(minimum_subsolar_long+90),
+              0, 90, color='0.5', linestyles='solid')
+    ax.vlines(np.deg2rad(minimum_subsolar_long-90),
+              0, 90, color='0.5', linestyles='solid')
+
+    ax.text(np.deg2rad(maximum_subsolar_long), 80, "day side", color="orangered",
+            fontfamily="serif", fontweight="bold", fontstyle="italic", fontsize=10, horizontalalignment="center")
+    ax.text(np.deg2rad(maximum_subsolar_long+180), 80, "night side", color="navy",
+            fontfamily="serif", fontweight="bold", fontstyle="italic", fontsize=10, horizontalalignment="center")
 
     plt.savefig(os.path.join('../result_for_yasudaetal2022/plot_tangential_point/', spacecraft_name +
-                             '_' + object_name+'_'+str(time_of_flybies)+'_'+radio_type+'_In5:51^gress_tangential.png'))
+                             '_' + object_name+'_'+str(time_of_flybies)+'_'+radio_type+'_Ingress_tangential.png'))
 
     plt.show()
 

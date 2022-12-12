@@ -6,13 +6,13 @@ import matplotlib as mpt
 import pandas as pd
 from matplotlib.colors import LogNorm
 
-object_name = 'callisto'   # europa/ganymde/callisto
+object_name = 'ganymede'   # europa/ganymde/callisto
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 30  # ..th flyby
-highest_plasma = '5e2'  # 単位は(/cc) 2e2/4e2/16e2
-plasma_scaleheight = '4e2'  # 単位は(km) 1.5e2/3e2/6e2
-frequency = '2.332985162734985352e6'  # MHz
-altitiude_interval = 2
+time_of_flybies = 1  # ..th flyby
+highest_plasma = '2.5e2'  # 単位は(/cc) 2e2/4e2/16e2
+plasma_scaleheight = '0.5e2'  # 単位は(km) 1.5e2/3e2/6e2
+frequency = '7.922856807708740234e5'  # MHz
+altitiude_interval = 20
 
 Radio_name_cdf = '../result_for_yasudaetal2022/tracing_range_'+spacecraft_name+'_'+object_name + \
     '_'+str(time_of_flybies)+'_flybys/para_' + \
@@ -23,7 +23,17 @@ Highest = Radio_Range.highest
 Lowest = Radio_Range.lowest
 Except = Radio_Range.exc
 
+"""# カリスト
+
 Freq_str = ['3.612176179885864258e5', '3.984813988208770752e5', '4.395893216133117676e5', '4.849380254745483398e5', '5.349649786949157715e5', '5.901528000831604004e5', '6.510338783264160156e5',
+            '7.181954979896545410e5', '7.922856807708740234e5', '8.740190267562866211e5', '9.641842246055603027e5', '1.063650846481323242e6',
+            '1.173378825187683105e6', '1.294426321983337402e6', '1.427961349487304688e6', '1.575271964073181152e6', '1.737779378890991211e6',
+            '1.917051434516906738e6', '2.114817380905151367e6', '2.332985162734985352e6', '2.573659420013427734e6', '2.839162111282348633e6',
+            '3.132054328918457031e6', '3.455161809921264648e6', '3.811601638793945312e6', '4.204812526702880859e6', '4.638587474822998047e6',
+            '5.117111206054687500e6', '5.644999980926513672e6']
+"""
+# エウロパ・ガニメデ
+Freq_str = ['3.984813988208770752e5', '4.395893216133117676e5', '4.849380254745483398e5', '5.349649786949157715e5', '5.901528000831604004e5', '6.510338783264160156e5',
             '7.181954979896545410e5', '7.922856807708740234e5', '8.740190267562866211e5', '9.641842246055603027e5', '1.063650846481323242e6',
             '1.173378825187683105e6', '1.294426321983337402e6', '1.427961349487304688e6', '1.575271964073181152e6', '1.737779378890991211e6',
             '1.917051434516906738e6', '2.114817380905151367e6', '2.332985162734985352e6', '2.573659420013427734e6', '2.839162111282348633e6',
@@ -78,8 +88,10 @@ def main():
     plt.title("europa_nonplume")
     plt.xlabel("x (km)")
     plt.ylabel("z (km)")
-    plt.xlim(-1000, 1000)
-    plt.ylim(-200, 2000)
+    plt.xlim(-3000, 7000)
+    plt.ylim(-200, 800)
+
+    print(raytrace_lowest_altitude)
 
     for i in range(raytrace_lowest_altitude, raytrace_highest_altitude, altitiude_interval):
         ray_plot(i)
@@ -90,7 +102,7 @@ def main():
 
     plt.plot(t, c, color="black")
     n = -1600+t*0
-    plt.plot(n, c, color="black")
+    plt.plot(t, n, color="black")
     plt.fill_between(t, c, n, facecolor='black')
     plt.show()
 

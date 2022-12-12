@@ -7,15 +7,15 @@ from multiprocessing import Pool
 import os
 import time
 import glob
-
+import requests
 # %%
 # あらかじめ ../result_sgepss2021/~/~ に必要なレイトレーシング結果とパラメータセットを入れること
 
 object_name = 'callisto'  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 30  # ..th flyby
-highest_plasma = '29e2'  # 単位は(/cc) 2e2/4e2/16e22
-plasma_scaleheight = '4e2'  # 単位は(km) 1.5e2/3e2/6e2
+time_of_flybies = 9   # ..th flyby
+highest_plasma = '11e2'  # 単位は(/cc) 2e2/4e2/16e22 #12.5 13.5
+plasma_scaleheight = '6e2'  # 単位は(km) 1.5e2/3e2/6e2
 
 
 Radio_name_cdf = '../result_for_yasudaetal2022/tracing_range_'+spacecraft_name+'_'+object_name + \
@@ -27,7 +27,8 @@ Radio_observer_position = np.loadtxt('../result_for_yasudaetal2022/calculated_ex
                                      spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_Radio_data.txt')  # 電波源の経度を含む
 
 
-"""修理中 europa & ganymede 
+#europa & ganymede
+"""
 Freq_str = ['3.984813988208770752e5', '4.395893216133117676e5', '4.849380254745483398e5', '5.349649786949157715e5', '5.901528000831604004e5', '6.510338783264160156e5',
             '7.181954979896545410e5', '7.922856807708740234e5', '8.740190267562866211e5', '9.641842246055603027e5', '1.063650846481323242e6',
             '1.173378825187683105e6', '1.294426321983337402e6', '1.427961349487304688e6', '1.575271964073181152e6', '1.737779378890991211e6',
@@ -169,11 +170,19 @@ def Replace_Save(judgement, all_radio_data):
     return all_detectable_radio
 
 
+def lineNotify(message):
+    line_notify_token = 'MFCL4nEMoT0m9IyjUXLeVsoePNXCfbAInnBs7tZeGts'
+    line_notify_api = 'https://notify-api.line.me/api/notify'
+    payload = {'message': message}
+    headers = {'Authorization': 'Bearer ' + line_notify_token}
+    requests.post(line_notify_api, data=payload, headers=headers)
+
+
 def main():
 
     # MakeFolder()  # フォルダ作成　基本的にはoccultation_range_plot.py で移動しているから基本使わない
 
-    MoveFile()  # ファイル移動　
+    # MoveFile()  # ファイル移動　
 
     # 受かっているかの検証　processesの引数で並列数を指定
 
@@ -183,6 +192,8 @@ def main():
     # 受かっている電波のみを保存
     Replace_Save(result_list, Radio_observer_position)
 
+    message = "計算完了"
+    lineNotify(message)
     return 0
 
 

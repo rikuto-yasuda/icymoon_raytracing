@@ -8,21 +8,28 @@ import glob
 # %%
 
 ####################################################
-object_name = 'callisto'  # ganydeme/europa/calisto`
+object_name = 'europa'  # ganydeme/europa/calisto`
 
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 30  # ..th flyby
+time_of_flybies = 12  # ..th flyby
 
 
 """lowest frequency and highest_freqency(MHz)"""
 # using_frequency_range = [8.5e-1, 4]  # G1 ingress
 # using_frequency_range = [5.5e-1, 6]  # G1 egress
-# using_frequency_range = [2, 6]  # E12
+using_frequency_range = [2, 6]  # E12
 
-using_frequency_range = [6.0e-1, 6]  # C30 ingress
-# using_frequency_range = [4.5e-1, 6]  # C30 egress
+# using_frequency_range = [6.0e-1, 6]  # C30 ingress
+# using_frequency_range = [4.0e-1, 6]  # C30 egress A
+# using_frequency_range = [4.5e-1, 6]  # C30 egress D
+# using_frequency_range = [7.0e-1, 6]  # C30 egress B&C
 
-boundary_intensity_str = '7e-16'  # '7e-16' '1e-15'
+# using_frequency_range = [5.3e-1, 5.5]  # C9 egress A B D
+# using_frequency_range = [6.5e-1, 5.5]  # C9 egress C
+
+# using_frequency_range = [6.5e-1, 5.5]  # C9 egress C
+
+boundary_intensity_str = '7e-16'  # '7e-16' '1e-15' '4e-16'
 occultaion_type = 'ingress'  # 'ingress' or 'egress
 radio_type = 'D'  # 'A' or 'B' or 'C' or 'D'
 # %%
@@ -88,11 +95,13 @@ def main():
     print(output_array)
     np.savetxt('../result_for_yasudaetal2022/evaluate_f-t_diagram_plot_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby_radioint_'+boundary_intensity_str+'/'+spacecraft_name +
                '_'+object_name+'_'+str(time_of_flybies)+'flyby_radiointensity_'+boundary_intensity_str+'_'+occultaion_type+'_'+radio_type+'_'+str(using_frequency_range)+'output_array.csv', output_array, fmt='%.2f', delimiter=',')
-    plt.scatter(max, scale, s=100, c=dif,
-                cmap='rainbow_r', vmax=300, vmin=20)
+    #plt.scatter(max, scale, s=100, c=dif,cmap='rainbow_r', vmax=80, vmin=20)
+    #plt.figure(figsize=(9, 4))
+    plt.scatter(max, scale, s=25, c=dif,
+                cmap='rainbow_r', vmax=150, vmin=20)
     # plt.xscale('log')
     plt.yscale('log')
-    plt.ylim(200, 1000)
+    plt.ylim(200, 700)
     plt.colorbar(label='average time difference (sec)')
     plt.xlabel("Max density (/cc)")
     plt.ylabel("Scale height (km)")
