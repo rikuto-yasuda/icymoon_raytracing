@@ -14,8 +14,8 @@ import glob
 object_name = 'europa'  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
 time_of_flybies = 12  # ..th flyby
-highest_plasma = '4e2'  # 単位は(/cc) 2e2/4e2/16e22
-plasma_scaleheight = '6e2'  # 単位は(km) 1.5e2/3e2/6e2
+highest_plasma = '90e2'  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = '2.4e2'  # 単位は(km) 1.5e2/3e2/6e2
 boundary_intensity_str = '7e-16'  # boundary_intensity_str = '1e-15'
 # boundary_intensity_str = '0'  # boundary_intensity_str = '1e-15'
 
@@ -424,7 +424,8 @@ def Make_FT_full(DataA, DataB, DataC, DataD, raytrace_time_information, radio_da
         pcm = ax.pcolormesh(xx, yy, galileo_radio_intensity_row, norm=mpl.colors.LogNorm(
             vmin=1e-16, vmax=1e-12), cmap='Spectral_r')
         print(xx)
-        fig.colorbar(pcm, extend='max')
+        fig.colorbar(pcm, extend='max',
+                     label='GLL/PWS Electric Power spectral density (V2/m2/Hz)')
 
         # ガリレオ探査機の電波強度の閾値を赤線＃
 

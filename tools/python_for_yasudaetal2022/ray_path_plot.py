@@ -9,10 +9,10 @@ from matplotlib.colors import LogNorm
 object_name = 'ganymede'   # europa/ganymde/callisto
 spacecraft_name = "galileo"  # galileo/JUICE(?)
 time_of_flybies = 1  # ..th flyby
-highest_plasma = '2.5e2'  # 単位は(/cc) 2e2/4e2/16e2
-plasma_scaleheight = '0.5e2'  # 単位は(km) 1.5e2/3e2/6e2
-frequency = '7.922856807708740234e5'  # MHz
-altitiude_interval = 20
+highest_plasma = '2e2'  # 単位は(/cc) 2e2/4e2/16e2
+plasma_scaleheight = '3e2'  # 単位は(km) 1.5e2/3e2/6e2
+frequency = '5.349649786949157715e5'  # MHz
+altitiude_interval = 50
 
 Radio_name_cdf = '../result_for_yasudaetal2022/tracing_range_'+spacecraft_name+'_'+object_name + \
     '_'+str(time_of_flybies)+'_flybys/para_' + \
@@ -59,7 +59,7 @@ def ray_plot(height):
                       '/ray-P'+object_name+'_nonplume_'+highest_plasma+'_'+plasma_scaleheight+'-Mtest_simple-benchmark-LO-Z'+str(height)+'-FR'+frequency+'')
     x = data[:, [1]]
     z = data[:, [3]]
-    plt.plot(x, z, color='red')
+    plt.plot(x, z, color='red', linewidth=0.5)
 
 
 def Output_moon_radius(moon_name):
@@ -84,12 +84,12 @@ def Output_moon_radius(moon_name):
 
 
 def main():
-
-    plt.title("europa_nonplume")
-    plt.xlabel("x (km)")
-    plt.ylabel("z (km)")
-    plt.xlim(-3000, 7000)
-    plt.ylim(-200, 800)
+    plt.figure(figsize=(20, 4))
+    plt.title("ray paths of Jovian radio waves around Ganymede")
+    plt.xlabel("x (km) / tangential direction")
+    plt.ylabel("z (km) / normal direction")
+    plt.xlim(-7500, 2500)
+    plt.ylim(-500, 1500)
 
     print(raytrace_lowest_altitude)
 
