@@ -11,8 +11,8 @@ a = 0
 b = 10000000
 n = int(b/1000)  # 分割数は一キロ分解能になるように
 magnetic_field = 750*(10**-9)  # 　磁場強度 T //ガニメデ赤道表面 750 nT 木星磁場 100 nT
-max_density = 250*(10**6)  # 最大電子密度 m-3 //n(/cc)=n*10**6(/m3)  250 or 100 /cc
-scale_height = 1500*(10**3)  # スケールハイト m //l(km)=l*10**3(m) 1500 or 300 km
+max_density = 200*(10**6)  # 最大電子密度 m-3 //n(/cc)=n*10**6(/m3)  250 or 100 /cc
+scale_height = 50*(10**3)  # スケールハイト m //l(km)=l*10**3(m) 1500 or 300 km
 radius = 2634100  # 半径 m ガニメデ半球 2634.1 km = 2634100 m
 diameter_raio = 0.2  # 楕円の長辺と短辺の比率(0-1)円偏波度の考慮はここで起こる
 
@@ -21,7 +21,7 @@ diameter_raio = 0.2  # 楕円の長辺と短辺の比率(0-1)円偏波度の考�
 dx = (b-a)/n
 # frequency = np.arange(200000, 10000000, 100)  # 0.1MHzから10MHzを0.01MHz間隔で分解
 # 0.1MHzから10MHzを0.01MHz間隔で分解 位相計算用
-frequency = np.arange(200000, 40000000, 100)
+frequency = np.arange(200000, 6000000, 100)
 # 周波数 Hz // 1MHz 1000000Hz
 # 積分する関数の定義
 K = 2.42*(10**4)
@@ -78,7 +78,7 @@ print("psi_radian:", psi_rad)
 print("psi_degree:", psi_deg)
 
 # 以下電波強度用
-"""
+
 reshape_intensity = np.reshape(radio_intensity, (1, len(radio_intensity)))
 c = np.concatenate([reshape_intensity, reshape_intensity]).T
 # print(b)
@@ -105,10 +105,10 @@ ax.axhline(y=fre_1MHz_plus_3pi, xmin=0, xmax=1, color="purple",
            label='1MHz-3pi', linestyle="dashed")
 ax.set_ylabel("radio frequency (Hz)")
 ax.set_title("max:"+str(max_density/1000000) + "(/cc) h_s " +
-             str(scale_height/1000)+"(km) TEC:"+str('{:.2e}'.format(TEC))+"(/m2)"+" \n wipth(MHz):"+str('{:.2e}'.format(width_1/1000000))+","+str('{:.2e}'.format(width_2/1000000))+","+str('{:.2e}'.format(width_3/1000000)), fontsize=10)
+             str(scale_height/1000)+"(km) TEC:"+str('{:.2e}'.format(TEC))+"(/m2)"+" \n width(MHz):"+str('{:.2e}'.format(width_1/1000000))+","+str('{:.2e}'.format(width_2/1000000))+","+str('{:.2e}'.format(width_3/1000000)), fontsize=10)
 ax.axes.xaxis.set_visible(False)
 ax.legend()
-plt.savefig("max_" + str(int(max_density/1000000)) +
+plt.savefig("others/max_" + str(int(max_density/1000000)) +
             "_cc_scaleheight_"+str(int(scale_height/1000))+"_km.png")
 plt.show()
 
@@ -128,7 +128,7 @@ plt.xlabel("radio frequency (MHz)")
 plt.ylabel("rotation angle (deg)")
 plt.xticks([10000000, 15000000, 20000000, 25000000, 30000000,
            35000000, 40000000], ['10', '15', '20', '25', '30', '35', '40'])
-
+"""
 # 以下ゴミ
 """
 X, Y = np.mgrid[:2, :9700]

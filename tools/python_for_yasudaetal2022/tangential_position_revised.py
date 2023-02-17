@@ -9,11 +9,13 @@ import math
 
 # %%
 
-object_name = "callisto"  # europa/ganymde/callisto
+object_name = "ganymede"  # europa/ganymde/callisto
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 30  # ..th flyby
+time_of_flybies = 1  # ..th flyby
 information_list = ['year', 'month', 'start_day', 'end_day',
                     'start_hour', 'end_hour', 'start_min', 'end_min']
+
+# IAU_JUPITERで接点を求める用
 
 
 def Pick_up_spacecraft_csv():
@@ -41,7 +43,41 @@ def Pick_up_spacecraft_csv():
     spacecraft_ephemeris_csv = pd.read_csv(
         spacecraft_csv_path, header=13, skipfooter=7)  # ヘッダーの位置と末端のデータの位置をheaderとskipfooterで設定
 
-    return spacecraft_ephemeris_csv, time_information
+    return spacecraft_ephemeris_csv, time_information  # IAU_JUPITERで考えた木星から見た探査機の位置
+
+# IAU_MOONに変換する用
+
+
+def Pick_up_spacecraft_csv_coordinate():
+
+    flyby_list_path = '../result_for_yasudaetal2022/occultation_flyby_list.csv'
+    flyby_list = pd.read_csv(flyby_list_path)
+
+    # csvファイルにフライバイごとで使う軌道データを記入しておく　上記のパラメータから必要なデータのファイル名が選ばれて読み込まれる
+    # queryが数値非対応なのでまずはフライバイ数で絞り込み
+    selected_flyby_list = flyby_list[flyby_list['flyby_time']
+                                     == time_of_flybies]
+    complete_selecred_flyby_list = selected_flyby_list.query(
+        'object == "'+object_name+'" & spacecraft == "'+spacecraft_name+'"')  # queryでフライバイ数以外を絞り込み
+    complete_selecred_flyby_list = complete_selecred_flyby_list.reset_index(
+        drop=True)  # index振り直し
+    # 使うcsvファイルの名前を取得
+    csv_name = str(
+        complete_selecred_flyby_list['spacecraft_ephemeris_coordinate_csv'][0])
+
+    # csvから時刻データを抽出
+    time_information = []
+    for i in information_list:
+        time_information.append(str(complete_selecred_flyby_list[i][0]))
+
+    spacecraft_csv_path = '../result_for_yasudaetal2022/ephemeris_for_coordinate_transformation/spacecraft/' + csv_name
+    spacecraft_ephemeris_coordinate_csv = pd.read_csv(
+        spacecraft_csv_path, header=15, skipfooter=4)  # ヘッダーの位置と末端のデータの位置をheaderとskipfooterで設定
+
+    # IAU_"moon"で考えた木星から見た探査機の位置
+    return spacecraft_ephemeris_coordinate_csv, time_information
+
+# IAU_JUPITERで接点を求める用
 
 
 def Pick_up_moon_csv():
@@ -69,7 +105,38 @@ def Pick_up_moon_csv():
     spacecraft_ephemeris_csv = pd.read_csv(
         spacecraft_csv_path, header=15, skipfooter=4)  # ヘッダーの位置と末端のデータの位置をheaderとskipfooterで設定
 
-    return spacecraft_ephemeris_csv, time_information
+    return spacecraft_ephemeris_csv, time_information  # IAU_JUPITERで考えた木星から見た月の位置
+
+# IAU_MOONに変換する用
+
+
+def Pick_up_moon_csv_coordinate():
+
+    flyby_list_path = '../result_for_yasudaetal2022/occultation_flyby_list.csv'
+    flyby_list = pd.read_csv(flyby_list_path)
+
+    # csvファイルにフライバイごとで使う軌道データを記入しておく　上記のパラメータから必要なデータのファイル名が選ばれて読み込まれる
+    # queryが数値非対応なのでまずはフライバイ数で絞り込み
+    selected_flyby_list = flyby_list[flyby_list['flyby_time']
+                                     == time_of_flybies]
+    complete_selecred_flyby_list = selected_flyby_list.query(
+        'object == "'+object_name+'" & spacecraft == "'+spacecraft_name+'"')  # queryでフライバイ数以外を絞り込み
+    complete_selecred_flyby_list = complete_selecred_flyby_list.reset_index(
+        drop=True)  # index振り直し
+    # 使うcsvファイルの名前を取得
+    csv_name = str(
+        complete_selecred_flyby_list['moon_ephemeris_coordinate_csv'][0])
+
+    # csvから時刻データを抽出
+    time_information = []
+    for i in information_list:
+        time_information.append(str(complete_selecred_flyby_list[i][0]))
+
+    moon_csv_path = '../result_for_yasudaetal2022/ephemeris_for_coordinate_transformation/moon/' + csv_name
+    moon_ephemeris_coordinate_csv = pd.read_csv(
+        moon_csv_path, header=15, skipfooter=3)  # ヘッダーの位置と末端のデータの位置をheaderとskipfooterで設定
+
+    return moon_ephemeris_coordinate_csv, time_information  # IAU_"moon"で考えた木星から見た月の位置
 
 
 def Check_time_validity_csv(time, spacecraft_csv_data, moon_csv_data):
@@ -181,7 +248,59 @@ def Coordinate_sysytem_transformation(polar_coordinate_data_csv):
     return time_and_position
 
 
-def Spacecraft_ephemeris_calc(spacecraft_ephemeris_csv, moon_ephemeris_csv, time):
+def Iau_jupiter_2_iau_moon(row_latitude, row_longitude, position1_moon_sys, position1_jup_sys, position2_moon_sys, position2_jup_sys):
+    # row_latitude, row_longitude ともにradiunで入力
+    # position dataはそれぞれxyzのベクトルで
+    #　以下の計算の考え方はredmeを参照（修論内）
+    deff_position1 = position1_moon_sys - position1_jup_sys
+    deff_position2 = position2_moon_sys - position2_jup_sys
+
+    rotation_normal_axis = np.cross(deff_position1, deff_position2) / (
+        np.linalg.norm(np.cross(deff_position1, deff_position2)))
+    perp_position_jup = np.cross(position1_jup_sys, rotation_normal_axis) / (
+        np.linalg.norm(np.cross(position1_jup_sys, rotation_normal_axis)))
+    perp_position_moon = np.cross(position1_moon_sys, rotation_normal_axis) / (
+        np.linalg.norm(np.cross(position1_moon_sys, rotation_normal_axis)))
+
+    rotation_sin_theta = np.dot(
+        np.cross(perp_position_jup, perp_position_moon), rotation_normal_axis)
+    # rotation_cos_theta = np.cos(np.arcsin(rotation_sin_theta)
+    rotation_cos_theta = np.dot(perp_position_jup, perp_position_moon)
+
+    print(rotation_cos_theta**2 + rotation_sin_theta**2)
+
+    n1 = rotation_normal_axis[0]
+    n2 = rotation_normal_axis[1]
+    n3 = rotation_normal_axis[2]
+
+    a11 = n1*n1*(1-rotation_cos_theta)+rotation_cos_theta
+    a12 = n1*n2*(1-rotation_cos_theta)-n3*rotation_sin_theta
+    a13 = n1*n3*(1-rotation_cos_theta)+n2*rotation_sin_theta
+    a21 = n1*n2*(1-rotation_cos_theta)+n3*rotation_sin_theta
+    a22 = n2*n2*(1-rotation_cos_theta)+rotation_cos_theta
+    a23 = n2*n3*(1-rotation_cos_theta)-n1*rotation_sin_theta
+    a31 = n1*n3*(1-rotation_cos_theta)-n2*rotation_sin_theta
+    a32 = n2*n3*(1-rotation_cos_theta)+n1*rotation_sin_theta
+    a33 = n3*n3*(1-rotation_cos_theta)+rotation_cos_theta
+
+    rotation_matrix = np.array(
+        [[a11, a12, a13], [a21, a22, a23], [a31, a32, a33]])
+
+    tangential_point_row = np.array(
+        [np.cos(row_longitude), np.sin(row_longitude), np.sin(row_latitude)])
+
+    tangential_point_revised = np.dot(rotation_matrix, tangential_point_row)
+
+    # print(tangential_point_revised)
+
+    revised_latitude = np.arcsin(tangential_point_revised[2])
+    revised_longitude = np.arctan2(
+        tangential_point_revised[1], tangential_point_revised[0])
+    # latitude, longitude ともにradiunで出力
+    return revised_latitude, revised_longitude
+
+
+def Spacecraft_ephemeris_calc(spacecraft_ephemeris_csv, moon_ephemeris_csv, spacecraft_ephemeris_coordinate_csv, moon_ephemeris_coordinate_csv, time):
 
     # 電波源のデータファイルを読み込み　[0 年、1 月、2 日、3 時間、4 分、5 秒、◯、○、◯、9 周波数（MHz)、10 磁力線の経度(0~360)orイオの場合は(-1000)、11 極（北:1 南:-1)、12 x座標,13 y座標,14 z座標]を受かるパターン分だけ
     radio_source_position = np.loadtxt("../result_for_yasudaetal2022/expres_detectable_radio_data_of_each_flyby/All_" +
@@ -190,12 +309,21 @@ def Spacecraft_ephemeris_calc(spacecraft_ephemeris_csv, moon_ephemeris_csv, time
     # 木星半径からkmに変換（System３座標）
     radio_source_position[:, 12:15] = radio_source_position[:, 12:15]*71492
 
-    # 探査機の時刻・位置データ[year,month,day,hour,min,sec,0,x,y,z]の10次元データ
+    # 直交座標から極座標へ
+    # 探査機の時刻・位置データ[year,month,day,hour,min,sec,0,x,y,z]の10次元データ IAU_JUPITER
     spacecraft_time_position = Coordinate_sysytem_transformation(
         spacecraft_ephemeris_csv)
 
-    # 月の時刻・位置データ[year,month,day,hour,min,sec,0,x,y,z]の10次元データ
+    # 月の時刻・位置データ[year,month,day,hour,min,sec,0,x,y,z]の10次元データ IAU_JUPITER
     moon_time_position = Coordinate_sysytem_transformation(moon_ephemeris_csv)
+
+    # 探査機の時刻・位置データ[year,month,day,hour,min,sec,0,x,y,z]の10次元データ IAU_"moon"
+    spacecraft_time_position_for_coordinate = Coordinate_sysytem_transformation(
+        spacecraft_ephemeris_coordinate_csv)
+
+    # 月の時刻・位置データ[year,month,day,hour,min,sec,0,x,y,z]の10次元データ IAU_"moon"
+    moon_time_position_for_coordinate = Coordinate_sysytem_transformation(
+        moon_ephemeris_coordinate_csv)
 
     radio_source_data_length = len(radio_source_position)
     res = np.empty((radio_source_data_length, 12))
@@ -204,11 +332,15 @@ def Spacecraft_ephemeris_calc(spacecraft_ephemeris_csv, moon_ephemeris_csv, time
     Ymax = 0
 
     for i in range(radio_source_data_length):
+
         ex = np.array([0.0, 0.0, 0.0])
         ey = np.array([0.0, 0.0, 0.0])
         r1 = np.array([0.0, 0.0, 0.0])
         r2 = np.array([0.0, 0.0, 0.0])
         r3 = np.array([0.0, 0.0, 0.0])
+        r4 = np.array([0.0, 0.0, 0.0])
+        r5 = np.array([0.0, 0.0, 0.0])
+
         rc1 = np.array([0.0, 0.0, 0.0])
         rc2 = np.array([0.0, 0.0, 0.0])
 
@@ -223,71 +355,87 @@ def Spacecraft_ephemeris_calc(spacecraft_ephemeris_csv, moon_ephemeris_csv, time
 
         Glow = np.intersect1d(
             np.where(spacecraft_time_position[:, 3] == radio_source_position[i][3]), np.where(spacecraft_time_position[:, 4] == radio_source_position[i][4]))
-        glow = int(Glow)
+        glow = int(Glow)  # 電波源の時刻データと同じ時刻の列を抽出
 
-        #
-        r1[0:3] = radio_source_position[i][12:15]
-        r2[0:3] = moon_time_position[glow, 7:10]  # moon position
-        r3[0:3] = spacecraft_time_position[glow, 7:10]  # space craft position
-        ex = (r3-r1) / np.linalg.norm(r3-r1)
-        rc1 = np.cross((r2-r1), (r3-r1))
-        rc2 = np.cross((rc1 / np.linalg.norm(rc1)), ex)  # ガニメデ表面に垂直なベクトル
-        ey = rc2 / np.linalg.norm(rc2)  # ガニメデ表面に垂直な単位ベクトル
+        # ある時間における各地点の座標xyzが 木星中心 & IGU_JUPITER で得られている
+        r1[0:3] = radio_source_position[i][12:15]  # radio source IAU_JUPITER
+        r2[0:3] = moon_time_position[glow, 7:10]  # moon position IAU_JUPITER
+        # space craft position IAU_JUPITER
+        r3[0:3] = spacecraft_time_position[glow, 7:10]
 
-        res[i][11] = np.dot((r3-r2), ey) - Output_moon_radius(object_name)
+        # moon position IAU_"moon"
+        r4[0:3] = moon_time_position_for_coordinate[glow, 7:10]
+        # space craft position IAU_"moon"
+        r5[0:3] = spacecraft_time_position_for_coordinate[glow, 7:10]
 
-        ratitude_y = np.degrees(np.arcsin(ey[2]))  # 緯度
-        longtitude_ey = np.degrees(np.arctan2(ey[1], ey[0]))
+        ex = (r3-r1) / np.linalg.norm(r3-r1)  # 電波源→探査機ベクトル
+        rc1 = np.cross((r2-r1), (r3-r1))  # 三点がなす平面と垂直なベクトル
+        # ガニメデ表面に垂直なベクトル（タンジェンシャルポイントにおける）
+        rc2 = np.cross((rc1 / np.linalg.norm(rc1)), ex)
+        # ガニメデ表面に垂直な単位ベクトル（タンジェンシャルポイントにおける・IAU_JUIPTER）
+        ey = rc2 / np.linalg.norm(rc2)
 
-        er = r2 / np.linalg.norm(r2)  # 木星からガニメデ表面への単位ベクトル
-        longtitude_er = np.degrees(np.arctan2(er[1], er[0]))
+        res[i][11] = np.dot((r3-r2), ey) - \
+            Output_moon_radius(object_name)  # 高度
 
-        longtitude_y = (longtitude_ey - longtitude_er+180)
-        if longtitude_y < -180:
-            longtitude_y += 360
+        latitude_ey_rad = np.arcsin(ey[2])  # IAUJIPTERでのでの緯度radian
+        longtitude_ey_rad = np.arctan2(ey[1], ey[0])  # IAUJIPTERでの経度radian
 
-        if longtitude_y > 180:
-            longtitude_y -= 360
+        # IAUJUPPITERからIAUmoonに変更
+        latitude_ey_rad_IAUmoon, longtitude_ey_rad_IAUmoon = Iau_jupiter_2_iau_moon(
+            latitude_ey_rad, longtitude_ey_rad, r4, r2, r5, r3)
 
-        res[i][5] = longtitude_y
-        res[i][6] = ratitude_y
+        latitude_ey = np.degrees(latitude_ey_rad_IAUmoon)  # IAUmoonでのでの緯度deg
+        longtitude_ey = np.degrees(longtitude_ey_rad_IAUmoon)  # IAUmoonでの経度deg
 
-        ratitude_x = np.degrees(np.arcsin(ex[2]))  # 緯度
-        longtitude_ex = np.degrees(np.arctan2(ex[1], ex[0]))
+        res[i][5] = longtitude_ey
+        res[i][6] = latitude_ey
 
-        longtitude_x = (longtitude_ex - longtitude_er+180)
-        if longtitude_x < -180:
-            longtitude_x += 360
+        latitude_ex_rad = np.arcsin(ex[2])  # 緯度radiun
+        longtitude_ex_rad = np.arctan2(ex[1], ex[0])  # 　経度radiun
 
-        if longtitude_x > 180:
-            longtitude_x -= 360
+        # IAUJUPPITERからIAUmoonに変更
+        latitude_ex_rad_IAUmoon, longtitude_ex_rad_IAUmoon = Iau_jupiter_2_iau_moon(
+            latitude_ex_rad, longtitude_ex_rad, r4, r2, r5, r3)
 
-        res[i][7] = longtitude_x
-        res[i][8] = ratitude_x
+        latitude_ex = np.degrees(latitude_ex_rad_IAUmoon)  # IAUmoonでのでの緯度deg
+        longtitude_ex = np.degrees(longtitude_ex_rad_IAUmoon)  # IAUmoonでの経度deg
+
+        res[i][7] = longtitude_ex
+        res[i][8] = latitude_ex
 
         res[i][10] = spacecraft_time_position[glow][10]  # 探査機の経度
 
-    # res [hour,min,frequency(MHz),電波源データの磁力線(根本)の経度  orイオの場合は(-1000),電波源の南北,tangential pointでの衛星経度,tangential pointでの衛星緯度,tangential pointから探査機方向に伸ばした時の衛星経度,tangential pointから探査機方向に伸ばした時の衛星緯度,座標変換した時のy(tangential pointからの高さ方向の距離),電波源の実際の経度,探査機の経度,探査機の高度]
-
+    # res [hour, min, frequency(MHz), 電波源データの磁力線(根本)の経度  orイオの場合は(-1000), 電波源の南北, tangential pointのIAUmoon経度, tangential pointnoのIAUmoon緯度, tangential pointからの探査機方向（tangential から90度回転）のIAUmoon経度, tangential pointからの探査機方向（tangential から90度回転）のIAUmoon緯度,座標変換した時のy(tangential pointからの高さ方向の距離)]
     return res
 
 
 def Save_data(data):
     np.savetxt('../result_for_yasudaetal2022/calculated_expres_detectable_radio_data_of_each_flyby/calculated_all_' +
-               spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_tangential_point_test.txt', data, fmt="%s")
+               spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_tangential_point_revised.txt', data, fmt="%s")
 
 
 def main():
 
-    # 探査機の位置データとフライバイリストから持ってきた時刻データを出力
+    # 探査機の位置データとフライバイリストから持ってきた時刻データを出力(IAU_JUPITER)
     spacecraft_epemeris, time = Pick_up_spacecraft_csv()
     moon_epemeris, time = Pick_up_moon_csv()  # 月の位置データとフライバイリストから持ってきた時刻データを出力
+
+    # 探査機の位置データとフライバイリストから持ってきた時刻データを出力(IAU_"moon")
+    spacecraft_epemeris_coordinate, time_coordinate = Pick_up_spacecraft_csv_coordinate()
+    # 月の位置データとフライバイリストから持ってきた時刻データを出力
+    moon_epemeris_coordinate, time_coordinate = Pick_up_moon_csv_coordinate()
+
     # 探査機の位置データの時間・月の位置データの時間・フライバイリストで指定している時刻データが一致するか確認
     Check_time_validity_csv(time, spacecraft_epemeris, moon_epemeris)
-    res = Spacecraft_ephemeris_calc(
-        spacecraft_epemeris, moon_epemeris, time)
+    Check_time_validity_csv(
+        time_coordinate, spacecraft_epemeris_coordinate, moon_epemeris_coordinate)
 
-    Save_data(res)
+    res = Spacecraft_ephemeris_calc(spacecraft_epemeris, moon_epemeris,
+                                    spacecraft_epemeris_coordinate, moon_epemeris_coordinate, time)
+
+    Save_data(res)  # 西経で出力される
+    # print(res[0])
 
     return 0
 
