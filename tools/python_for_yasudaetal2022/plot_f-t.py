@@ -11,30 +11,31 @@ import glob
 # %%
 # あらかじめ ../result_sgepss2021/~/~ に必要なレイトレーシング結果とパラメータセットを入れること
 
-object_name = 'europa'  # ganydeme/europa/calisto``
+object_name = 'ganymede'  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 12  # ..th flyby
-highest_plasma = '90e2'  # 単位は(/cc) 2e2/4e2/16e22
-plasma_scaleheight = '2.4e2'  # 単位は(km) 1.5e2/3e2/6e2
+time_of_flybies = 1  # ..th flyby
+highest_plasma = '1e2'  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = '10e2'  # 単位は(km) 1.5e2/3e2/6e2
 boundary_intensity_str = '7e-16'  # boundary_intensity_str = '1e-15'
 # boundary_intensity_str = '0'  # boundary_intensity_str = '1e-15'
+vertical_line_freq = 0.65  # MHz
 
 # G1 flyby
-# plot_time_step_sec = [0, 900, 1800, 2700, 3600, 4500, 5400]
-# plot_time_step_label = ["05:30", "05:45", "06:00", "06:15", "06:30", "06:45", "07;00"]
+plot_time_step_sec = [0, 900, 1800, 2700, 3600, 4500, 5400]
+plot_time_step_label = ["05:30", "05:45",
+                        "06:00", "06:15", "06:30", "06:45", "07;00"]
 
 # E12 flyby
-plot_time_step_sec = [6300, 6600, 6900, 7200, 7500, 7800, 8100, 8400, 8700]
-plot_time_step_label = ["11:45", "11:50", "11:55",
-                        "12:00", "12:05", "12:10", "12:15", "12:20", "12:25"]
+# plot_time_step_sec = [6300, 6600, 6900, 7200, 7500, 7800, 8100, 8400, 8700]
+# plot_time_step_label = ["11:45", "11:50", "11:55","12:00", "12:05", "12:10", "12:15", "12:20", "12:25"]
 
 # C30 flyby
-#plot_time_step_sec = [0, 1800, 3600, 5400, 7200, 9000, 10800]
-#plot_time_step_label = ["10:00", "10:30","11:00", "11:30", "12:00", "12:30", "13:00"]
+# plot_time_step_sec = [0, 1800, 3600, 5400, 7200, 9000, 10800]
+# plot_time_step_label = ["10:00", "10:30","11:00", "11:30", "12:00", "12:30", "13:00"]
 
 # C9 flyby
-#plot_time_step_sec = [0, 1800, 3600, 5400, 7200, 9000, 10800]
-#plot_time_step_label = ["12:00", "12:30","13:00", "13:30", "14:00", "14:30", "15:00"]
+# plot_time_step_sec = [0, 1800, 3600, 5400, 7200, 9000, 10800]
+# plot_time_step_label = ["12:00", "12:30","13:00", "13:30", "14:00", "14:30", "15:00"]
 
 information_list = ['year', 'month', 'start_day', 'end_day',
                     'start_hour', 'end_hour', 'start_min', 'end_min', 'occultaton_center_day', 'occultaton_center_hour', 'occultaton_center_min']
@@ -42,7 +43,7 @@ information_list = ['year', 'month', 'start_day', 'end_day',
 Radio_name_csv = '../result_for_yasudaetal2022/tracing_range_'+spacecraft_name+'_'+object_name + \
     '_'+str(time_of_flybies)+'_flybys/para_' + \
     highest_plasma+'_'+plasma_scaleheight+'.csv'
-Radio_Range = pd.read_csv(Radio_name_csv, header=0)
+Radio_Range = pd.read_csv(Radio_name_csv, header=0, engine="python")
 # [0 hour,1 min,2 frequency(MHz),3 電波源データの磁力線(根本)の経度  orイオの場合は(-1000),4 電波源の南北,5 座標変換した時のx(tangential point との水平方向の距離),6 座標変換した時のy(tangential pointからの高さ方向の距離),7 電波源の実際の経度,8 探査機の経度]
 
 
@@ -100,7 +101,7 @@ gal_fleq_tag_row = [5.620e+00, 1.000e+01, 1.780e+01, 3.110e+01, 4.213e+01, 4.538
 
 def Pick_up_cdf():
     flyby_list_path = '../result_for_yasudaetal2022/occultation_flyby_list.csv'
-    flyby_list = pd.read_csv(flyby_list_path)
+    flyby_list = pd.read_csv(flyby_list_path, engine="python")
 
     # csvファイルにフライバイごとで使う軌道データを記入しておく　上記のパラメータから必要なデータのファイル名が選ばれて読み込まれる
     # queryが数値非対応なのでまずはフライバイ数で絞り込み
@@ -213,14 +214,14 @@ def Prepare_Galileo_data(time_info, data_name):
     # 初めの数行は読み取らないよう設定・時刻データを読み取って時刻をプロットするためここがずれても影響はないが、データがない行を読むと怒られるのでその時はd2sファイルを確認
 
     rad_row_data = pd.read_csv(
-        '../result_for_yasudaetal2022/galileo_radio_data/'+data_name, header=None, skiprows=24, delimiter='  ')
+        '../result_for_yasudaetal2022/galileo_radio_data/'+data_name, header=None, skiprows=24, delimiter='  ', engine="python")
 
     # 電波データの周波数の単位をHzからMHzに変換する
     gal_fleq_tag = np.array(gal_fleq_tag_row, dtype='float64')/1000000
 
     # 一列目の時刻データを文字列で取得（例; :10:1996-06-27T05:30:08.695） ・同じ長さの０配列を準備・
     gal_time_tag_prepare = np.array(rad_row_data.iloc[:, 0])
-    gal_time_tag_prepare = gal_time_tag_prepare.astype(np.str)
+    gal_time_tag_prepare = gal_time_tag_prepare.astype(str)
     gal_time_tag = np.zeros(len(gal_time_tag_prepare))
 
     # 文字列のデータから開始時刻からの経過時間（秒）に変換
@@ -256,7 +257,7 @@ def Prepare_Galileo_data(time_info, data_name):
 
     DDF = np.array(df).astype(np.float64).T
     # print(DDF)
-    #print(len(gal_fleq_tag), len(gal_time_tag), DDF.shape)
+    # print(len(gal_fleq_tag), len(gal_time_tag), DDF.shape)
 
     # ガリレオ探査機のデータ取得開始時刻からの経過時間（sec) , ガリレオ探査機のデータ取得周波数（MHz), ガリレオ探査機の取得した電波強度（代入したデータと同じ単位）
     return gal_time_tag, gal_fleq_tag, DDF
@@ -452,20 +453,25 @@ def Make_FT_full(DataA, DataB, DataC, DataD, raytrace_time_information, radio_da
 
         # 横軸の幅は作りたい図によって変わるので引数用いる
         ax.set_xlim(start_time, end_time)
-
+        plt.hlines(vertical_line_freq, start_time, end_time,
+                   colors='hotpink', linestyle='dashed')
+        plt.annotate(str(vertical_line_freq)+"MHz",
+                     (start_time+20, vertical_line_freq+0.05), color="hotpink")
         ax.set_title("max density "+highest_plasma +
-                     "(/cc) scale height "+plasma_scaleheight+"(km)")
+                     "(cm-3) scale height "+plasma_scaleheight+"(km)")
 
         fig.savefig(os.path.join('../result_for_yasudaetal2022/raytracing_'+object_name+'_results/' + object_name+'_'+highest_plasma +
-                                 '_'+plasma_scaleheight+'/', spacecraft_name+'_' + object_name+'_'+str(time_of_flybies)+'_'+highest_plasma+'_'+plasma_scaleheight+'_boundary_int='+boundary_intensity_str+'_'+name+'_f-t.png'))
+                                 '_'+plasma_scaleheight+'/', spacecraft_name+'_' + object_name+'_'+str(time_of_flybies)+'_'+highest_plasma+'_'+plasma_scaleheight+'_boundary_int='+boundary_intensity_str+'_'+name+'_f-t.png'), dpi=1000)
 
         fig.savefig(os.path.join('../result_for_yasudaetal2022/f-t_plot_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby/radio_boundary_intensity_'+boundary_intensity_str,
-                                 spacecraft_name+'_' + object_name+'_'+str(time_of_flybies)+'_'+highest_plasma+'_'+plasma_scaleheight+'_boundary_int='+boundary_intensity_str+'_'+name+'_f-t.png'))
+                                 spacecraft_name+'_' + object_name+'_'+str(time_of_flybies)+'_'+highest_plasma+'_'+plasma_scaleheight+'_boundary_int='+boundary_intensity_str+'_'+name+'_f-t.png'), dpi=1000)
 
     plot_and_save(int(plot_time_step_sec[0]), int(
         plot_time_step_sec[-1]), "full")
-    plot_and_save(middle_time, int(plot_time_step_sec[-1]), "egress")
-    plot_and_save(int(plot_time_step_sec[0]), middle_time, "ingress")
+    # plot_and_save(middle_time, int(plot_time_step_sec[-1]), "egress")
+    # plot_and_save(int(plot_time_step_sec[0]), middle_time, "ingress")
+    plot_and_save(middle_time, middle_time+1800, "egress")
+    plot_and_save(middle_time-1800, middle_time, "ingress")
 
     # 以下は電波データにおける掩蔽タイミングを決めるものなので、閾値を買えない限りは毎回やる必要はない
     # print(ingress_time_list)
@@ -638,7 +644,7 @@ def Evaluate_data_coutour(time_data, radio_data_name):
 
 def main():
     time_information, radio_data = Pick_up_cdf()
-    #print(time_information, radio_data)
+    # print(time_information, radio_data)
     # [0 hour,1 min,2 frequency(MHz),3 電波源データの磁力線(根本)の経度  orイオの場合は(-1000),4 電波源の南北,5 座標変換した時のx(tangential point との水平方向の距離),6 座標変換した時のy(tangential pointからの高さ方向の距離),7 電波源の実際の経度,8 探査機の経度]
 
     detectable_radio = np.loadtxt('../result_for_yasudaetal2022/raytracing_'+object_name+'_results/'+object_name+'_'+highest_plasma+'_'+plasma_scaleheight +

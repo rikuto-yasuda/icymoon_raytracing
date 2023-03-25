@@ -14,6 +14,17 @@ plasma_scaleheight = '3e2'  # 単位は(km) 1.5e2/3e2/6e2
 frequency = '5.349649786949157715e5'  # MHz
 altitiude_interval = 50
 
+begining_egress_hour = 13
+begining_egress_minute = 41
+
+end_egress_hour = 13
+end_egress_minute = 45
+
+lowest_frequency_egress = 0.53
+highest_frequecy_egress = 5.5
+radio_type_egress = "D"  # 複数選択可能にしたい
+
+
 Radio_name_cdf = '../result_for_yasudaetal2022/tracing_range_'+spacecraft_name+'_'+object_name + \
     '_'+str(time_of_flybies)+'_flybys/para_' + \
     highest_plasma+'_'+plasma_scaleheight+'.csv'
@@ -60,6 +71,12 @@ def ray_plot(height):
     x = data[:, [1]]
     z = data[:, [3]]
     plt.plot(x, z, color='red', linewidth=0.5)
+
+
+def spacecraft_plot():
+    # [0 hour, 1 min, 2 frequency(MHz), 3 電波源データの磁力線(根本)の経度  orイオの場合は(-1000), 4 電波源の南北,座標変換した時のx(tangential point との水平方向の距離), 5 座標変換した時のy(tangential pointからの高さ方向の距離),6 電波源の実際の経度]
+    data = np.loadtxt(
+        '../result_for_yasudaetal2022/calculated_expres_detectable_radio_data_of_each_flyby/')
 
 
 def Output_moon_radius(moon_name):

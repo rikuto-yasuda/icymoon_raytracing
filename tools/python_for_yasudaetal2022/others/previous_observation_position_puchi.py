@@ -9,10 +9,15 @@ import math
 
 # %%
 
-first_lat = 0  # deg表記
-first_lon = 82
-second_lat = 3
-second_lon = 266
+first_lat_low = -6.6
+first_lat_high = -1.2  # deg表記
+first_lon_low = 264.5
+first_lon_high = 267.5
+
+second_lat_low = 0
+second_lat_high = 0.1
+second_lon_low = 268.5
+second_lon_high = 268.6
 
 # %%
 
@@ -38,12 +43,38 @@ def naiseki_calc(lat_deg1, lon_deg1, lat_deg2, lon_deg2):
 
     return naiseki
 
+
+def angle_range(lat1_low, lat1_high, lon1_low, lon1_high, lat2_low, lat2_high, lon2_low, lon2_high):
+    min_angle = 180
+    max_angle = 0
+
+    lat1 = np.arange(lat1_low, lat1_high, 0.1)
+    lon1 = np.arange(lon1_low, lon1_high, 0.1)
+    lat2 = np.arange(lat2_low, lat2_high, 0.1)
+    lon2 = np.arange(lon2_low, lon2_high, 0.1)
+
+    for i in lat1:
+        for j in lon1:
+            for k in lat2:
+                for l in lon2:
+                    naiseki = naiseki_calc(i, j, k, l)
+                    deg = calc_deg(naiseki)
+
+                    if deg < min_angle:
+                        min_angle = deg
+                    if deg > max_angle:
+                        max_angle = deg
+
+    return max_angle, min_angle
+
+
 # %%
 
 
 def main():
-    nai = naiseki_calc(first_lat, first_lon, second_lat, second_lon)
-    print(calc_deg(nai))
+    max, min = angle_range(first_lat_low, first_lat_high, first_lon_low, first_lon_high,
+                           second_lat_low, second_lat_high, second_lon_low, second_lon_high)
+    print(max, min)
     return 0
 
 

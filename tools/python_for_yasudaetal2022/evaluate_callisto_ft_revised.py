@@ -8,30 +8,26 @@ import glob
 # %%
 
 ####################################################
-object_name = 'ganymede'  # ganydeme/europa/calisto`
+object_name = 'callisto'  # ganydeme/europa/calisto`
 
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 1  # ..th flyby
+time_of_flybies = 9  # ..th flyby
 
 
 """lowest frequency and highest_freqency(MHz)"""
-using_frequency_range = [8.5e-1, 4]  # G1 ingress
-# using_frequency_range = [5.5e-1, 6]  # G1 egress
-# using_frequency_range = [2, 6]  # E12
+"""
+using_frequency_range = [6.0e-1, 6]  # C30 ingress
+boundary_intensity_str = '7e-16'  # '7e-16'
+occultaion_type = 'ingress'  # 'ingress'
+radio_type = 'C'  # 'A' or 'B' or 'C'
+"""
 
-# using_frequency_range = [6.0e-1, 6]  # C30 ingress
-# using_frequency_range = [4.0e-1, 6]  # C30 egress A
-# using_frequency_range = [4.5e-1, 6]  # C30 egress D
-# using_frequency_range = [7.0e-1, 6]  # C30 egress B&C
+using_frequency_range = [5.3e-1, 5.5]  # C9 egress D
+boundary_intensity_str = '4e-16'  # '4e-16'
+occultaion_type = 'egress'  # 'egress
+radio_type = 'D'
 
-# using_frequency_range = [5.3e-1, 5.5]  # C9 egress A B D
-# using_frequency_range = [6.5e-1, 5.5]  # C9 egress C
 
-# using_frequency_range = [6.5e-1, 5.5]  # C9 egress C
-
-boundary_intensity_str = '7e-16'  # '7e-16' '1e-15' '4e-16'
-occultaion_type = 'ingress'  # 'ingress' or 'egress
-radio_type = 'B'  # 'A' or 'B' or 'C' or 'D'
 # %%
 
 use_files = sorted(glob.glob('../result_for_yasudaetal2022/radio_raytracing_occultation_timing_def_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies) +
@@ -80,6 +76,42 @@ def plot_difference(highest, scaleheight):
     return 0
 
 
+def plot(max_list, scale_list, density_list):
+    #scale_type = np.sort(np.array(list(set(scale_list))))
+    scale_type = np.array([900, 600, 400])
+    fig, ax = plt.subplots(len(scale_type), 1, figsize=(4, 7))
+
+    # 上
+    for i in range(len(scale_type)):
+        selected_number = np.array(np.where(scale_list == scale_type[i]))[0]
+        x = np.array(max_list)[selected_number]
+        y = np.array(density_list)[selected_number]
+        x_sorted_number = np.argsort(x)
+        x_sorted = x[x_sorted_number]
+        y_sorted = y[x_sorted_number]
+        print(x_sorted_number)
+        ax[i].plot(x_sorted, y_sorted)
+
+        # callisto
+        #ax[i].set_xlim(0, 3000)
+        #ax[i].set_ylim(20, 60)
+        ax[i].set_xlim(0, 1000)
+        ax[i].set_ylim(20, 80)
+        ax[i].set_title('scale_height:'+str(scale_type[i])+'(km)', fontsize=10)
+    fig.supxlabel('maximum density (cm-3)')
+    fig.supylabel('average time lag (sec) radio source:'+radio_type)
+    fig.subplots_adjust(left=0.22)
+    fig.subplots_adjust(hspace=0.3)
+    fig.subplots_adjust(bottom=0.07)
+
+    plt.savefig("../result_for_yasudaetal2022/evaluate_average_time_lag/" +
+                object_name+"_"+str(time_of_flybies)+"_"+occultaion_type+radio_type+".png")
+
+    plt.show()
+
+    return 0
+
+
 def main():
     # MakeFolder()  # フォルダ作成　初めだけ使う
 
@@ -92,23 +124,11 @@ def main():
 
     output_array = np.array(max + scale + dif)
     output_array = output_array.reshape(3, int(len(output_array)/3)).T
-    print(output_array)
     np.savetxt('../result_for_yasudaetal2022/evaluate_f-t_diagram_plot_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby_radioint_'+boundary_intensity_str+'/'+spacecraft_name +
                '_'+object_name+'_'+str(time_of_flybies)+'flyby_radiointensity_'+boundary_intensity_str+'_'+occultaion_type+'_'+radio_type+'_'+str(using_frequency_range)+'output_array.csv', output_array, fmt='%.2f', delimiter=',')
-    #plt.scatter(max, scale, s=100, c=dif,cmap='rainbow_r', vmax=80, vmin=20)
-    #plt.figure(figsize=(9, 4))
-    plt.scatter(max, scale, s=25, c=dif,
-                cmap='rainbow_r', vmax=150, vmin=20)
+
+    plot(max, scale, dif)
     # plt.xscale('log')
-    plt.yscale('log')
-    plt.ylim(200, 700)
-    plt.colorbar(label='average time difference (sec)')
-    plt.xlabel("Max density (/cc)")
-    plt.ylabel("Scale height (km)")
-    plt.title(object_name+'_'+occultaion_type+'_'+radio_type+'_f-t_evaluate')
-    plt.savefig(os.path.join('../result_for_yasudaetal2022/evaluate_f-t_diagram_plot_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby_radioint_'+boundary_intensity_str,
-                             spacecraft_name + '_'+object_name+'_'+str(time_of_flybies)+'flyby_radiointensity_'+boundary_intensity_str+'_'+occultaion_type+'_'+radio_type+'_'+str(using_frequency_range)+'_f-t_evaluate.png'))
-    plt.show()
 
     return 0
 

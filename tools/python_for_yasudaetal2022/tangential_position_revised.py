@@ -9,13 +9,74 @@ import math
 
 # %%
 
-object_name = "ganymede"  # europa/ganymde/callisto
+object_name = "callisto"  # europa/ganymde/callisto
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 1  # ..th flyby
+time_of_flybies = 9  # ..th flyby
 information_list = ['year', 'month', 'start_day', 'end_day',
                     'start_hour', 'end_hour', 'start_min', 'end_min']
 
+begining_ingress_hour = 13
+begining_ingress_minute = 41
+
+end_ingress_hour = 13
+end_ingress_minute = 45
+
+lowest_frequency_ingress = 0.6
+highest_frequecy_ingress = 6.0
+
+radio_type_ingress = "A,B,C"  # 複数選択可能にしたい
+
+begining_egress_hour = 13
+begining_egress_minute = 41
+
+end_egress_hour = 13
+end_egress_minute = 45
+
+lowest_frequency_egress = 0.53
+highest_frequecy_egress = 5.5
+radio_type_egress = "D"  # 複数選択可能にしたい
+
+# Callisto
+Freq_str = ['3.612176179885864258e5', '3.984813988208770752e5', '4.395893216133117676e5', '4.849380254745483398e5', '5.349649786949157715e5', '5.901528000831604004e5', '6.510338783264160156e5',
+            '7.181954979896545410e5', '7.922856807708740234e5', '8.740190267562866211e5', '9.641842246055603027e5', '1.063650846481323242e6',
+            '1.173378825187683105e6', '1.294426321983337402e6', '1.427961349487304688e6', '1.575271964073181152e6', '1.737779378890991211e6',
+            '1.917051434516906738e6', '2.114817380905151367e6', '2.332985162734985352e6', '2.573659420013427734e6', '2.839162111282348633e6',
+            '3.132054328918457031e6', '3.455161809921264648e6', '3.811601638793945312e6', '4.204812526702880859e6', '4.638587474822998047e6',
+            '5.117111206054687500e6', '5.644999980926513672e6', ]
+
+
+Freq_num = []
+for idx in Freq_str:
+    Freq_num.append(float(idx)/1000000)
+
 # IAU_JUPITERで接点を求める用
+
+
+def Pick_up_time():
+    flyby_list_path = '../result_for_yasudaetal2022/occultation_flyby_list.csv'
+    flyby_list = pd.read_csv(flyby_list_path)
+
+    # csvファイルにフライバイごとで使う軌道データを記入しておく　上記のパラメータから必要なデータのファイル名が選ばれて読み込まれる
+    # queryが数値非対応なのでまずはフライバイ数で絞り込み
+    selected_flyby_list = flyby_list[flyby_list['flyby_time']
+                                     == time_of_flybies]
+    complete_selecred_flyby_list = selected_flyby_list.query(
+        'object == "'+object_name+'" & spacecraft == "'+spacecraft_name+'"')  # queryでフライバイ数以外を絞り込み
+
+    complete_selecred_flyby_list = complete_selecred_flyby_list.reset_index(
+        drop=True)
+
+    # complete_selecred_flyby_list = complete_selecred_flyby_list.index.tolist()
+
+    # print(complete_selecred_flyby_list)
+
+    # csvから時刻データを抽出['year', 'month', 'start_day', 'end_day','start_hour', 'end_hour', 'start_min', 'end_min','occultaton_center_day','occultaton_center_hour','occultaton_center_min']
+    time_information = []
+    for i in information_list:
+        time_information.append(int(complete_selecred_flyby_list[i][0]))
+
+    # csvの時刻データと電波データの名前をかえす
+    return time_information
 
 
 def Pick_up_spacecraft_csv():
@@ -72,7 +133,7 @@ def Pick_up_spacecraft_csv_coordinate():
 
     spacecraft_csv_path = '../result_for_yasudaetal2022/ephemeris_for_coordinate_transformation/spacecraft/' + csv_name
     spacecraft_ephemeris_coordinate_csv = pd.read_csv(
-        spacecraft_csv_path, header=15, skipfooter=4)  # ヘッダーの位置と末端のデータの位置をheaderとskipfooterで設定
+        spacecraft_csv_path, header=15, skipfooter=5)  # ヘッダーの位置と末端のデータの位置をheaderとskipfooterで設定
 
     # IAU_"moon"で考えた木星から見た探査機の位置
     return spacecraft_ephemeris_coordinate_csv, time_information
@@ -134,7 +195,7 @@ def Pick_up_moon_csv_coordinate():
 
     moon_csv_path = '../result_for_yasudaetal2022/ephemeris_for_coordinate_transformation/moon/' + csv_name
     moon_ephemeris_coordinate_csv = pd.read_csv(
-        moon_csv_path, header=15, skipfooter=3)  # ヘッダーの位置と末端のデータの位置をheaderとskipfooterで設定
+        moon_csv_path, header=15, skipfooter=4)  # ヘッダーの位置と末端のデータの位置をheaderとskipfooterで設定
 
     return moon_ephemeris_coordinate_csv, time_information  # IAU_"moon"で考えた木星から見た月の位置
 
@@ -251,7 +312,7 @@ def Coordinate_sysytem_transformation(polar_coordinate_data_csv):
 def Iau_jupiter_2_iau_moon(row_latitude, row_longitude, position1_moon_sys, position1_jup_sys, position2_moon_sys, position2_jup_sys):
     # row_latitude, row_longitude ともにradiunで入力
     # position dataはそれぞれxyzのベクトルで
-    #　以下の計算の考え方はredmeを参照（修論内）
+    # 　以下の計算の考え方はredmeを参照（修論内）
     deff_position1 = position1_moon_sys - position1_jup_sys
     deff_position2 = position2_moon_sys - position2_jup_sys
 
@@ -295,7 +356,10 @@ def Iau_jupiter_2_iau_moon(row_latitude, row_longitude, position1_moon_sys, posi
 
     revised_latitude = np.arcsin(tangential_point_revised[2])
     revised_longitude = np.arctan2(
-        tangential_point_revised[1], tangential_point_revised[0])
+        tangential_point_revised[1]*(-1), tangential_point_revised[0])
+
+    if revised_longitude < 0:
+        revised_longitude += 2*np.pi
     # latitude, longitude ともにradiunで出力
     return revised_latitude, revised_longitude
 
@@ -406,7 +470,7 @@ def Spacecraft_ephemeris_calc(spacecraft_ephemeris_csv, moon_ephemeris_csv, spac
 
         res[i][10] = spacecraft_time_position[glow][10]  # 探査機の経度
 
-    # res [hour, min, frequency(MHz), 電波源データの磁力線(根本)の経度  orイオの場合は(-1000), 電波源の南北, tangential pointのIAUmoon経度, tangential pointnoのIAUmoon緯度, tangential pointからの探査機方向（tangential から90度回転）のIAUmoon経度, tangential pointからの探査機方向（tangential から90度回転）のIAUmoon緯度,座標変換した時のy(tangential pointからの高さ方向の距離)]
+    # res [0 hour, 1 min, 2 frequency(MHz), 3 電波源データの磁力線(根本)の経度  orイオの場合は(-1000), 4 電波源の南北, 5 tangential pointのIAUmoon経度, 6 tangential pointnoのIAUmoon緯度, 7 tangential pointからの探査機方向（tangential から90度回転）のIAUmoon経度, 8 tangential pointからの探査機方向（tangential から90度回転）のIAUmoon緯度,9 座標変換した時のy(tangential pointからの高さ方向の距離),10 探査機の経度, 11 z]
     return res
 
 
@@ -415,8 +479,103 @@ def Save_data(data):
                spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_tangential_point_revised.txt', data, fmt="%s")
 
 
-def main():
+def Occultation_timing_select(row_data, time_data):
 
+    # judgement [0 hour,1 min,2 frequency(MHz),3 電波源データの磁力線(根本)の経度  orイオの場合は(-1000),4 電波源の南北,5 tangential pointでの衛星経度,6 tangential pointでの衛星緯度,7 tangential pointから探査機方向に伸ばした時の衛星経度,8 tangential pointから探査機方向に伸ばした時の衛星緯度, 9 電波源の実際の経度,10 探査機の経度, 11 z]
+
+    def radio_source_select(judgement, time_information, radio_type):
+
+        selected_data = np.zeros_like(judgement)
+
+        for k in range(len(judgement)):
+
+            Num = int(judgement[k][0]*60+judgement[k][1]) - \
+                (time_information[4]*60+time_information[6])
+
+            if np.abs(judgement[k][10]+360-judgement[k][9]) < np.abs(judgement[k][10]-judgement[k][9]):
+                Lon = judgement[k][10]+360 - judgement[k][9]
+
+            elif np.abs(judgement[k][9]+360-judgement[k][10]) < np.abs(judgement[k][9]-judgement[k][10]):
+                Lon = judgement[k][10]-360 - judgement[k][9]
+
+            else:
+                Lon = judgement[k][10] - judgement[k][9]
+
+            Lat = judgement[k][4]
+
+            Fre = np.where(Freq_num == judgement[k][2])
+
+            if 'A' in radio_type:
+                if Lon < 0 and Lat > 0:
+                    selected_data[k, :] = judgement[k, :].copy()
+
+            if 'B' in radio_type:
+                if Lon > 0 and Lat > 0:
+                    selected_data[k, :] = judgement[k, :].copy()
+
+            if 'C' in radio_type:
+                if Lon < 0 and Lat < 0:
+                    selected_data[k, :] = judgement[k, :].copy()
+
+            if 'D' in radio_type:
+                if Lon > 0 and Lat < 0:
+                    selected_data[k, :] = judgement[k, :].copy()
+
+        selected_data = selected_data[np.all(selected_data != 0, axis=1), :]
+        return selected_data
+
+    # np.savetxt('../result_for_yasudaetal2022/calculated_expres_detectable_radio_data_of_each_flyby/calculated_all_' +spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_'+radio_type+'_tangential_point.txt', selected_data, fmt="%s")
+
+    ####
+    def lon_and_lat(radio_data, begining_hour, begining_min, end_hour, end_min, lowest_freq, highest_freq):
+
+        # radio_data[0 hour,1 min,2 frequency(MHz),3 電波源データの磁力線(根本)の経度  orイオの場合は(-1000),4 電波源の南北,5 tangential pointでの衛星経度,6 tangential pointでの衛星緯度,7 tangential pointから探査機方向に伸ばした時の衛星経度,8 tangential pointから探査機方向に伸ばした時の衛星緯度, 9 電波源の実際の経度,10 探査機の経度, 11 z]
+
+        start_hour_select = np.where(
+            radio_data[:, 0] == begining_hour)
+        start_minute_select = np.where(
+            radio_data[:, 1] == begining_min)
+        start_select = np.intersect1d(
+            start_hour_select, start_minute_select)[0]
+
+        end_hour_select = np.where(
+            radio_data[:, 0] == end_hour)
+        end_minute_select = np.where(
+            radio_data[:, 1] == end_min)
+        end_select = np.intersect1d(end_hour_select, end_minute_select)[0]
+
+        time_select = radio_data[start_select:end_select, :]
+
+        freq_select = np.where((time_select[:, 2] > lowest_freq) & (
+            time_select[:, 2] < highest_freq))[0]
+        selected_freq_data = (time_select[freq_select, :])
+
+        detectable_select = np.where(selected_freq_data[:, 11] > 0)[0]
+        selected_detectable_data = (selected_freq_data[detectable_select, :])
+        longitude = selected_detectable_data[:, 5]
+        latitude = selected_detectable_data[:, 6]
+        print(np.max(selected_detectable_data[:, 2]))
+        print(longitude)
+        print(latitude)
+        print("longitude max:"+str(np.max(longitude))+" min:" +
+              str(np.min(longitude))+" average:"+str(np.average(longitude)))
+        print("latitude max:"+str(np.max(latitude))+" min:" +
+              str(np.min(latitude))+" average:"+str(np.average(latitude)))
+
+    print("ingress")
+    ingress_data = radio_source_select(row_data, time_data, radio_type_ingress)
+    lon_and_lat(ingress_data, begining_ingress_hour, begining_ingress_minute, end_ingress_hour,
+                end_ingress_minute, lowest_frequency_ingress, highest_frequecy_ingress)
+
+    print("egress")
+    egress_data = radio_source_select(row_data, time_data, radio_type_egress)
+    lon_and_lat(egress_data, begining_egress_hour, begining_egress_minute, end_egress_hour,
+                end_egress_minute, lowest_frequency_egress, highest_frequecy_egress)
+    return 0
+
+
+def main():
+    time_information = Pick_up_time()
     # 探査機の位置データとフライバイリストから持ってきた時刻データを出力(IAU_JUPITER)
     spacecraft_epemeris, time = Pick_up_spacecraft_csv()
     moon_epemeris, time = Pick_up_moon_csv()  # 月の位置データとフライバイリストから持ってきた時刻データを出力
@@ -435,6 +594,7 @@ def main():
                                     spacecraft_epemeris_coordinate, moon_epemeris_coordinate, time)
 
     Save_data(res)  # 西経で出力される
+    Occultation_timing_select(res, time_information)
     # print(res[0])
 
     return 0
