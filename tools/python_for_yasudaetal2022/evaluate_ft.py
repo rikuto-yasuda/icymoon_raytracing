@@ -8,20 +8,20 @@ import glob
 # %%
 
 ####################################################
-object_name = 'ganymede'  # ganydeme/europa/calisto`
+object_name = 'callisto'  # ganydeme/europa/calisto`
 
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 1  # ..th flyby
+time_of_flybies = 30  # ..th flyby
 
 
 """lowest frequency and highest_freqency(MHz)"""
-using_frequency_range = [8.5e-1, 4]  # G1 ingress
+# using_frequency_range = [8.5e-1, 4]  # G1 ingress
 # using_frequency_range = [5.5e-1, 6]  # G1 egress
 # using_frequency_range = [2, 6]  # E12
 
 # using_frequency_range = [6.0e-1, 6]  # C30 ingress
 # using_frequency_range = [4.0e-1, 6]  # C30 egress A
-# using_frequency_range = [4.5e-1, 6]  # C30 egress D
+using_frequency_range = [4.5e-1, 6]  # C30 egress D
 # using_frequency_range = [7.0e-1, 6]  # C30 egress B&C
 
 # using_frequency_range = [5.3e-1, 5.5]  # C9 egress A B D
@@ -30,12 +30,15 @@ using_frequency_range = [8.5e-1, 4]  # G1 ingress
 # using_frequency_range = [6.5e-1, 5.5]  # C9 egress C
 
 boundary_intensity_str = '7e-16'  # '7e-16' '1e-15' '4e-16'
-occultaion_type = 'ingress'  # 'ingress' or 'egress
-radio_type = 'B'  # 'A' or 'B' or 'C' or 'D'
+occultaion_type = 'egress'  # 'ingress' or 'egress
+radio_type = 'D'  # 'A' or 'B' or 'C' or 'D'
 # %%
 
 use_files = sorted(glob.glob('../result_for_yasudaetal2022/radio_raytracing_occultation_timing_def_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies) +
                    '_flyby_radioint_'+boundary_intensity_str+'/'+object_name+'_*_'+occultaion_type+'_defference_time_data'+radio_type+'_'+boundary_intensity_str+'.txt'))
+
+use_files = sorted(glob.glob('../result_for_yasudaetal2022/radio_raytracing_occultation_timing_def_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies) +
+                   '_flyby_radioint_'+boundary_intensity_str+'_examine/'+object_name+'_*_'+occultaion_type+'_defference_time_data'+radio_type+'_'+boundary_intensity_str+'_examine.txt'))
 
 
 max = []
@@ -61,7 +64,7 @@ def maxandscale(file):
 def plot_difference(highest, scaleheight):
 
     time_diffrence_index = np.loadtxt('../result_for_yasudaetal2022/radio_raytracing_occultation_timing_def_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby_radioint_' +
-                                      boundary_intensity_str+'/'+object_name+'_' + highest+'_'+scaleheight+'_'+occultaion_type+'_defference_time_data'+radio_type+'_'+boundary_intensity_str+'.txt')
+                                      boundary_intensity_str+'_examine/'+object_name+'_' + highest+'_'+scaleheight+'_'+occultaion_type+'_defference_time_data'+radio_type+'_'+boundary_intensity_str+'_examine.txt')
 
     print(time_diffrence_index)
     limited_time_list = np.array(np.where(
@@ -101,7 +104,7 @@ def main():
                 cmap='rainbow_r', vmax=150, vmin=20)
     # plt.xscale('log')
     plt.yscale('log')
-    plt.ylim(200, 700)
+    plt.ylim(20, 1500)
     plt.colorbar(label='average time difference (sec)')
     plt.xlabel("Max density (/cc)")
     plt.ylabel("Scale height (km)")

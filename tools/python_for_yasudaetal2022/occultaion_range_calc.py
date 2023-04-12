@@ -7,14 +7,14 @@ import pandas as pd
 
 
 # In[]
-object_name = 'callisto'   # europa/ganymde/callisto
+object_name = 'ganymede'   # europa/ganymde/callisto
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 12  # ..th flyby
-highest_plasma = '90e2'  # 単位は(/cc) 2e2/4e2/16e2
-plasma_scaleheight = '2.4e2'  # 単位は(km) 1.5e2/3e2/6e2
+time_of_flybies = 1  # ..th flyby
+highest_plasma = '0e2'  # 単位は(/cc) 2e2/4e2/16e2
+plasma_scaleheight = '0.5e2'  # 単位は(km) 1.5e2/3e2/6e2
 
-raytrace_lowest_altitude = -1000  # レイトレーシングの下端の初期高度(km) 100の倍数で
-raytrace_highest_altitude = 8100  # レイトレーシング上端の初期高度(km) 500の倍数+100で
+raytrace_lowest_altitude = -200  # レイトレーシングの下端の初期高度(km) 100の倍数で
+raytrace_highest_altitude = 600  # レイトレーシング上端の初期高度(km) 500の倍数+100で
 
 information_list = ['year', 'month', 'start_day', 'end_day',
                     'start_hour', 'end_hour', 'start_min', 'end_min']
@@ -280,8 +280,8 @@ def Replace_csv(lowest_list, highest_list):
 
 def main():
 
-    # Raytrace_result_makefolder()  # レイトレーシングの結果を格納するフォルダを生成
-    # MoveFile()  # レイトレーシングの結果を移動
+    Raytrace_result_makefolder()  # レイトレーシングの結果を格納するフォルダを生成
+    MoveFile()  # レイトレーシングの結果を移動
 
     with Pool(processes=3) as pool:
         lowest_altitude_list = list(pool.map(Calc_lowest, kinds_freq))

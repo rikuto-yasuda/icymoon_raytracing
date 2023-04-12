@@ -6,17 +6,22 @@ import glob
 import numpy as np
 import pandas as pd
 from scipy.interpolate import griddata
+from matplotlib.colors import ListedColormap, BoundaryNorm
 
 
 # %%
 
 ####################################################
-object_name = 'ganymede'  # ganydeme/europa/calisto`
+object_name = 'callisto'  # ganydeme/europa/calisto`
 
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 1  # ..th flyby
+time_of_flybies = 30  # ..th flyby
 occultaion_type = 'egress'  # 'ingress' or 'egress
-radio_type_A2D = 'A'  # 'A' or 'B' or 'C' or 'D'
+radio_type_A2D = 'D'  # 'A' or 'B' or 'C' or 'D'
+# callisto 30 flyby egress用　if you want to ignore the exclave structere, choose "True" (Check M-thesis!)
+exclave_examine = True
+# "time_difference" or "kai_2" please choose what you want to plot
+purpose = "time_difference"
 
 # %%
 
@@ -41,12 +46,22 @@ def maxandscale(file):
     print(max_density, scale_height)
     return max_density, scale_height
 
+# ずれ時間の計算関数・保存機能なし
 
-def plot_difference(highest, scaleheight, boundary_intensity_str, radio_type, using_frequency_range):
+
+def plot_difference(highest, scaleheight, boundary_intensity_str, radio_type, using_frequency_range, exclave):
 
     # [[frequencyの配列] [time_lagの配列]]
-    time_diffrence_index = np.loadtxt('../result_for_yasudaetal2022/radio_raytracing_occultation_timing_def_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby_radioint_' +
-                                      boundary_intensity_str+'/'+object_name+'_' + highest+'_'+scaleheight+'_'+occultaion_type+'_defference_time_data'+radio_type+'_'+boundary_intensity_str+'.txt')
+    if exclave == False:
+        time_diffrence_index = np.loadtxt('../result_for_yasudaetal2022/radio_raytracing_occultation_timing_def_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby_radioint_' +
+                                          boundary_intensity_str+'/'+object_name+'_' + highest+'_'+scaleheight+'_'+occultaion_type+'_defference_time_data'+radio_type+'_'+boundary_intensity_str+'.txt')
+
+    elif exclave == True:
+        time_diffrence_index = np.loadtxt('../result_for_yasudaetal2022/radio_raytracing_occultation_timing_def_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby_radioint_' +
+                                          boundary_intensity_str+'_examine/'+object_name+'_' + highest+'_'+scaleheight+'_'+occultaion_type+'_defference_time_data'+radio_type+'_'+boundary_intensity_str+'_examine.txt')
+
+    else:
+        print("please type collect exclave_examine")
 
     limited_time_list = np.array(np.where(
         (time_diffrence_index[0][:] > using_frequency_range[0]) & (time_diffrence_index[0][:] < using_frequency_range[1])))
@@ -59,6 +74,10 @@ def plot_difference(highest, scaleheight, boundary_intensity_str, radio_type, us
     average_difference_time = sum(
         time_diffrence_index[1][limited_time_minimum: limited_time_maximum+1])/frequency_number
 
+    print(time_diffrence_index[1]
+          [limited_time_minimum: limited_time_maximum+1])
+    print(str(frequency_number)+"ko")
+
     # シグマを1と置いたときのkai2じょう
     kai2_temporary = np.dot(
         time_diffrence_index[1][limited_time_minimum: limited_time_maximum+1], time_diffrence_index[1][limited_time_minimum: limited_time_maximum+1])
@@ -69,6 +88,8 @@ def plot_difference(highest, scaleheight, boundary_intensity_str, radio_type, us
     kai2_temp.append(float(kai2_temporary))
 
     return frequency_number
+
+# カイ二乗計算関数・保存機能なし
 
 
 def kai2(maximum, scaleheight, kai2, frequency_n):
@@ -192,38 +213,57 @@ def get_frequency_intensity_plotparameter(moon_name, flyby_time, ingress_or_eger
 
     return using_frequency_range, boundary_intensity_str, timelag_max, timelag_min, scale_max, scale_min, dot_size, fig_holizontal, fig_vertical
 
+# 　カイ二乗値補間・プロット関数　保存機能付き
 
-def plot_kai_contor(max, scale, delta_kai, ymin, ymax):
-    sample_df = pd.DataFrame()
-    sample_df['X'] = max
-    sample_df['Y'] = scale
-    sample_df['value'] = delta_kai
 
-    # データ範囲を取得
-    x_min, x_max = sample_df['X'].min(), sample_df['X'].max()
+def plot_kai2(max, scale, delta_kai, ymin, ymax):
 
-    # 取得したデータ範囲で新しく座標にする配列を作成
-    new_x_coord = np.linspace(0, x_max, 32)
-    new_y_coord = np.linspace(ymin, ymax, 100)
+    # 補間するためのグリッドを作成
+    max = np.array(max)
+    scale = np.array(scale)
+    xi = np.arange(max.min(), max.max(), 25)
+    yi = np.arange(scale.min(), scale.max(), 25)
+    xi, yi = np.meshgrid(xi, yi)
 
-    # x, yのグリッド配列作成
-    xx, yy = np.meshgrid(new_x_coord, new_y_coord)
+    # データの補間
+    zi = griddata((max, scale), delta_kai, (xi, yi), method='linear')
 
-    # 既知のx, y座標, その値取得
-    knew_xy_coord = sample_df[['X', 'Y']].values
-    knew_values = sample_df['value'].values
+    # 等高線の描画
+    cs = plt.contour(xi, yi, zi, levels=[10, 20, 30, 40])
+    plt.clabel(cs)
 
-    # 座標間のデータを補間, method='nearest', 'linear' or 'cubic'
-    result = griddata(points=knew_xy_coord, values=knew_values,
-                      xi=(xx, yy), method='linear')
+    # データの散布図を重ねて描画
+    plt.scatter(max, scale, c=delta_kai, cmap='jet', vmax=100)
 
-    # グラフ表示
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    ax.contour(xx, yy, result, levels=[3, 10, 30])
-    ax.set_yscale('log')
-    ax.set_ylim(ymin, ymax)
-    return 0
+    plt.xlim(0, max.max())
+    plt.ylim(ymin, ymax)
+    plt.yscale("log")
+    plt.colorbar()
+
+
+def fig_and_save_def(def_data, frequency_range, radio_intensity, holizontal_size, vertical_size, dot, ymin, ymax):
+
+    np.savetxt('../result_for_yasudaetal2022/evaluate_f-t_diagram_plot_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby_radioint_'+radio_intensity+'/'+spacecraft_name +
+               '_'+object_name+'_'+str(time_of_flybies)+'flyby_radiointensity_'+radio_intensity+'_'+occultaion_type+'_'+radio_type_A2D+'_'+str(frequency_range)+'output_array.csv', def_data, fmt='%.2f', delimiter=',')
+
+    cmap = ListedColormap(['#dc143c', '#ffa055', '#a7f89d',
+                          '#3be9d6', '#2e7bf7', '#4b0082'])
+    bounds = np.linspace(0, 180, 7)
+    norm = BoundaryNorm(bounds, cmap.N)
+
+    plt.figure(figsize=(holizontal_size, vertical_size))
+
+    sc = plt.scatter(max, scale, s=dot, c=dif, norm=norm, cmap=cmap)
+    plt.yscale('log')
+    plt.ylim(ymin, ymax)
+    plt.colorbar(sc, label='average time difference (sec)')
+    plt.xlabel("Max density (/cc)")
+    plt.ylabel("Scale height (km)")
+    plt.title(object_name+'_'+occultaion_type +
+              '_'+radio_type_A2D+'_f-t_evaluate')
+    plt.savefig(os.path.join('../result_for_yasudaetal2022/evaluate_f-t_diagram_plot_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby_radioint_'+radio_intensity,
+                             spacecraft_name + '_'+object_name+'_'+str(time_of_flybies)+'flyby_radiointensity_'+radio_intensity+'_'+occultaion_type+'_'+radio_type_A2D+'_'+str(frequency_range)+'_f-t_evaluate.png'))
+    plt.show()
 
 
 def main():
@@ -241,44 +281,40 @@ def main():
         highest_density_str,  plasma_scaleheight_str = maxandscale(file)
 
         frequency_kinds = plot_difference(
-            highest_density_str, plasma_scaleheight_str, boundary_intensity, radio_type_A2D, using_frequency_range)
+            highest_density_str, plasma_scaleheight_str, boundary_intensity, radio_type_A2D, using_frequency_range, exclave_examine)
 
     # ずれ時間を散布図にする部分
+    ### ここから#
     output_array = np.array(max + scale + dif)
     output_array = output_array.reshape(3, int(len(output_array)/3)).T
     print(output_array)
-    """
-    np.savetxt('../result_for_yasudaetal2022/evaluate_f-t_diagram_plot_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby_radioint_'+boundary_intensity+'/'+spacecraft_name +
-               '_'+object_name+'_'+str(time_of_flybies)+'flyby_radiointensity_'+boundary_intensity+'_'+occultaion_type+'_'+radio_type_A2D+'_'+str(using_frequency_range)+'output_array.csv', output_array, fmt='%.2f', delimiter=',')
-    plt.figure(figsize=(fig_holizontal_size, fig_vertical_size))
-    plt.scatter(max, scale, s=dot_size, c=dif,
-                cmap='rainbow_r', vmax=vmaximum, vmin=vminimum)
-    plt.yscale('log')
-    plt.ylim(yminimum, ymaximum)
-    plt.colorbar(label='average time difference (sec)')
-    plt.xlabel("Max density (/cc)")
-    plt.ylabel("Scale height (km)")
-    plt.title(object_name+'_'+occultaion_type +
-              '_'+radio_type_A2D+'_f-t_evaluate')
-    """
-    # カイ二乗を計算する部分
 
-    kai2_completed_list = list(kai2(max, scale, kai2_temp, frequency_kinds))
-    output_kai2 = np.array(kai2_completed_list)
-    #output_kai2 = output_kai2.reshape(3, int(len(output_kai2)/3)).T
-    print(output_kai2)
+    if purpose == "time_difference":
+        fig_and_save_def(output_array, using_frequency_range, boundary_intensity,
+                         fig_holizontal_size, fig_vertical_size, dot_size, yminimum, ymaximum)  # ずれ時間とカラーマップを保存
+    ### ここまで###
 
-    plot_kai_contor(max, scale, output_kai2, yminimum, ymaximum)
+    elif purpose == "kai_2":
+        # カイ二乗を計算する部分
+        kai2_completed_list = list(
+            kai2(max, scale, kai2_temp, frequency_kinds))
+        output_kai2 = np.array(kai2_completed_list)
+        #output_kai2 = output_kai2.reshape(3, int(len(output_kai2)/3)).T
+        print(output_kai2)
 
-    plt.savefig(os.path.join('../result_for_yasudaetal2022/evaluate_f-t_diagram_plot_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby_radioint_'+boundary_intensity,
-                             spacecraft_name + '_'+object_name+'_'+str(time_of_flybies)+'flyby_radiointensity_'+boundary_intensity+'_'+occultaion_type+'_'+radio_type_A2D+'_'+str(using_frequency_range)+'_f-t_evaluate.png'))
+        plot_kai2(max, scale, output_kai2, yminimum, ymaximum)
+        plt.savefig(os.path.join('../result_for_yasudaetal2022/evaluate_f-t_diagram_plot_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby_radioint_'+boundary_intensity,
+                                 spacecraft_name + '_'+object_name+'_'+str(time_of_flybies)+'flyby_radiointensity_'+boundary_intensity+'_'+occultaion_type+'_'+radio_type_A2D+'_'+str(using_frequency_range)+'_f-t_kai2.png'))
+        plt.show()
 
-    plt.show()
+    else:
+        print("porpose is not correct")
 
     return 0
 
 
 if __name__ == "__main__":
     main()
+
 
 # %%

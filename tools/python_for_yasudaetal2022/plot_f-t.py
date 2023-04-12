@@ -14,8 +14,8 @@ import glob
 object_name = 'ganymede'  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
 time_of_flybies = 1  # ..th flyby
-highest_plasma = '1e2'  # 単位は(/cc) 2e2/4e2/16e22
-plasma_scaleheight = '10e2'  # 単位は(km) 1.5e2/3e2/6e2
+highest_plasma = '0e2'  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = '0.25e2'  # 単位は(km) 1.5e2/3e2/6e2
 boundary_intensity_str = '7e-16'  # boundary_intensity_str = '1e-15'
 # boundary_intensity_str = '0'  # boundary_intensity_str = '1e-15'
 vertical_line_freq = 0.65  # MHz
