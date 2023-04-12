@@ -33,10 +33,10 @@ boundary_intensity_str = '7e-16'  # '7e-16' '1e-15' '4e-16'
 occultaion_type = 'egress'  # 'ingress' or 'egress
 radio_type = 'D'  # 'A' or 'B' or 'C' or 'D'
 # %%
-
+"""
 use_files = sorted(glob.glob('../result_for_yasudaetal2022/radio_raytracing_occultation_timing_def_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies) +
                    '_flyby_radioint_'+boundary_intensity_str+'/'+object_name+'_*_'+occultaion_type+'_defference_time_data'+radio_type+'_'+boundary_intensity_str+'.txt'))
-
+"""
 use_files = sorted(glob.glob('../result_for_yasudaetal2022/radio_raytracing_occultation_timing_def_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies) +
                    '_flyby_radioint_'+boundary_intensity_str+'_examine/'+object_name+'_*_'+occultaion_type+'_defference_time_data'+radio_type+'_'+boundary_intensity_str+'_examine.txt'))
 
@@ -55,8 +55,12 @@ def maxandscale(file):
     filename = file
     sep = '_'
     t = filename.split(sep)
+    max_density = t[14]
+    scale_height = t[15]
+    """
     max_density = t[13]
     scale_height = t[14]
+    """
     print(max_density, scale_height)
     return max_density, scale_height
 
@@ -71,8 +75,8 @@ def plot_difference(highest, scaleheight):
         (time_diffrence_index[0][:] > using_frequency_range[0]) & (time_diffrence_index[0][:] < using_frequency_range[1])))
     limited_time_minimum = limited_time_list[0][0]
     limited_time_maximum = limited_time_list[0][len(limited_time_list[0][:])-1]
-    print()
 
+    print(using_frequency_range[0])
     average_difference_time = sum(
         time_diffrence_index[1][limited_time_minimum: limited_time_maximum+1])/(limited_time_maximum+1-limited_time_minimum)
 
