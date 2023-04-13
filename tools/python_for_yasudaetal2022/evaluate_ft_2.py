@@ -15,11 +15,11 @@ from matplotlib.colors import ListedColormap, BoundaryNorm
 object_name = 'callisto'  # ganydeme/europa/calisto`
 
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 30  # ..th flyby
+time_of_flybies = 9  # ..th flyby
 occultaion_type = 'egress'  # 'ingress' or 'egress
 radio_type_A2D = 'D'  # 'A' or 'B' or 'C' or 'D'
 # callisto 30 flyby egress用　if you want to ignore the exclave structere, choose "True" (Check M-thesis!)
-exclave_examine = True
+exclave_examine = False
 # "time_difference" or "kai_2" please choose what you want to plot
 purpose = "time_difference"
 
@@ -87,6 +87,30 @@ def plot_difference(highest, scaleheight, boundary_intensity_str, radio_type, us
     kai2_temp.append(float(kai2_temporary))
 
     return frequency_number
+
+
+def mindif_density():
+    scale_list = np.unique(np.array(scale))
+    print(scale_list)
+    max_np = np.array(max)
+    scale_np = np.array(scale)
+    dif_np = np.array(dif)
+
+    for sca in scale_list:
+        scaleselected_dif_position = np.where(scale_np == sca)
+        min_dif_time = np.min(dif_np[scaleselected_dif_position])
+        minselected_dif_position = np.where(dif_np == min_dif_time)
+        selected_position = np.intersect1d(
+            scaleselected_dif_position, minselected_dif_position)
+
+        selected_max_density = max_np[selected_position]
+
+        print("scale_height=" + str(sca) +
+              "  dif_time =" + str(min_dif_time) +
+              "  max_den = " + str(selected_max_density))
+
+    return 0
+
 
 # カイ二乗計算関数・保存機能なし
 
@@ -287,6 +311,8 @@ def main():
 
         frequency_kinds = plot_difference(
             highest_density_str, plasma_scaleheight_str, boundary_intensity, radio_type_A2D, using_frequency_range, exclave_examine)
+
+    mindif_density()  # スケールハイトごとにずれ最小となる密度を出力
 
     # ずれ時間を散布図にする部分
     ### ここから#
