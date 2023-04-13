@@ -15,11 +15,11 @@ from matplotlib.colors import ListedColormap, BoundaryNorm
 object_name = 'callisto'  # ganydeme/europa/calisto`
 
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 9  # ..th flyby
+time_of_flybies = 30  # ..th flyby
 occultaion_type = 'egress'  # 'ingress' or 'egress
-radio_type_A2D = 'D'  # 'A' or 'B' or 'C' or 'D'
+radio_type_A2D = 'B'  # 'A' or 'B' or 'C' or 'D'
 # callisto 30 flyby egress用　if you want to ignore the exclave structere, choose "True" (Check M-thesis!)
-exclave_examine = False
+exclave_examine = True
 # "time_difference" or "kai_2" please choose what you want to plot
 purpose = "time_difference"
 

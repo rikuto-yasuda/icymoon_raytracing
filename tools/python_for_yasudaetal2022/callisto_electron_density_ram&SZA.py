@@ -7,7 +7,7 @@ import glob
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from matplotlib import colors
 # %%
-object_name = 'ganymede'  # ganydeme/europa/calisto``
+object_name = 'callisto'  # ganydeme/europa/calisto``
 
 # occultation magnetic field
 occultation_detection_density = [4300, 5100, 15300, 8500, 17400, 3000]
@@ -58,6 +58,7 @@ ax.scatter(occultation_nodetection_ram, occultation_nodetection_density,
 ax.errorbar(occultation_nodetection_ram, occultation_nodetection_density,
             yerr=occultation_nodetection_density_range, capsize=4, fmt='none', ecolor='black', alpha=0.3)
 
+"""
 ax.scatter(insitu_detection_ram, insitu_detection_density, c='red', marker="o")
 ax.errorbar(insitu_detection_ram, insitu_detection_density, xerr=insitu_detection_ram_range,
             capsize=4, fmt='none', ecolor='black', alpha=0.3)
@@ -66,7 +67,7 @@ ax.scatter(insitu_nodetection_ram,
            insitu_nodetection_density, c='blue', marker="o")
 ax.errorbar(insitu_nodetection_ram, insitu_nodetection_density, xerr=insitu_nodetection_ram_range,
             capsize=4, fmt='none', ecolor='black', alpha=0.3)
-
+"""
 
 ax.scatter(jovian_occultation_ram,
            jovian_occultation_density, c='red', marker=",", alpha=1)
@@ -105,6 +106,7 @@ ax.scatter(occultation_nodetection_sza, occultation_nodetection_density,
 ax.errorbar(occultation_nodetection_sza, occultation_nodetection_density,
             yerr=occultation_nodetection_density_range, capsize=4, fmt='none', ecolor='black', alpha=0.3)
 
+"""
 ax.scatter(insitu_detection_sza, insitu_detection_density, c='red', marker="o")
 ax.errorbar(insitu_detection_sza, insitu_detection_density, xerr=insitu_detection_sza_range,
             capsize=4, fmt='none', ecolor='black', alpha=0.3)
@@ -113,7 +115,7 @@ ax.scatter(insitu_nodetection_sza,
            insitu_nodetection_density, c='blue', marker="o")
 ax.errorbar(insitu_nodetection_sza, insitu_nodetection_density, xerr=insitu_nodetection_sza_range,
             capsize=4, fmt='none', ecolor='black', alpha=0.3)
-
+"""
 
 ax.scatter(jovian_occultation_sza,
            jovian_occultation_density, c='red', marker=",", alpha=1)
@@ -125,9 +127,11 @@ ax.set_xlim(0, 180)
 ax.set_xticks(np.linspace(0, 180, 5))
 ax.set_xticklabels(["0", "45", "90", "135", "180"])
 plt.title('Detected electron density')
-ax.legend(['Radio occultation (detection)', 'Radio occultation (no detection)', 'In situ (detection)',
-          'In situ (no detection)', 'Jovian radio occulatation'], loc='upper left')
+#ax.legend(['Radio occultation (detection)', 'Radio occultation (no detection)','In situ (detection)', 'In situ (no detection)', 'Jovian radio occulatation'], loc='upper left')
+ax.legend(['Radio occultation (detection)', 'Radio occultation (no detection)',
+          'Jovian radio occulatation'], loc='upper left')
 divider = make_axes_locatable(ax)
+ax.set_yscale("log")
 ax.set_xlabel('SZA angle (deg)')
 ax.set_ylabel('Electron density (/cc)')
 plt.show()
@@ -150,7 +154,7 @@ ax[0].set_title('Radio occultation', fontsize=10)
 
 ax[0].legend(['Detection', 'No detection'], loc='upper right')
 
-
+"""
 ax[1].scatter(insitu_detection_sza,
               insitu_detection_density, c='red', marker="o")
 ax[1].errorbar(insitu_detection_sza, insitu_detection_density, xerr=insitu_detection_sza_range,
@@ -160,6 +164,7 @@ ax[1].scatter(insitu_nodetection_sza,
               insitu_nodetection_density, c='blue', marker="o")
 ax[1].errorbar(insitu_nodetection_sza, insitu_nodetection_density, xerr=insitu_nodetection_sza_range,
                capsize=4, fmt='none', ecolor='black', alpha=0.3)
+"""
 ax[1].set_title('In situ', fontsize=10)
 ax[1].set_xlim(0, 180)
 
