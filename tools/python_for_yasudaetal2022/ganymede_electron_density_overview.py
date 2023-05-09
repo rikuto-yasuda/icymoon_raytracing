@@ -31,8 +31,6 @@ jovian_occultation_density = [62.5, 175]
 
 
 fig, ax = plt.subplots()
-
-
 ax.grid()
 cm = plt.cm.get_cmap('rainbow')
 mappable = ax.scatter(occultation_detectable_longitude, occultation_detectable_latitude,
@@ -55,7 +53,6 @@ ax.errorbar(jovian_occultation_longitude, jovian_occultation_latitude, xerr=jovi
 # 緯度経度指定
 ax.set_xlim(0, 360)
 ax.set_ylim(-90, 90)
-ax.invert_xaxis()
 ax.set_xticks(np.linspace(0, 360, 5))
 ax.set_xticks(np.linspace(0, 360, 9), minor=True)
 ax.set_xticklabels(["", "90W", "180W", "270W", ""])
@@ -64,12 +61,18 @@ ax.set_yticks(np.linspace(-90, 90, 5))
 ax.set_yticks(np.linspace(-90, 90, 13), minor=True)
 ax.set_yticklabels(["", "45S", "0", "45N", ""])
 ax.set_aspect('equal')
-plt.title('Detected electron density')
-ax.legend(['Radio occultation (detection)', 'Radio occultation (no detectable)', 'In situ',
-          'Jovian radio occulatation'], bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0)
+ax.set_title('Ganymede ionospheric observation results')
+ax.invert_xaxis()
+#ax.legend(['Radio occultation (detection)', 'Radio occultation (no detectable)', 'In situ','Jovian radio occulatation'], bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0)
+ax.legend(['Radio occultation (detection)', 'Radio occultation (no detectable)',
+          'In situ', 'Jovian radio occulatation'], loc='lower right')
 divider = make_axes_locatable(ax)
-cax = divider.append_axes("bottom", size="10%", pad=0.3)
-fig.colorbar(mappable, cax=cax, orientation="horizontal")
+cax = divider.append_axes("bottom", size="6%", pad=0.3)
+cb = fig.colorbar(mappable, cax=cax, orientation="horizontal")
+cb.set_label('Maximum density (cm-3)')
+fig.savefig("../result_for_yasudaetal2022/observation_ppint_plot_for_paper/" +
+            object_name+"_overview_plot.jpg", format="jpg", dpi=600)
+
 plt.show()
 
 

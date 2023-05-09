@@ -14,8 +14,8 @@ import glob
 object_name = 'ganymede'  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
 time_of_flybies = 1  # ..th flyby
-highest_plasma = '0e2'  # 単位は(/cc) 2e2/4e2/16e22
-plasma_scaleheight = '0.25e2'  # 単位は(km) 1.5e2/3e2/6e2
+highest_plasma = '1e2'  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = '0.5e2'  # 単位は(km) 1.5e2/3e2/6e2
 boundary_intensity_str = '7e-16'  # boundary_intensity_str = '1e-15'
 # boundary_intensity_str = '0'  # boundary_intensity_str = '1e-15'
 vertical_line_freq = 0.65  # MHz
@@ -457,9 +457,9 @@ def Make_FT_full(DataA, DataB, DataC, DataD, raytrace_time_information, radio_da
                    colors='hotpink', linestyle='dashed')
         plt.annotate(str(vertical_line_freq)+"MHz",
                      (start_time+20, vertical_line_freq+0.05), color="hotpink")
-        ax.set_title("max density "+highest_plasma +
-                     "(cm-3) scale height "+plasma_scaleheight+"(km)")
-
+        ax.set_title("Maximum density "+highest_plasma +
+                     "(cm-3) & scale height "+plasma_scaleheight+"(km)")
+        #ax.set_title("No ionosphere")
         fig.savefig(os.path.join('../result_for_yasudaetal2022/raytracing_'+object_name+'_results/' + object_name+'_'+highest_plasma +
                                  '_'+plasma_scaleheight+'/', spacecraft_name+'_' + object_name+'_'+str(time_of_flybies)+'_'+highest_plasma+'_'+plasma_scaleheight+'_boundary_int='+boundary_intensity_str+'_'+name+'_f-t.png'), dpi=1000)
 

@@ -69,7 +69,7 @@ def plot_difference(highest, scaleheight):
 
 def plot(max_list, scale_list, density_list):
     scale_type = np.array([900, 600, 400])
-    fig, ax = plt.subplots(len(scale_type), 1, figsize=(4, 7))
+    fig, ax = plt.subplots(len(scale_type), 1, figsize=(6, 5))
 
     # 上
     for i in range(len(scale_type)):
@@ -81,15 +81,21 @@ def plot(max_list, scale_list, density_list):
         y_sorted = y[x_sorted_number]
         print(x_sorted_number)
         ax[i].plot(x_sorted, y_sorted)
-        ax[i].set_xlim(0, 3000)
-        ax[i].set_ylim(50, 200)
-        ax[i].set_title('scale_height:'+str(scale_type[i])+'(km)', fontsize=10)
 
-    fig.supxlabel('maximum density (cm-3)')
-    fig.supylabel('average time lag (sec) radio source:'+radio_type)
-    fig.subplots_adjust(left=0.22)
-    fig.subplots_adjust(hspace=0.3)
-    fig.subplots_adjust(bottom=0.07)
+        # callisto
+        ax[i].set_xlim(0, 3000)
+        #ax[i].set_ylim(20, 60)
+        #ax[i].set_xlim(0, 1000)
+        ax[i].set_ylim(15, 180)
+        ax[i].set_title('scale_height:'+str(scale_type[i])+'(km)', fontsize=10)
+        ax[i].set_yticks(np.array([30, 60, 90, 120, 150]))
+        ax[i].grid()
+    fig.supxlabel('Maximum density (cm-3)')
+    fig.supylabel('Average time lag (sec)  Source:'+radio_type)
+    # fig.subplots_adjust(left=0.23)
+    fig.subplots_adjust(left=0.11)
+    fig.subplots_adjust(hspace=0.42)
+    fig.subplots_adjust(bottom=0.1)
 
     plt.savefig("../result_for_yasudaetal2022/evaluate_average_time_lag/" +
                 object_name+"_"+str(time_of_flybies)+"_"+occultaion_type+radio_type+".png")

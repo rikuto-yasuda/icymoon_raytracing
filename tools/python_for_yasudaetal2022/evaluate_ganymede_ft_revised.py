@@ -52,7 +52,7 @@ def maxandscale(file):
 def plot_difference(highest, scaleheight):
 
     time_diffrence_index = np.loadtxt('../result_for_yasudaetal2022/radio_raytracing_occultation_timing_def_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby_radioint_' +
-                                      boundary_intensity_str+'/'+object_name+'_' + highest+'_'+scaleheight+'_'+occultaion_type+'_defference_time_data'+radio_type+'_'+boundary_intensity_str+'.txt')
+                                      boundary_intensity_str+'/'+object_name+'_' + highest+'_'+scaleheight+'_'+occultaion_type+'_defference_time_data'+radio_type+'_'+boundary_intensity_str+str(using_frequency_range)'.txt')
 
     print(time_diffrence_index)
     limited_time_list = np.array(np.where(
@@ -89,16 +89,18 @@ def plot(max_list, scale_list, density_list):
         n = i % 2
         ax[m, n].plot(x_sorted, y_sorted)
         ax[m, n].set_xlim(0, 400)
-        ax[m, n].set_ylim(20, 80)
+        ax[m, n].set_ylim(15, 90)
         # ax[m,n].set_yscale('log')
         ax[m, n].set_title(
-            'scale_height:'+str(scale_type[i])+'(km)', fontsize=10)
+            'Scale_height:'+str(scale_type[i])+'(km)', fontsize=10)
+        ax[m, n].set_yticks(np.array([15, 30, 45, 60, 75, 90]))
+        ax[m, n].grid()
 
-    fig.supxlabel('maximum density (cm-3)')
-    fig.supylabel('average time lag (sec)')
+    fig.supxlabel('Maximum density (cm-3)')
+    fig.supylabel('Average time lag (sec)')
     fig.subplots_adjust(hspace=0.5)
     plt.savefig("../result_for_yasudaetal2022/evaluate_average_time_lag/" +
-                object_name+"_"+str(time_of_flybies)+"_"+occultaion_type+radio_type+".png")
+                object_name+"_"+str(time_of_flybies)+"_"+occultaion_type+radio_type+".jpg", format="jpg", dpi=600)
     plt.show()
 
     return 0

@@ -101,8 +101,8 @@ def Output_moon_radius(moon_name):
 
 
 def main():
-    plt.figure(figsize=(20, 4))
-    plt.title("ray paths of Jovian radio waves around Ganymede")
+    plt.figure(figsize=(16, 4))
+    plt.title("Ray paths of Jovian radio waves around Ganymede")
     plt.xlabel("x (km) / tangential direction")
     plt.ylabel("z (km) / normal direction")
     plt.xlim(-7500, 2500)
@@ -121,6 +121,8 @@ def main():
     n = -1600+t*0
     plt.plot(t, n, color="black")
     plt.fill_between(t, c, n, facecolor='black')
+    plt.savefig(
+        "../result_for_yasudaetal2022/ray_path_plot_for_paper/figure3_inthesis.jpg", format="jpg", dpi=600)
     plt.show()
 
 

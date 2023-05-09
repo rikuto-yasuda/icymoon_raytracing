@@ -75,7 +75,7 @@ double plasma::ganymede_nonplume::getDensity(const vector &point) const ////////
 	const double
 		rxy = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)));
 	const double
-		t = std::fabs(0e8 * exp(-(r - 2.6341e6) / 15e5)); //�K�j���f�Ð������s���f�� �n�\�ʂł̖��x�� �n�\�ʂ�3.5*10^2(/cc) �X�P�[���n�C�g100km
+		t = std::fabs(0.125e8 * exp(-(r - 2.6341e6) / 0.5e5)); //�K�j���f�Ð������s���f�� �n�\�ʂł̖��x�� �n�\�ʂ�3.5*10^2(/cc) �X�P�[���n�C�g100km
 	;
 
 	return t;

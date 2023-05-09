@@ -11,7 +11,7 @@ import glob
 object_name = 'callisto'  # ganydeme/europa/calisto`
 
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 9  # ..th flyby
+time_of_flybies = 30  # ..th flyby
 
 
 """lowest frequency and highest_freqency(MHz)"""
@@ -22,10 +22,10 @@ occultaion_type = 'ingress'  # 'ingress'
 radio_type = 'C'  # 'A' or 'B' or 'C'
 """
 
-using_frequency_range = [5.3e-1, 5.5]  # C9 egress D
-boundary_intensity_str = '4e-16'  # '4e-16'
-occultaion_type = 'egress'  # 'egress
-radio_type = 'D'
+using_frequency_range = [6.0e-1, 6.0]  # C9 egress D
+boundary_intensity_str = '7e-16'  # '4e-16'
+occultaion_type = 'ingress'  # 'egress
+radio_type = 'C'
 
 
 # %%
@@ -79,7 +79,7 @@ def plot_difference(highest, scaleheight):
 def plot(max_list, scale_list, density_list):
     #scale_type = np.sort(np.array(list(set(scale_list))))
     scale_type = np.array([900, 600, 400])
-    fig, ax = plt.subplots(len(scale_type), 1, figsize=(4, 7))
+    fig, ax = plt.subplots(len(scale_type), 1, figsize=(6, 5))
 
     # 上
     for i in range(len(scale_type)):
@@ -93,19 +93,22 @@ def plot(max_list, scale_list, density_list):
         ax[i].plot(x_sorted, y_sorted)
 
         # callisto
-        #ax[i].set_xlim(0, 3000)
+        ax[i].set_xlim(0, 3000)
         #ax[i].set_ylim(20, 60)
-        ax[i].set_xlim(0, 1000)
-        ax[i].set_ylim(20, 80)
+        #ax[i].set_xlim(0, 1000)
+        ax[i].set_ylim(15, 90)
         ax[i].set_title('scale_height:'+str(scale_type[i])+'(km)', fontsize=10)
-    fig.supxlabel('maximum density (cm-3)')
-    fig.supylabel('average time lag (sec) radio source:'+radio_type)
-    fig.subplots_adjust(left=0.22)
-    fig.subplots_adjust(hspace=0.3)
-    fig.subplots_adjust(bottom=0.07)
+        ax[i].set_yticks(np.array([15, 30, 45, 60, 75, 90]))
+        ax[i].grid()
+    fig.supxlabel('Maximum density (cm-3)')
+    fig.supylabel('Average time lag (sec)  Source:'+radio_type)
+    # fig.subplots_adjust(left=0.23)
+    fig.subplots_adjust(left=0.1)
+    fig.subplots_adjust(hspace=0.42)
+    fig.subplots_adjust(bottom=0.1)
 
     plt.savefig("../result_for_yasudaetal2022/evaluate_average_time_lag/" +
-                object_name+"_"+str(time_of_flybies)+"_"+occultaion_type+radio_type+".png")
+                object_name+"_"+str(time_of_flybies)+"_"+occultaion_type+radio_type+".jpg", format="jpg", dpi=600)
 
     plt.show()
 

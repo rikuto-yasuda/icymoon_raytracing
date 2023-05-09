@@ -82,12 +82,16 @@ ax.set_xticklabels(["0", "45", "90", "135", "180"])
 
 #ax.set_yticks(np.linspace(0, 20000, 5))
 #ax.set_yticklabels(["0", "5000", "10000", "15000", "20000"])
-plt.title('Detected electron density')
-ax.legend(['Radio occultation (detection)', 'Radio occultation (no detection)', 'In situ (detection)',
-          'In situ (no detection)', 'Jovian radio occulatation'], loc='upper left')
+plt.title('Callisto ionospheric observation results')
+#ax.legend(['Radio occultation (detection)', 'Radio occultation (no detection)', 'In situ (detection)','In situ (no detection)', 'Jovian radio occulatation'], loc='upper left')
+ax.legend(['Radio occultation (detection)', 'Radio occultation (no detection)',
+          'Jovian radio occulatation'], loc='upper left')
+
 divider = make_axes_locatable(ax)
 ax.set_xlabel('Ram angle (deg)')
-ax.set_ylabel('Electron density (/cc)')
+ax.set_ylabel('Maximum density (cm-3)')
+plt.savefig("../result_for_yasudaetal2022/observation_ppint_plot_for_paper/" +
+            object_name+"_Ram_angle_plot.jpg", format="jpg", dpi=600)
 plt.show()
 # %%
 
@@ -126,14 +130,17 @@ ax.errorbar(jovian_occultation_sza, jovian_occultation_density,
 ax.set_xlim(0, 180)
 ax.set_xticks(np.linspace(0, 180, 5))
 ax.set_xticklabels(["0", "45", "90", "135", "180"])
-plt.title('Detected electron density')
+plt.title('Callisto ionospheric observation results')
 #ax.legend(['Radio occultation (detection)', 'Radio occultation (no detection)','In situ (detection)', 'In situ (no detection)', 'Jovian radio occulatation'], loc='upper left')
 ax.legend(['Radio occultation (detection)', 'Radio occultation (no detection)',
           'Jovian radio occulatation'], loc='upper left')
 divider = make_axes_locatable(ax)
-ax.set_yscale("log")
+# ax.set_yscale("log")
 ax.set_xlabel('SZA angle (deg)')
-ax.set_ylabel('Electron density (/cc)')
+ax.set_ylabel('Maximum density (cm-3)')
+
+plt.savefig("../result_for_yasudaetal2022/observation_ppint_plot_for_paper/" +
+            object_name+"_SZA_angle_plot.jpg", format="jpg", dpi=600)
 plt.show()
 # %%
 
@@ -177,7 +184,7 @@ ax[2].errorbar(jovian_occultation_sza, jovian_occultation_density,
 ax[2].set_title('Jovian radio occultation', fontsize=10)
 ax[2].set_xlim(0, 180)
 fig.supxlabel('SZA angle (deg)')
-fig.supylabel('Electron density (/cc)')
+fig.supylabel('Maximum density (cm-3)')
 
 fig.subplots_adjust(left=0.13)
 fig.subplots_adjust(hspace=0.3)

@@ -77,12 +77,15 @@ ax.set_xticklabels(["0", "45", "90", "135", "180"])
 
 ax.set_yticks(np.linspace(0, 6000, 7))
 ax.set_yticklabels(["0", "1000", "2000", "3000", "4000", "5000", "6000"])
-plt.title('Detected electron density')
+plt.title('Ganymede ionospheric observation results')
 ax.legend(['Radio occultation (open)', 'Radio occultation (cloesd & no detectable)', 'In situ (open)',
           'Jovian radio occulatation (open)', 'Jovian radio occulatation (closed)'], loc='upper left')
 divider = make_axes_locatable(ax)
 ax.set_xlabel('Ram angle (deg)')
-ax.set_ylabel('Electron density (/cc)')
+ax.set_ylabel('Maximum density (cm-3)')
+plt.savefig("../result_for_yasudaetal2022/observation_ppint_plot_for_paper/" +
+            object_name+"_Ram_angle_plot.jpg", format="jpg", dpi=600)
+
 plt.show()
 
 # %%
@@ -121,20 +124,25 @@ ax.set_xticklabels(["0", "45", "90", "135", "180"])
 
 ax.set_yticks(np.linspace(0, 6000, 7))
 ax.set_yticklabels(["0", "1000", "2000", "3000", "4000", "5000", "6000"])
-plt.title('Detected electron density')
+plt.title('Ganymede ionospheric observation results')
 ax.legend(['Radio occultation (open)', 'Radio occultation (cloesd & no detectable)', 'In situ (open)',
           'Jovian radio occulatation (open)', 'Jovian radio occulatation (closed)'], loc='upper left')
 divider = make_axes_locatable(ax)
 ax.set_xlabel('SZA angle (deg)')
-ax.set_ylabel('Electron density (/cc)')
+ax.set_ylabel('Maximum density (cm-3)')
+plt.savefig("../result_for_yasudaetal2022/observation_ppint_plot_for_paper/" +
+            object_name+"_SZA_angle_plot.jpg", format="jpg", dpi=600)
 plt.show()
 # %%
 fig, ax = plt.subplots(3, 1, figsize=(7, 7))
 
-ax[0].scatter(occultation_open_ram, occultation_open_density,c='red', marker="*", s=100)
+ax[0].scatter(occultation_open_ram, occultation_open_density,
+              c='red', marker="*", s=100)
 
-ax[0].scatter(occultation_closed_ram, occultation_closed_density,c='blue', edgecolors='black', marker="*", s=100)
-ax[0].errorbar(occultation_closed_ram, occultation_closed_density,yerr=occultation_closed_density_range, capsize=4, fmt='none', ecolor='black', alpha=0.3)
+ax[0].scatter(occultation_closed_ram, occultation_closed_density,
+              c='blue', edgecolors='black', marker="*", s=100)
+ax[0].errorbar(occultation_closed_ram, occultation_closed_density,
+               yerr=occultation_closed_density_range, capsize=4, fmt='none', ecolor='black', alpha=0.3)
 
 ax[0].set_xlim(0, 180)
 ax[0].set_title('Radio occultation', fontsize=10)
@@ -163,10 +171,11 @@ ax[2].errorbar(jovian_occultation_closed_ram, jovian_occultation_closed_density,
 
 ax[2].set_title('Jovian radio occultation', fontsize=10)
 ax[2].set_xlim(0, 180)
-ax[2].legend(['Open magnetic field', 'Closed magnetic field'], loc='upper left')
+ax[2].legend(['Open magnetic field', 'Closed magnetic field'],
+             loc='upper left')
 
 fig.supxlabel('ram angle (deg)')
-fig.supylabel('Electron density (/cc)')
+fig.supylabel('Electron density (cm-3)')
 
 fig.subplots_adjust(left=0.13)
 fig.subplots_adjust(hspace=0.3)

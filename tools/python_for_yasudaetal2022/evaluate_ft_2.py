@@ -17,7 +17,7 @@ object_name = 'callisto'  # ganydeme/europa/calisto`
 spacecraft_name = "galileo"  # galileo/JUICE(?)
 time_of_flybies = 30  # ..th flyby
 occultaion_type = 'egress'  # 'ingress' or 'egress
-radio_type_A2D = 'B'  # 'A' or 'B' or 'C' or 'D'
+radio_type_A2D = 'D'  # 'A' or 'B' or 'C' or 'D'
 # callisto 30 flyby egress用　if you want to ignore the exclave structere, choose "True" (Check M-thesis!)
 exclave_examine = True
 # "time_difference" or "kai_2" please choose what you want to plot
@@ -181,9 +181,9 @@ def get_frequency_intensity_plotparameter(moon_name, flyby_time, ingress_or_eger
                 scale_max = 1000
                 scale_min = 350
 
-                dot_size = 20
-                fig_holizontal = 9
-                fig_vertical = 4
+                dot_size = 15
+                fig_holizontal = 7
+                fig_vertical = 5
 
                 if (radio_type == 'A') or (radio_type == 'B') or (radio_type == 'C') or (radio_type == 'D'):
                     using_frequency_range = [6.0e-1, 6]
@@ -197,9 +197,9 @@ def get_frequency_intensity_plotparameter(moon_name, flyby_time, ingress_or_eger
                 scale_max = 1000
                 scale_min = 350
 
-                dot_size = 20
-                fig_holizontal = 9
-                fig_vertical = 4
+                dot_size = 15
+                fig_holizontal = 7
+                fig_vertical = 5
 
                 if radio_type == 'A':
                     using_frequency_range = [4.0e-1, 6]  # C30 egress A
@@ -279,15 +279,16 @@ def fig_and_save_def(def_data, frequency_range, radio_intensity, holizontal_size
     plt.figure(figsize=(holizontal_size, vertical_size))
 
     sc = plt.scatter(max, scale, s=dot, c=dif, norm=norm, cmap=cmap)
+
     plt.yscale('log')
     plt.ylim(ymin, ymax)
-    plt.colorbar(sc, label='average time difference (sec)')
-    plt.xlabel("Max density (/cc)")
+    plt.colorbar(sc, label='Average time difference (sec)')
+    plt.xlabel("Maximum density (cm-3)")
     plt.ylabel("Scale height (km)")
-    plt.title(object_name+'_'+occultaion_type +
+    plt.title(object_name.capitalize()+'_'+occultaion_type +
               '_'+radio_type_A2D+'_f-t_evaluate')
     plt.savefig(os.path.join('../result_for_yasudaetal2022/evaluate_f-t_diagram_plot_'+spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_flyby_radioint_'+radio_intensity,
-                             spacecraft_name + '_'+object_name+'_'+str(time_of_flybies)+'flyby_radiointensity_'+radio_intensity+'_'+occultaion_type+'_'+radio_type_A2D+'_'+str(frequency_range)+'_f-t_evaluate.png'))
+                             spacecraft_name + '_'+object_name+'_'+str(time_of_flybies)+'flyby_radiointensity_'+radio_intensity+'_'+occultaion_type+'_'+radio_type_A2D+'_'+str(frequency_range)+'_f-t_evaluate.jpg'), format="jpg", dpi=600)
     plt.show()
 
 
