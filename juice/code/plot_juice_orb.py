@@ -4,6 +4,9 @@
 # In[1]:
 
 
+from astropy.constants import au
+import juice_lib
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 import spiceypy as spice
@@ -21,11 +24,8 @@ spice.tkvrsn('TOOLKIT')
 # In[3]:
 
 
-import sys
-
 # import JUICE lib
 sys.path.append('../lib/')
-import juice_lib
 
 
 # Load SPICE kernels
@@ -34,7 +34,7 @@ import juice_lib
 
 
 # load SPICE ketnels
-spice_dir = 'C:/share/Linux/doc/spice/juice/kernels/'
+spice_dir = '/Users/yasudarikuto/spice/JUICE/kernels/'
 juice_lib.spice_ini(spice_dir)
 
 
@@ -74,7 +74,7 @@ plt.show()
 # set date/time
 utctim = '2023-04-14T00:00:00'    # start date/time
 et_ex = spice.str2et(utctim)      # seconds
-nd = 365*10 # number of data
+nd = 365*10  # number of data
 dt = 60*60*24   # time step [second]
 et = et_ex + dt * np.arange(0, nd)
 
@@ -85,10 +85,8 @@ x, y, z, r, lat, lon = juice_lib.get_juice_pos_sun(et, x_ref='JUPITER')
 # In[8]:
 
 
-from astropy.constants import au
-
 # plot
-au_km=au*1e-3
+au_km = au*1e-3
 plt.plot(x/au_km, y/au_km)
 plt.title('JUICE orbit')
 plt.xlabel('Distance from Sun [A.U.]')
@@ -250,10 +248,11 @@ x, y, z, r, lat, lon = juice_lib.get_pos(
 # In[19]:
 
 
-rg = 2634.1 # [km]
-idx = np.where(r<20000.0)
+rg = 2634.1  # [km]
+idx = np.where(r < 20000.0)
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12.0, 6.0), sharex=True, sharey=True)
+fig, (ax1, ax2) = plt.subplots(
+    1, 2, figsize=(12.0, 6.0), sharex=True, sharey=True)
 
 ax1.scatter(x/rg, y/rg, s=0.1)
 range = 5.0
@@ -276,7 +275,7 @@ ax2.set_ylabel('Z distance from Ganymede [Rg]')
 
 
 plt.figure(figsize=(12, 6))
-plt.scatter(lon*180.0/np.pi, lat*180.0/np.pi,s=0.1)
+plt.scatter(lon*180.0/np.pi, lat*180.0/np.pi, s=0.1)
 plt.title('JUICE orbit')
 plt.xlabel('Longitude [deg]')
 plt.ylabel('Latitude [deg]')
@@ -333,4 +332,3 @@ plt.title('JUICE orbit')
 plt.xlabel('Longitude [deg]')
 plt.ylabel('Latitude [deg]')
 plt.show()
-
