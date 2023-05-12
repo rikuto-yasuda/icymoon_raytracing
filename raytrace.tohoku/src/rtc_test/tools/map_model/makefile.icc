@@ -1,0 +1,39 @@
+# Makefile for GCC g++ ###########################
+OBJECT_EXP=o
+CC = icc
+LIBRT = \
+	../../lib/core.a   \
+	../../lib/model.a  \
+	../../lib/planet.a
+
+STDLIB = stdc++ guide pthread boost_thread-mt
+
+include makefile.common
+
+# コンパイル時のフラグを指定
+CC_FLAG = -c -O3 -DNDEBUG \
+    -finline-functions    \
+    -funroll-loops        \
+    -ipo                  \
+    -parallel   \
+    -openmp     \
+    -axNP       \
+    -march=`arch`
+
+LD_FLAG = -i-dynamic -shared-libcxa
+
+##################################################
+$(LIBNAME): $(OBJ_PATH) $(OBJ) $(LIBRT)
+	$(CC) $(LD_FLAG) -o $@ $(OBJ) $(LIBRT) \
+	$(STDLIB:%=-l%)
+
+$(OBJ_PATH)/%.$(OBJECT_EXP) :: %.cpp
+	$(CC) $(CC_FLAG) $< -o $@
+
+$(OBJ): $(STDHEADER)
+
+$(OBJ_PATH):
+	mkdir $(OBJ_PATH)
+
+clean:
+	rm -f ./$(OBJ_PATH)/*.$(OBJECT_EXP)
