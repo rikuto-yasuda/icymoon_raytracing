@@ -7,6 +7,7 @@ import datetime
 # Load NAIF SPICE kernels for S/C
 # ---------------------------------------------------------
 
+
 def spice_ini(source_dir):
 
     # load spice kernel files
@@ -26,7 +27,22 @@ def spice_ini(source_dir):
 #   origin: org
 #   light time correction: corr
 # ---------------------------------------------------------
+
+
 def get_pos_xref(et, ref='IAU_SUN', tar='JUICE', org='SUN', x_ref='JUPITER', corr='LT+S'):
+    """_return JUICE orbit from Sun_
+
+    Args:
+        et (_np.array_): _time array_
+        ref (str, optional): _referrence_. Defaults to 'IAU_SUN'.
+        tar (str, optional): _target_. Defaults to 'JUICE'.
+        org (str, optional): _observer_. Defaults to 'SUN'.
+        x_ref (str, optional): _x_axis definition (direction from org to x_ref in x-y plane is defied as x_axis)_. Defaults to 'JUPITER'.
+        corr (str, optional): _light time correction_. Defaults to 'LT+S'.
+
+    Returns:
+        _np.ndarray?_: _[[x,y,z,r,lat,lon](t1), [x,y,z,r,lat,lon](t2), [..](t3),[] ... []]_
+    """
 
     # number of data
     nd = len(et)
@@ -44,22 +60,23 @@ def get_pos_xref(et, ref='IAU_SUN', tar='JUICE', org='SUN', x_ref='JUPITER', cor
 
     for i in range(0, nd):
 
-        #Get state vector of S/C
+        # Get state vector of S/C
         [state, lttime] = spice.spkezr(tar, et[i], ref, corr, org)
         x_s = state[0]
         y_s = state[1]
         z_s = state[2]
 
-        #Get state vector of reference target
+        # Get state vector of reference target
         [state, lttime] = spice.spkezr(x_ref, et[i], ref, corr, org)
         x_r = state[0]
         y_r = state[1]
         z_r = state[2]
 
         vec_x = [x_r, y_r, 0.0]
+        # x軸(1)をvec_x にz軸をvec_zにする座標変換行列を返す
         mout = spice.twovec(vec_x, 1, vec_z, 3)
         vec_in = [x_s, y_s, z_s]
-        vec_out = spice.mxv(mout, vec_in)
+        vec_out = spice.mxv(mout, vec_in)  # 座標変換のための行列を
 
         x[i] = vec_out[0]
         y[i] = vec_out[1]
@@ -77,6 +94,8 @@ def get_pos_xref(et, ref='IAU_SUN', tar='JUICE', org='SUN', x_ref='JUPITER', cor
 #   origin: SUN
 #   refernce target on the x-axis: x_ref
 # ---------------------------------------------------------
+
+
 def get_juice_pos_sun(et, x_ref='JUPITER'):
 
     x, y, z, r, lat, lon = get_pos_xref(
@@ -91,6 +110,8 @@ def get_juice_pos_sun(et, x_ref='JUPITER'):
 #   origin: JUPITER
 #   refernce target on the x-axis: x_ref
 # ---------------------------------------------------------
+
+
 def get_juice_pos_jup(et, x_ref='GANYMEDE'):
 
     x, y, z, r, lat, lon = get_pos_xref(
@@ -105,6 +126,8 @@ def get_juice_pos_jup(et, x_ref='GANYMEDE'):
 #   origin: EARTH
 #   refernce target on the x-axis: x_ref
 # ---------------------------------------------------------
+
+
 def get_juice_pos_earth(et, x_ref='SUN'):
 
     x, y, z, r, lat, lon = get_pos_xref(
@@ -117,7 +140,17 @@ def get_juice_pos_earth(et, x_ref='SUN'):
 #   reference frame: ref
 #   origin: org
 #   target: tar
-# ---------------------------------------------------------
+# ---------------------------------------------------------¥
+
+
+def get_juice_pos_venus(et, x_ref='SUN'):
+
+    x, y, z, r, lat, lon = get_pos_xref(
+        et, ref='IAU_VENUS', tar='JUICE', org='VENUS', x_ref=x_ref, corr='LT+S')
+
+    return [x, y, z, r, lat, lon]
+
+
 def get_pos(et, ref='IAU_SUN', tar='JUICE', org='SUN'):
 
     # light time correction
@@ -159,6 +192,8 @@ def get_pos(et, ref='IAU_SUN', tar='JUICE', org='SUN'):
 #   x : vector from the origin to the reference target
 #   y : vector of the orbital direction of the reference target
 # ---------------------------------------------------------
+
+
 def get_pos_ref(et, ref='IAU_JUPITER', tar='JUICE', org='JUPITER', tar_ref='GANYMEDE', corr='LT+S'):
 
     # number of data
@@ -174,11 +209,11 @@ def get_pos_ref(et, ref='IAU_JUPITER', tar='JUICE', org='JUPITER', tar_ref='GANY
 
     for i in range(0, nd):
 
-        #Get state vector of target
+        # Get state vector of target
         [state, lttime] = spice.spkezr(tar, et[i], ref, corr, org)
         x_t = [state[0], state[1], state[2]]
 
-        #Get state vector of reference target
+        # Get state vector of reference target
         [state, lttime] = spice.spkezr(tar_ref, et[i], ref, corr, org)
         x_r = [state[0], state[1], state[2]]
         v_r = [state[3], state[4], state[5]]
