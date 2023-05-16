@@ -12,13 +12,24 @@ double plasma::test_null_plasma::getDensity(const vector &point) const
 
 double plasma::test_simple::getDensity(const vector &point) const ///////////////�V�����v���Y�}���f���iz��������exp�Ō����j
 {
-	const double
-		z = 2 * 6.4e6; //単位m
+	// benchmark 1
+	/*
+
+		const double
+			z = 2 * 6.4e6; // 単位m
 	const double
 		n = 1.15e8; // 単位 / m3
 	const double
 		h = std::fabs(n * pow((point(2) / z), -3));
+	*/
 
+	// benchmark2
+	const double
+		z = 2 * 6.4e6; // 単位m
+	const double
+		n = 1e8; // 単位 / m3
+	const double
+		h = std::fabs(n * pow((point(0) / z), -2));
 	return h;
 	/*
 	return 1.0e3;
@@ -75,7 +86,7 @@ double plasma::ganymede_nonplume::getDensity(const vector &point) const ////////
 	const double
 		rxy = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)));
 	const double
-		t = std::fabs(0.125e8 * exp(-(r - 2.6341e6) / 0.5e5)); //�K�j���f�Ð������s���f�� �n�\�ʂł̖��x�� �n�\�ʂ�3.5*10^2(/cc) �X�P�[���n�C�g100km
+		t = std::fabs(0.125e8 * exp(-(r - 2.6341e6) / 0.5e5)); // �K�j���f�Ð������s���f�� �n�\�ʂł̖��x�� �n�\�ʂ�3.5*10^2(/cc) �X�P�[���n�C�g100km
 	;
 
 	return t;
@@ -88,7 +99,7 @@ double plasma::callisto_nonplume::getDensity(const vector &point) const ////////
 	const double
 		rxy = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)));
 	const double
-		t = std::fabs(1.5e8 * exp(-(r - 2.4103e6) / 4e5)); //�J���X�g�Ð������s���f�� �n�\�ʂł̖��x�� �n�\�ʂ�3.5*10^2(/cc) �X�P�[���n�C�g100km
+		t = std::fabs(1.5e8 * exp(-(r - 2.4103e6) / 4e5)); // �J���X�g�Ð������s���f�� �n�\�ʂł̖��x�� �n�\�ʂ�3.5*10^2(/cc) �X�P�[���n�C�g100km
 	;
 	return t;
 }

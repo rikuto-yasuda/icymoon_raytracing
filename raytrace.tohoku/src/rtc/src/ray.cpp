@@ -168,10 +168,12 @@ void ray::checkState(
 	// 屈折率が 0 < n <= 1 にあることを確認する。
 	// ちなみにこの範囲を逸脱したらモード変換が起こるらしい。
 	const double n = cnst::c * norm_2(k)/( 2*cnst::pi*getWaveParam().getFreq() );
+	"""
 	if( n <= 0.0 || 1.0 < n )
 		throw std::runtime_error(
 			log("core::ray : The refractive index reached outside the range.")
 	);
+	"""
 	//掩蔽シミュレーションの場合以下利用 cf)tracer.inl
 
 	if( ray::checkReflection(r,drk) == 1 )

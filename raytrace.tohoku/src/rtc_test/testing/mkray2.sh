@@ -1,4 +1,4 @@
-for ANGLE in `seq -50 20 50`
+for ANGLE in `seq -30 10 -10`
 do
 
 RAYTRACE='./testing'
@@ -16,9 +16,11 @@ COORD="euclid" # (euclid|polar)
 #SZ=2e6         # (source.z|altitude)
 #SZ=1.1e8        # (source.z|altitude)
 
-SX=0
+#SX=0 #for benchmark1
+SX=13800  #for benchmark2
 SY=0
-SZ=13800
+#SZ=13800 #for benchmark1
+SZ=0 #for benchmark2
 
 
 ## モデルを選択 ##
@@ -32,14 +34,16 @@ TIME="0:0.0"     # hour:minutes.sec
 
 ## 波動特性を設定 ##
 FREQ=100000       # 周波数[Hz]
-MODE="LO"       # 波動モード(LO|RX)
+MODE="RX"       # 波動モード(LO|RX)
 RAY_L=4e8     # トレースする最大の光路長
 PITCH=${ANGLE}        # 磁場に対するピッチ角
-SEGMENT=300     # 出力する光路上の点の数
-MAX_STEP=45000   # トレース・ステップの最大数
+SEGMENT=1000     # 出力する光路上の点の数
+#MAX_STEP=45000   # トレース・ステップの最大数
+MAX_STEP=7500000   # トレース・ステップの最大数
 STEP_LENGTH=10000000  # １ステップで進む最大の光路長 (1step毎に進める最大長を[m]で指定する)
 PRECISION="10000"  # １ステップ間のベクトル誤差の許容率
-TIME_RANGE="4e-6:1e-13"  # １ステップ間の時間分解能レンジ  (1step毎に進める時間の最大値・最小値を指定する。)
+#TIME_RANGE="4e-6:1e-13"  # １ステップ間の時間分解能レンジ  (1step毎に進める時間の最大値・最小値を指定する。)
+TIME_RANGE="1e-7:1e-8"  # １ステップ間の時間分解能レンジ  (1step毎に進める時間の最大値・最小値を指定する。)
 
 ## plasma cavity ##
 # --cavity [fp/fc]/[ilat]:[ilat range]/[mlt]:[mlt range]/[height upper]:[height bottom]
