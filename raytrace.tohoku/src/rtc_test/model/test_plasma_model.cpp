@@ -25,7 +25,7 @@ double plasma::test_simple::getDensity(const vector &point) const //////////////
 
 	// benchmark2
 	const double
-		z = 2 * 6.4e6; // 単位m
+		z = 6.4e6; // 単位m
 	const double
 		n = 1e8; // 単位 / m3
 	const double

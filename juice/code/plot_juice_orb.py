@@ -330,10 +330,11 @@ plt.show()
 # JUICE orbit close to Venus
 # set date/time
 
-utctim = "2025-08-31T04:00:00"  # start date/time
+# utctim = "2025-08-31T04:00:00"  # start date/time
+utctim = "2026-08-31T04:00:00"  # start date/time
 et_ex = spice.str2et(utctim)  # seconds
-nd = 5 * 60  # number of data
-dt = 60  # time step [second]
+nd = 100  # number of data
+dt = 24 * 60 * 60  # time step [second]
 et = et_ex + dt * np.arange(0, nd)
 td = spice.et2datetime(et)
 # calculate target position with spice

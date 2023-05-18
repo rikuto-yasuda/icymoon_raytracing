@@ -39,12 +39,11 @@ RAY_L=4e8     # トレースする最大の光路長
 PITCH=${ANGLE}        # 磁場に対するピッチ角
 SEGMENT=1000     # 出力する光路上の点の数
 #MAX_STEP=45000   # トレース・ステップの最大数
-MAX_STEP=7500000   # トレース・ステップの最大数
+MAX_STEP=500000   # トレース・ステップの最大数
 STEP_LENGTH=10000000  # １ステップで進む最大の光路長 (1step毎に進める最大長を[m]で指定する)
-PRECISION="10000"  # １ステップ間のベクトル誤差の許容率
+PRECISION="10000"  # １ステップ間のベクsトル誤差の許容率
 #TIME_RANGE="4e-6:1e-13"  # １ステップ間の時間分解能レンジ  (1step毎に進める時間の最大値・最小値を指定する。)
-TIME_RANGE="1e-7:1e-8"  # １ステップ間の時間分解能レンジ  (1step毎に進める時間の最大値・最小値を指定する。)
-
+TIME_RANGE="1e-6:1e-7"  # １ステップ間の時間分解能レンジ  (1step毎に進める時間の最大値・最小値を指定する。)
 ## plasma cavity ##
 # --cavity [fp/fc]/[ilat]:[ilat range]/[mlt]:[mlt range]/[height upper]:[height bottom]
 # すべてMKSA単位系
