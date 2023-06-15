@@ -21,7 +21,9 @@ Radio_name_cdf = '../result_for_yasudaetal2022/tracing_range_'+spacecraft_name+'
     '_'+str(time_of_flybies)+'_flybys/para_' + \
     highest_plasma+'_'+plasma_scaleheight+'.csv'
 Radio_Range = pd.read_csv(Radio_name_cdf, header=0)
-# [0 hour,1 min,2 frequency(MHz),3 電波源データの磁力線(根本)の経度  orイオの場合は(-1000),4 電波源の南北,5 座標変換した時のx(tangential point との水平方向の距離),6 座標変換した時のy(tangential pointからの高さ方向の距離),7 電波源の実際の経度]
+
+# old [0 hour,1 min,2 frequency(MHz),3 電波源データの磁力線(根本)の経度  orイオの場合は(-1000),4 電波源の南北,5 座標変換した時のx(tangential point との水平方向の距離),6 座標変換した時のy(tangential pointからの高さ方向の距離),7 電波源の実際の経度,8 探査機の経度]
+# new [0 hour,1 min,2 sec, 3 frequency(MHz),4 電波源データの磁力線(根本)の経度  orイオの場合は(-1000),5 電波源の南北,6 座標変換した時のx(tangential point との水平方向の距離),7 座標変換した時のy(tangential pointからの高さ方向の距離),8 電波源の実際の経度,9 探査機の経度,10 電波源タイプ（A,C:1 B,D:-1)]
 Radio_observer_position = np.loadtxt('../result_for_yasudaetal2022/calculated_expres_detectable_radio_data_of_each_flyby/calculated_all_' +
                                      spacecraft_name+'_'+object_name+'_'+str(time_of_flybies)+'_Radio_data.txt')  # 電波源の経度を含む
 
