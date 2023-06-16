@@ -235,7 +235,7 @@ def Judge_occultation(i):
     detectable_frequency = Radio_observer_position[i][3]  # 使うレイの周波数を取得
     # レイの周波数と周波数リスト（Freq＿num）の値が一致する場所を取得　周波数リスト（Freq＿num）とcsvファイルの週数リストが一致しているのでそこからその周波数における電波源の幅を取得
 
-    print(i)
+    # print(i)
     # print(detectable_frequency)
     # print(np.where(Freq_num == detectable_frequency)[0][0])
 
@@ -349,8 +349,8 @@ def Replace_Save(
     # を想定した電子密度でのレイトレーシング結果が保存されているフォルダに保存
     occultaion_aray = np.array(judgement)
     judge_array = befrore_judged_array[np.where(occultaion_aray[:] == 1)[0]]
-    np.savetxt("./judgement.txt", judgement)
-    np.savetxt("./judge_array.txt", judge_array)
+    # np.savetxt("./judgement.txt", judgement)
+    # np.savetxt("./judge_array.txt", judge_array)
     # print(judge_array)
     # print(expected_detectable_array)
     detectable_array = np.sort(
@@ -359,7 +359,7 @@ def Replace_Save(
             0,
         )
     )
-    np.savetxt("./detectable_array.txt", detectable_array)
+    # np.savetxt("./detectable_array.txt", detectable_array)
     all_detectable_radio = all_radio_data[detectable_array][:]
     np.savetxt(
         "../result_for_yasudaetal2022/raytracing_"
