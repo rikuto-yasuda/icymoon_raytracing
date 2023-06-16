@@ -11,7 +11,7 @@ import math
 
 object_name = "callisto"  # europa/ganymde/callisto
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 30  # ..th flyby
+time_of_flybies = 9  # ..th flyby
 information_list = [
     "year",
     "month",

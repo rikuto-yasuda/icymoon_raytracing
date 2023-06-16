@@ -13,16 +13,16 @@ import sys
 # あらかじめ ../result_sgepss2021/~/~ に必要なレイトレーシング結果とパラメータセットを入れること
 args = sys.argv
 
-object_name = "ganymede"  # ganydeme/europa/calisto``
+object_name = "callisto"  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 1  # ..th flyby
-# highest_plasma = "0.25e2"  # 単位は(/cc) 2e2/4e2/16e22
-# plasma_scaleheight = "1e2"  # 単位は(km) 1.5e2/3e2/6e2
-highest_plasma = args[1]  # 単位は(/cc) 2e2/4e2/16e22 #12.5 13.5
-plasma_scaleheight = args[2]  # 単位は(km) 1.5e2/3e2/6e2
+time_of_flybies = 30  # ..th flyby
+highest_plasma = "0e2"  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = "4e2"  # 単位は(km) 1.5e2/3e2/6e2
+# highest_plasma = args[1]  # 単位は(/cc) 2e2/4e2/16e22 #12.5 13.5
+# plasma_scaleheight = args[2]  # 単位は(km) 1.5e2/3e2/6e2
 boundary_intensity_str = "7e-16"  # boundary_intensity_str = '1e-15'
 # callisto 30 flyby egress用　if you want to ignore the exclave structere, choose "True" (Check M-thesis!)
-exclave_examine = False
+exclave_examine = True
 # boundary_intensity_str = '0'  # boundary_intensity_str = '1e-15'
 vertical_line_freq = 0.65  # MHz
 
@@ -86,7 +86,7 @@ if object_name == "europa" and time_of_flybies == 12:
         "12:25",
     ]
 
-if object_name == "calisto" and time_of_flybies == 30:
+if object_name == "callisto" and time_of_flybies == 30:
     # C30 flyby
     plot_time_step_sec = [0, 1800, 3600, 5400, 7200, 9000, 10800]
     plot_time_step_label = [
@@ -100,7 +100,7 @@ if object_name == "calisto" and time_of_flybies == 30:
     ]
     boundary_intensity_str = "7e-16"
 
-if object_name == "calisto" and time_of_flybies == 9:
+if object_name == "callisto" and time_of_flybies == 9:
     # C9 flyby
     plot_time_step_sec = [0, 1800, 3600, 5400, 7200, 9000, 10800]
     plot_time_step_label = [
@@ -199,7 +199,7 @@ Except = Radio_Range.exc
 
 boundary_intensity = float(boundary_intensity_str)
 
-if object_name == "callisto" & time_of_flybies == 30 & exclave_examine == True:
+if object_name == "callisto" and time_of_flybies == 30 and exclave_examine:
     end_of_save_file = "_examine"
 else:
     end_of_save_file = ""
@@ -548,7 +548,7 @@ def Make_FT_full(
     galileo_radio_intensity_row = galileo_radio_intensity.copy()
 
     # カリスト30フライバイの時は浮島構造を無視できるよう値を埋める
-    if object_name == "callisto" & time_of_flybies == 30 & exclave_examine == True:
+    if object_name == "callisto" and time_of_flybies == 30 and exclave_examine:
         galileo_radio_intensity[134:145, 306:355] = 1e-17
 
     # ガリレオ電波データが閾値より大きいとこは1 それ以外0
