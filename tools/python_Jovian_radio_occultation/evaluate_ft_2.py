@@ -12,14 +12,14 @@ from matplotlib.colors import ListedColormap, BoundaryNorm
 # %%
 
 ####################################################
-object_name = "ganymede"  # ganydeme/europa/calisto`
+object_name = "callisto"  # ganydeme/europa/calisto`
 
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 1  # ..th flyby
-occultaion_type = "ingress"  # 'ingress' or 'egress
+time_of_flybies = 30  # ..th flyby
+occultaion_type = "egress"  # 'ingress' or 'egress
 radio_type_A2D = "D"  # 'A' or 'B' or 'C' or 'D'
 # callisto 30 flyby egress用　if you want to ignore the exclave structere, choose "True" (Check M-thesis!)
-exclave_examine = False
+exclave_examine = True
 # "time_difference" or "kai_2" please choose what you want to plot
 purpose = "time_difference"
 
@@ -176,7 +176,7 @@ def mindif_density():
             "scale_height="
             + str(sca)
             + "  dif_time ="
-            + str(min_dif_time)
+            + str(round(min_dif_time, 1))
             + "  max_den = "
             + str(selected_max_density)
         )
@@ -269,7 +269,7 @@ def get_frequency_intensity_plotparameter(
                     or (radio_type == "C")
                     or (radio_type == "D")
                 ):
-                    using_frequency_range = [6.0e-1, 6]
+                    using_frequency_range = [8.0e-1, 5.5]
                     boundary_intensity_str = "7e-16"
 
             elif ingress_or_egerss == "egress":
@@ -284,15 +284,20 @@ def get_frequency_intensity_plotparameter(
                 fig_vertical = 5
 
                 if radio_type == "A":
-                    using_frequency_range = [4.0e-1, 6]  # C30 egress A
+                    using_frequency_range = [4.5e-1, 5.5]  # C30 egress A
+                    #using_frequency_range = [4.5e-1, 3.5]  # C30 egress A
+                    #using_frequency_range = [7.0e-1, 3.5]  # C30 egress A  
                     boundary_intensity_str = "7e-16"
 
                 elif (radio_type == "B") or (radio_type == "C"):
-                    using_frequency_range = [7.0e-1, 6]  # C30 egress B&C
+                    using_frequency_range = [7.0e-1, 5.5]  # C30 egress B&C
+                    #using_frequency_range = [7.0e-1, 3.5]  # C30 egress B&C                    
                     boundary_intensity_str = "7e-16"
 
                 elif radio_type == "D":
-                    using_frequency_range = [4.5e-1, 6]  # C30 egress D
+                    using_frequency_range = [5.0e-1, 5.5]  # C30 egress D
+                    #using_frequency_range = [5.0e-1, 3.5]  # C30 egress D
+                    #using_frequency_range = [7.0e-1, 3.5]  # C30 egress D               
                     boundary_intensity_str = "7e-16"
 
         elif flyby_time == 9:

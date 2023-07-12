@@ -16,10 +16,10 @@ args = sys.argv
 object_name = "callisto"  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
 time_of_flybies = 30  # ..th flyby
-highest_plasma = "0e2"  # 単位は(/cc) 2e2/4e2/16e22
-plasma_scaleheight = "4e2"  # 単位は(km) 1.5e2/3e2/6e2
-# highest_plasma = args[1]  # 単位は(/cc) 2e2/4e2/16e22 #12.5 13.5
-# plasma_scaleheight = args[2]  # 単位は(km) 1.5e2/3e2/6e2
+# highest_plasma = "0e2"  # 単位は(/cc) 2e2/4e2/16e22
+# plasma_scaleheight = "4e2"  # 単位は(km) 1.5e2/3e2/6e2
+highest_plasma = args[1]  # 単位は(/cc) 2e2/4e2/16e22 #12.5 13.5
+plasma_scaleheight = args[2]  # 単位は(km) 1.5e2/3e2/6e2
 boundary_intensity_str = "7e-16"  # boundary_intensity_str = '1e-15'
 # callisto 30 flyby egress用　if you want to ignore the exclave structere, choose "True" (Check M-thesis!)
 exclave_examine = True
@@ -1147,6 +1147,7 @@ def main():
             + str(time_of_flybies)
             + "_flyby_radioint_"
             + boundary_intensity_str
+            + end_of_save_file
             + "/interpolated_"
             + object_name
             + "_"
@@ -1170,6 +1171,7 @@ def main():
             + str(time_of_flybies)
             + "_flyby_radioint_"
             + boundary_intensity_str
+            + end_of_save_file
             + "/interpolated_"
             + object_name
             + "_"

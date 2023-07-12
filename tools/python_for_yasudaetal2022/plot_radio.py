@@ -13,7 +13,9 @@ import glob
 """ここでプロットに必要なデータを指定"""
 
 # プロットしたい電波データのパスを指定
-radio_data_name = "Survey_Electric_2001-05-25T10-00_2001-05-25T13-00_for_examine.d2s"
+radio_data_name = (
+    "Survey_Electric_2001-05-25T10-00_2001-05-25T13-00_for_examine.d2s"  # C30 flyby
+)
 
 
 # 読み込んだデータの開始日時(実際の観測時刻の切り下げ値を代入)
@@ -31,14 +33,14 @@ plot_time_step_label = ["10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "1
 plot_first_time = 0
 plot_last_time = 10800
 """
-plot_first_time = 5400
-plot_last_time = 6300
+plot_first_time = 6200
+plot_last_time = 7800
 
 # カラーマップの強度範囲（）
 max_intensity = 1e-12  # カラーマップの最大強度
 min_intensity = 1e-16  # カラーマップの最小強度
 
-averaged_max_intensity = 5e-14
+averaged_max_intensity = 1.2e-15
 averaged_min_intensity = 1e-17
 
 # ftダイヤグラムに等高線をひく強度を指定
@@ -46,8 +48,9 @@ boundary_intensity_str = "7e-16"  # boundary_intensity_str = '1e-15'
 boundary_intensity = float(boundary_intensity_str)
 
 # プロットする周波数範囲 (MHz)
-max_frequency = 7
-min_frequency = 0.08
+max_frequency = 0.6
+min_frequency = 0.4
+
 
 # ガリレオ探査機によって取得される周波数・探査機が変わったらこの周波数も変わってくるはず
 gal_fleq_tag_row = [
@@ -338,7 +341,7 @@ def Make_FT_full():
 
         return 0
 
-    def plot_average_intensity_and_save(first_time, last_time):
+    def plot_average_intensity_vs_freq_and_save(first_time, last_time):
         print(galileo_radio_intensity_row.shape)
         averaged_first_time = np.where(galileo_data_time > first_time)[0][0]
         averaged_last_time = np.where(galileo_data_time < last_time)[0][-1]
@@ -361,7 +364,7 @@ def Make_FT_full():
         # ガリレオ探査機の電波データの時刻・周波数でメッシュ作成
         fig, ax = plt.subplots(1, 1)
 
-        # ガリレオ探査機の電波強度をカラーマップへ
+        # ガリレオ探査機の電波強度を折線へ
         pcm = ax.plot(galileo_data_freq, mean_data)
 
         ax.set_xlim(min_frequency, max_frequency)
@@ -377,12 +380,47 @@ def Make_FT_full():
             os.path.join("../result_for_yasudaetal2022/radio_plot/radio_if_plot.png")
         )
 
-    plot_and_save(plot_first_time, plot_last_time)
-    plot_average_intensity_and_save(plot_first_time, plot_last_time)
+    def plot_average_intensity_vs_time_and_save(first_freq, last_freq):
+        print(galileo_radio_intensity_row.shape)
+        averaged_first_freq = np.where(galileo_data_freq > first_freq)[0][0]
+        averaged_last_freq = np.where(galileo_data_freq < last_freq)[0][-1]
+        print(averaged_first_freq, averaged_last_freq)
+        usable_data = galileo_radio_intensity_row[
+            averaged_first_freq:averaged_last_freq, :
+        ]
 
-    return 0
+        print(usable_data.shape)
+        mean_data = np.mean(usable_data, axis=0).T
+
+        mean_data_with_time = np.vstack((galileo_data_time, mean_data))
+        np.savetxt(
+            "../result_for_yasudaetal2022/radio_plot/galileo_radio_intensity__time_average.csv",
+            mean_data_with_time,
+            delimiter=",",
+        )
+        print(mean_data_with_time)
+
+        # ガリレオ探査機の電波データの時刻・周波数でメッシュ作成
+        fig, ax = plt.subplots(1, 1)
+
+        # ガリレオ探査機の電波強度を折線に
+        pcm = ax.plot(galileo_data_time, mean_data)
+
+        ax.set_xlim(plot_first_time, plot_last_time)
+        ax.set_ylim(averaged_min_intensity, averaged_max_intensity)
+        # ax.set_yscale("log")
+        ax.set_xlabel("time")
+        ax.set_ylabel("intensity")
+
+        # 横軸の幅は作りたい図によって変わるので引数用いる
+        plt.show()
+        fig.savefig(
+            os.path.join("../result_for_yasudaetal2022/radio_plot/radio_if_plot.png")
+        )
 
     plot_and_save(plot_first_time, plot_last_time)
+    plot_average_intensity_vs_freq_and_save(plot_first_time, plot_last_time)
+    plot_average_intensity_vs_time_and_save(min_frequency, max_frequency)
 
     return 0
 

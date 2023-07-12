@@ -16,7 +16,7 @@ rng = np.random.default_rng()
 
 object_name = "callisto"  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 30  # ..th flyby
+time_of_flybies = 9  # ..th flyby
 # highest_plasma = "0e2"  # 単位は(/cc) 2e2/4e2/16e22 #12.5 13.5
 # plasma_scaleheight = "4e2"  # 単位は(km) 1.5e2/3e2/6e2
 highest_plasma = args[1]  # 単位は(/cc) 2e2/4e2/16e22 #12.5 13.5
@@ -39,15 +39,48 @@ Radio_range_cdf = (
 Radio_Range = pd.read_csv(Radio_range_cdf, header=0)
 # new [0 hour,1 min,2 sec, 3 frequency(MHz),4 電波源データの磁力線(根本)の経度  orイオの場合は(-1000),5 電波源の南北,6 座標変換した時のx(tangential point との水平方向の距離),7 座標変換した時のy(tangential pointからの高さ方向の距離),8 電波源の実際の経度,9 探査機の経度,10 電波源タイプ（A,C:1 B,D:-1)]
 # old [0 hour,1 min,2 frequency(MHz),3 電波源データの磁力線(根本)の経度  orイオの場合は(-1000),4 電波源の南北,5 座標変換した時のx(tangential point との水平方向の距離),6 座標変換した時のy(tangential pointからの高さ方向の距離),7 電波源の実際の経度]
-Radio_observer_position = np.loadtxt(
-    "../result_for_yasudaetal2022/calculated_expres_detectable_radio_data_of_each_flyby/interpolated_calculated_all_"
-    + spacecraft_name
-    + "_"
+
+if int(float(highest_plasma) - 50) % 100 == 0:
+    before_highest_plasma = str(int(int(float(highest_plasma) - 50) / 100)) + "e2"
+
+elif int(float(highest_plasma) - 50) % 100 == 50:
+    before_highest_plasma = str(int(float(highest_plasma) - 50) / 100) + "e2"
+
+file_path = (
+    "/Users/yasudarikuto/research/icymoon_raytracing/tools/result_for_yasudaetal2022/raytracing_"
+    + object_name
+    + "_results/"
     + object_name
     + "_"
+    + before_highest_plasma
+    + "_"
+    + plasma_scaleheight
+    + "/interpolated_"
+    + object_name
+    + "_"
+    + spacecraft_name
+    + "_"
     + str(time_of_flybies)
-    + "_Radio_data.txt"
-)  # 電波源の経度を含む
+    + "_"
+    + before_highest_plasma
+    + "_"
+    + plasma_scaleheight
+    + "_dectable_radio_data.txt"
+)
+
+if os.path.isfile(file_path) == True:
+    Radio_observer_position = np.loadtxt(file_path)
+
+else:
+    Radio_observer_position = np.loadtxt(
+        "/Users/yasudarikuto/research/icymoon_raytracing/tools/result_for_yasudaetal2022/calculated_expres_detectable_radio_data_of_each_flyby/interpolated_calculated_all_"
+        + spacecraft_name
+        + "_"
+        + object_name
+        + "_"
+        + str(time_of_flybies)
+        + "_Radio_data.txt"
+    )  # 電波源の経度を含む
 
 
 # europa & ganymede
@@ -235,7 +268,7 @@ def Judge_occultation(i):
     detectable_frequency = Radio_observer_position[i][3]  # 使うレイの周波数を取得
     # レイの周波数と周波数リスト（Freq＿num）の値が一致する場所を取得　周波数リスト（Freq＿num）とcsvファイルの週数リストが一致しているのでそこからその周波数における電波源の幅を取得
 
-    # print(i)
+    print(i)
     # print(detectable_frequency)
     # print(np.where(Freq_num == detectable_frequency)[0][0])
 
@@ -410,7 +443,7 @@ def main():
     start = time.time()
     # 受かっているかの検証　processesの引数で並列数を指定
 
-    with Pool(processes=60) as pool:
+    with Pool(processes=30) as pool:
         result_list = list(pool.map(Judge_occultation, total_radio_number))
 
     # 受かっている電波のみを保存

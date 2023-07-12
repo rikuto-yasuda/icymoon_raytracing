@@ -11,47 +11,58 @@ a = 0
 b = 10000000
 n = int(b/1000)  # 分割数は一キロ分解能になるように
 magnetic_field = 750*(10**-9)  # 　磁場強度 T //ガニメデ赤道表面 750 nT 木星磁場 100 nT
-max_density = 200*(10**6)  # 最大電子密度 m-3 //n(/cc)=n*10**6(/m3)  250 or 100 /cc
-scale_height = 50*(10**3)  # スケールハイト m //l(km)=l*10**3(m) 1500 or 300 km
+max_density1 = 100*(10**6)  # 最大電子密度 m-3 //n(/cc)=n*10**6(/m3)  250 or 100 /cc
+scale_height1 = 1000*(10**3)  # スケールハイト m //l(km)=l*10**3(m) 1500 or 300 km
+
+max_density2 = 25*(10**6)  # 最大電子密度 m-3 //n(/cc)=n*10**6(/m3)  250 or 100 /cc
+scale_height2 = 100*(10**3)  # スケールハイト m //l(km)=l*10**3(m) 1500 or 300 km
+
 radius = 2634100  # 半径 m ガニメデ半球 2634.1 km = 2634100 m
 diameter_raio = 0.2  # 楕円の長辺と短辺の比率(0-1)円偏波度の考慮はここで起こる
-
 
 # 短冊の幅Δx
 dx = (b-a)/n
 # frequency = np.arange(200000, 10000000, 100)  # 0.1MHzから10MHzを0.01MHz間隔で分解
 # 0.1MHzから10MHzを0.01MHz間隔で分解 位相計算用
-frequency = np.arange(200000, 6000000, 100)
-# 周波数 Hz // 1MHz 1000000Hz
-# 積分する関数の定義
-K = 2.42*(10**4)
-coefficient = (K*magnetic_field) / \
-    (1.41421*frequency*frequency)  # 0.1MHzから10MHzの係数
+frequency = np.arange(1000000, 10000000, 100)
+
+def calc_psi_deg(max_density,scale_height):
+
+    # 周波数 Hz // 1MHz 1000000Hz
+    # 積分する関数の定義
+    K = 2.42*(10**4)
+    coefficient = (K*magnetic_field) / \
+        (1.41421*frequency*frequency)  # 0.1MHzから10MHzの係数
 
 
-def f(x):
-    integrand = np.exp(-1*(np.sqrt((x*x)+radius*radius)-radius)/scale_height)
-    return integrand
+    def f(x):
+        integrand = np.exp(-1*(np.sqrt((x*x)+radius*radius)-radius)/scale_height)
+        return integrand
 
 
-# 面積の総和
-s = 0
-for i in range(n):
-    x1 = a + dx*i
-    x2 = a + dx*(i+1)
-    f1 = f(x1)    # 上底
-    f2 = f(x2)    # 下底
-    # 面積
-    s += dx * (f1+f2)/2
+    # 面積の総和
+    s = 0
+    for i in range(n):
+        x1 = a + dx*i
+        x2 = a + dx*(i+1)
+        f1 = f(x1)    # 上底
+        f2 = f(x2)    # 下底
+        # 面積
+        s += dx * (f1+f2)/2
 
-TEC = s*max_density
-psi_rad = TEC*coefficient  # 0.1MHzから10MHzのψ角
-e_magnitude = np.reciprocal(np.sqrt(np.square(np.cos(psi_rad)) +
-                                    np.square(np.sin(psi_rad)/diameter_raio)))
-radio_intensity = np.square(e_magnitude)
-psi_deg = np.rad2deg(psi_rad)
+    TEC = s*max_density
+    psi_rad = TEC*coefficient  # 0.1MHzから10MHzのψ角
+    e_magnitude = np.reciprocal(np.sqrt(np.square(np.cos(psi_rad)) +
+                                        np.square(np.sin(psi_rad)/diameter_raio)))
+    radio_intensity = np.square(e_magnitude)
+    psi_deg = np.rad2deg(psi_rad)
+    return psi_deg
+
+psi_deg1 = calc_psi_deg(max_density1,scale_height1)
+psi_deg2 = calc_psi_deg(max_density2, scale_height2)
 
 
+"""
 deg_1MHz = psi_deg[int(np.where(frequency == 1000000)[0])]
 
 deg_1MHz_plus_pi = deg_1MHz+180
@@ -76,9 +87,9 @@ print("max_density(/cc):"+str(max_density/(10**6))
       + " / scale_height(km):"+str(scale_height/1000))
 print("psi_radian:", psi_rad)
 print("psi_degree:", psi_deg)
-
+"""
 # 以下電波強度用
-
+"""
 reshape_intensity = np.reshape(radio_intensity, (1, len(radio_intensity)))
 c = np.concatenate([reshape_intensity, reshape_intensity]).T
 # print(b)
@@ -117,18 +128,22 @@ print("total_width:"+str(width_total/1000000))
 # 以下電波位相用
 
 
-psi_deg_mod = np.mod(psi_deg, 180)
-plt.xlim(10000000, 40000000)
-plt.ylim(0, 10)
+psi_deg1_mod = np.mod(psi_deg1, 360)
+plt.xlim(1000000, 10000000)
+plt.ylim(0, 200)
 # print(b)
-plt.plot(frequency, psi_deg_mod)
-plt.title("max:"+str(max_density/1000000) + "(/cc) h_s " +
-          str(scale_height/1000)+"(km) TEC:"+str('{:.2e}'.format(TEC))+"(/m2)", fontsize=10)
+#plt.plot(frequency, psi_deg_mod)
+plt.plot(frequency, psi_deg1,label='1.max:100 /cc scale: 1000 km')
+plt.plot(frequency,psi_deg2,label='2.max:25 /cc scale: 100 km')
+plt.legend()
+plt.title("faraday rotation effect", fontsize=10)
+#plt.title("max:"+str(max_density/1000000) + "(/cc) h_s " +str(scale_height/1000)+"(km) TEC:"+str('{:.2e}'.format(TEC))+"(/m2)", fontsize=10)
 plt.xlabel("radio frequency (MHz)")
 plt.ylabel("rotation angle (deg)")
-plt.xticks([10000000, 15000000, 20000000, 25000000, 30000000,
-           35000000, 40000000], ['10', '15', '20', '25', '30', '35', '40'])
-"""
+plt.xticks([1000000, 2000000, 3000000, 4000000, 5000000, 6000000, 7000000,8000000,9000000,10000000], ['1', '2', '3', '4', '5', '6', '7','8','9','10'])
+
+
+
 # 以下ゴミ
 """
 X, Y = np.mgrid[:2, :9700]
