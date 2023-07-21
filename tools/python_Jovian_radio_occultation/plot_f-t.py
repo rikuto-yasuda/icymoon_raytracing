@@ -13,16 +13,16 @@ import sys
 # あらかじめ ../result_sgepss2021/~/~ に必要なレイトレーシング結果とパラメータセットを入れること
 args = sys.argv
 
-object_name = "callisto"  # ganydeme/europa/calisto``
+object_name = "ganymede"  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 30  # ..th flyby
+time_of_flybies = 1  # ..th flyby
 # highest_plasma = "0e2"  # 単位は(/cc) 2e2/4e2/16e22
 # plasma_scaleheight = "4e2"  # 単位は(km) 1.5e2/3e2/6e2
 highest_plasma = args[1]  # 単位は(/cc) 2e2/4e2/16e22 #12.5 13.5
 plasma_scaleheight = args[2]  # 単位は(km) 1.5e2/3e2/6e2
-boundary_intensity_str = "7e-16"  # boundary_intensity_str = '1e-15'
+boundary_intensity_str = "4e-16"  # boundary_intensity_str = '1e-15'
 # callisto 30 flyby egress用　if you want to ignore the exclave structere, choose "True" (Check M-thesis!)
-exclave_examine = True
+exclave_examine = False
 # boundary_intensity_str = '0'  # boundary_intensity_str = '1e-15'
 vertical_line_freq = 0.65  # MHz
 

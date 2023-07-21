@@ -7,50 +7,71 @@ from multiprocessing import Pool
 import os
 import time
 import glob
+import sys
 
 # %%
 
-"""ここでプロットに必要なデータを指定"""
+args = sys.argv
+## プロットしたいフライバイを指定
+object_name = "callisto"  # ganydeme/europa/calisto`
+spacecraft_name = "galileo"  # galileo/JUICE(?)
+time_of_flybies = 30  # ..th flyby
 
-# プロットしたい電波データのパスを指定
-radio_data_name = (
-    "Survey_Electric_2001-05-25T10-00_2001-05-25T13-00_for_examine.d2s"  # C30 flyby
-)
 
-
-# 読み込んだデータの開始日時(実際の観測時刻の切り下げ値を代入)
-start_day = 25  # 電波データの開始日
-start_hour = 10  # 電波データの開始時刻
-start_min = 0  # 電波データの開始分
-
-# 電波データの時刻ラベルを作成（列番号と時刻の対応を示すもの）/
-plot_time_step_sec = [0, 1800, 3600, 5400, 7200, 9000, 10800]
-plot_time_step_label = ["10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00"]
+## 詳細設定
 
 # プロットしたい時間範囲を指定(秒)
-
 """
+# G1
+plot_first_time = 0
+plot_last_time = 5400
+
+plot_first_time = 2100
+plot_last_time = 2700
+"""
+"""
+# C09
+plot_first_time = 0
+plot_last_time = 10800
+
+# C09
+plot_first_time = 5700
+plot_last_time = 6000
+"""
+"""
+# C30
 plot_first_time = 0
 plot_last_time = 10800
 """
-plot_first_time = 6200
-plot_last_time = 7800
+# C30
+plot_first_time = 5400
+plot_last_time = 6000
+
 
 # カラーマップの強度範囲（）
 max_intensity = 1e-12  # カラーマップの最大強度
 min_intensity = 1e-16  # カラーマップの最小強度
 
-averaged_max_intensity = 1.2e-15
+# 平均値を折れ線でプロットするときの範囲
+averaged_max_intensity = 3e-16
 averaged_min_intensity = 1e-17
 
+# 平均値を折れ線でプロットするときの範囲
+color = "g"
+
 # ftダイヤグラムに等高線をひく強度を指定
-boundary_intensity_str = "7e-16"  # boundary_intensity_str = '1e-15'
+boundary_intensity_str = "4e-10"  # boundary_intensity_str = '1e-15'
 boundary_intensity = float(boundary_intensity_str)
 
 # プロットする周波数範囲 (MHz)
-max_frequency = 0.6
-min_frequency = 0.4
+max_frequency = 6
+min_frequency = 0.1
 
+# ヒストグラムを作りたい場合
+histogram = True
+histogram_freq = float(args[1])  # MHz
+# histogram_freq = 3.034e-01  # MHz
+hictgram_interval = 5e-18
 
 # ガリレオ探査機によって取得される周波数・探査機が変わったらこの周波数も変わってくるはず
 gal_fleq_tag_row = [
@@ -208,6 +229,92 @@ gal_fleq_tag_row = [
     5.770e06,
 ]
 
+
+## フライバイの共通データを指定
+
+if (
+    (object_name == "callisto")
+    and (spacecraft_name == "galileo")
+    and (time_of_flybies == 30)
+):
+    # プロットしたい電波データのパスを指定
+    radio_data_name = (
+        "Survey_Electric_2001-05-25T10-00_2001-05-25T13-00_for_examine.d2s"  # C30 flyby
+    )
+
+    # 読み込んだデータの開始日時(実際の観測時刻の切り下げ値を代入)
+    start_day = 25  # 電波データの開始日
+    start_hour = 10  # 電波データの開始時刻
+    start_min = 0  # 電波データの開始分
+
+    # 電波データの時刻ラベルを作成（列番号と時刻の対応を示すもの）/
+    plot_time_step_sec = [0, 1800, 3600, 5400, 7200, 9000, 10800]
+    plot_time_step_label = [
+        "10:00",
+        "10:30",
+        "11:00",
+        "11:30",
+        "12:00",
+        "12:30",
+        "13:00",
+    ]
+
+if (
+    (object_name == "callisto")
+    and (spacecraft_name == "galileo")
+    and (time_of_flybies == 9)
+):
+    # プロットしたい電波データのパスを指定
+    radio_data_name = (
+        "Survey_Electric_1997-06-25T12-00_1997-06-25T15-00.d2s"  # C09 flyby
+    )
+
+    # 読み込んだデータの開始日時(実際の観測時刻の切り下げ値を代入)
+    start_day = 25  # 電波データの開始日
+    start_hour = 12  # 電波データの開始時刻
+    start_min = 0  # 電波データの開始分
+
+    # 電波データの時刻ラベルを作成（列番号と時刻の対応を示すもの）/
+    plot_time_step_sec = [0, 1800, 3600, 5400, 7200, 9000, 10800]
+    plot_time_step_label = [
+        "12:00",
+        "12:30",
+        "13:00",
+        "13:30",
+        "14:00",
+        "14:30",
+        "15:00",
+    ]
+
+
+if (
+    (object_name == "ganymede")
+    and (spacecraft_name == "galileo")
+    and (time_of_flybies == 1)
+):
+    # プロットしたい電波データのパスを指定
+    radio_data_name = (
+        "Survey_Electric_1996-06-27T05-30_1996-06-27T07-00.d2s"  # C30 flyby
+    )
+
+    # 読み込んだデータの開始日時(実際の観測時刻の切り下げ値を代入)
+    start_day = 27  # 電波データの開始日
+    start_hour = 5  # 電波データの開始時刻
+    start_min = 30  # 電波データの開始分
+
+    # 電波データの時刻ラベルを作成（列番号と時刻の対応を示すもの）/
+    plot_time_step_sec = [0, 900, 1800, 2700, 3600, 4500, 5400]
+    plot_time_step_label = [
+        "05:30",
+        "05:45",
+        "06:00",
+        "06:15",
+        "06:30",
+        "06:45",
+        "07;00",
+    ]
+
+
 # 電波強度のデータを取得（一列目は時刻データになってる）
 # 初めの数行は読み取らないよう設定・時刻データを読み取って時刻をプロットするためここがずれても影響はないが、データがない行を読むと怒られるのでその時はd2sファイルを確認
 
@@ -216,6 +323,7 @@ radio_row_data = pd.read_csv(
     header=None,
     skiprows=24,
     delimiter="  ",
+    engine="python",
 )
 
 
@@ -238,7 +346,7 @@ def Prepare_Galileo_data(rad_row_data):
 
     # 一列目の時刻データを文字列で取得（例; :10:1996-06-27T05:30:08.695） ・同じ長さの０配列を準備・
     gal_time_tag_prepare = np.array(rad_row_data.iloc[:, 0])
-    gal_time_tag_prepare = gal_time_tag_prepare.astype(np.str)
+    gal_time_tag_prepare = gal_time_tag_prepare.astype(np.str_)
     gal_time_tag = np.zeros(len(gal_time_tag_prepare))
 
     # 文字列のデータから開始時刻からの経過時間（秒）に変換
@@ -278,8 +386,8 @@ def Prepare_Galileo_data(rad_row_data):
     df = pd.DataFrame(rad_row_data.iloc[:, 1:])
 
     DDF = np.array(df).astype(np.float64).T
-    print(DDF)
-    print(len(gal_fleq_tag), len(gal_time_tag), DDF.shape)
+    # print(DDF)
+    # print(len(gal_fleq_tag), len(gal_time_tag), DDF.shape)
 
     # ガリレオ探査機のデータ取得開始時刻からの経過時間（sec) , ガリレオ探査機のデータ取得周波数（MHz), ガリレオ探査機の取得した電波強度（代入したデータと同じ単位）
     return gal_time_tag, gal_fleq_tag, DDF
@@ -333,63 +441,181 @@ def Make_FT_full():
 
         # 横軸の幅は作りたい図によって変わるので引数用いる
         ax.set_xlim(first_time, last_time)
-        ax.set_title("Radio intensity")
-        plt.show()
+        ax.set_title("Radio intensity boundary: " + boundary_intensity_str)
+        # plt.show()
         fig.savefig(
-            os.path.join("../result_for_yasudaetal2022/radio_plot/radio_ft_plot.png")
+            os.path.join(
+                "../result_for_yasudaetal2022/radio_plot/"
+                + object_name
+                + str(time_of_flybies)
+                + "/radio_ft_plot_time:"
+                + str(plot_first_time)
+                + "-"
+                + str(plot_last_time)
+                + "_int:"
+                + str(averaged_min_intensity)
+                + "-"
+                + str(averaged_max_intensity)
+                + ".png"
+            )
         )
 
         return 0
 
     def plot_average_intensity_vs_freq_and_save(first_time, last_time):
-        print(galileo_radio_intensity_row.shape)
+        # print(galileo_radio_intensity_row.shape)
         averaged_first_time = np.where(galileo_data_time > first_time)[0][0]
         averaged_last_time = np.where(galileo_data_time < last_time)[0][-1]
-        print(averaged_first_time, averaged_last_time)
+        # print(averaged_first_time, averaged_last_time)
         usable_data = galileo_radio_intensity_row[
             :, averaged_first_time:averaged_last_time
         ]
-
+        print(usable_data)
         print(usable_data.shape)
         mean_data = np.mean(usable_data, axis=1)
+        std_data = np.std(usable_data, axis=1)
+        median_data = np.median(usable_data, axis=1)
+        statistical_data_with_frequency = np.vstack(
+            (galileo_data_freq, mean_data, std_data, median_data)[0]
+        )
+        freq_num = np.where(galileo_data_freq == histogram_freq)[0][0]
+        intensity_list_at_freq = usable_data[freq_num][:]
 
-        mean_data_with_frequency = np.vstack((galileo_data_freq, mean_data))
         np.savetxt(
-            "../result_for_yasudaetal2022/radio_plot/galileo_noise_floor.csv",
-            mean_data_with_frequency,
+            "../result_for_yasudaetal2022/radio_plot/galileo_noise_floor_"
+            + object_name
+            + str(time_of_flybies)
+            + ".csv",
+            statistical_data_with_frequency,
             delimiter=",",
         )
-        print(mean_data_with_frequency)
+        # print(statistical_data_with_frequency)
 
         # ガリレオ探査機の電波データの時刻・周波数でメッシュ作成
-        fig, ax = plt.subplots(1, 1)
+        fig, ax = plt.subplots(2, 1, figsize=(8, 10))
 
         # ガリレオ探査機の電波強度を折線へ
-        pcm = ax.plot(galileo_data_freq, mean_data)
+        # print(np.shape(galileo_data_freq))
+        # print(np.shape(mean_data))
+        # print(np.shape(median_data))
+        pcm = ax[0].errorbar(
+            galileo_data_freq,
+            mean_data,
+            c="red",
+            fmt="o",
+            yerr=std_data,
+            label="mean & std",
+        )
 
-        ax.set_xlim(min_frequency, max_frequency)
-        ax.set_ylim(averaged_min_intensity, averaged_max_intensity)
-        ax.set_xscale("log")
-        ax.set_yscale("log")
-        ax.set_xlabel("Frequency (MHz)")
-        ax.set_ylabel("intensity")
+        ax[0].scatter(galileo_data_freq, median_data, c="b", label="median")
+        ax[0].set_xlim(min_frequency, max_frequency)
+        ax[0].set_ylim(
+            averaged_min_intensity,
+            np.maximum(
+                averaged_max_intensity,
+                (mean_data[freq_num] + std_data[freq_num]) * 1.05,
+            ),
+        )
+        ax[0].set_xscale("log")
+        # ax[0].set_yscale("log")
+        ax[0].set_xlabel("Frequency (MHz)")
+        ax[0].set_ylabel("intensity")
+        ax[0].set_title(
+            object_name
+            + str(time_of_flybies)
+            + " time"
+            + str(plot_first_time)
+            + "-"
+            + str(plot_last_time)
+        )
+        ax[0].axhline(y=boundary_intensity, color="red")
+        ax[0].legend()
 
-        # 横軸の幅は作りたい図によって変わるので引数用いる
-        plt.show()
+        ax[0].axvline(x=histogram_freq, color="green", linestyle="dotted")
+
+        ax[1].hist(
+            intensity_list_at_freq,
+            bins=np.arange(
+                np.minimum(averaged_min_intensity, np.min(intensity_list_at_freq)),
+                np.maximum(
+                    averaged_max_intensity,
+                    np.max(intensity_list_at_freq) + hictgram_interval,
+                ),
+                hictgram_interval,
+            ),
+            edgecolor="black",
+        )
+        # 縦線を引く
+        ax[1].axvline(
+            x=np.mean(intensity_list_at_freq),
+            color="red",
+            linestyle="dashed",
+            linewidth=2,
+            label="mean",
+        )
+        ax[1].axvline(
+            x=np.mean(intensity_list_at_freq) + np.std(intensity_list_at_freq),
+            color="orange",
+            linestyle="dashed",
+            linewidth=2,
+            label="1sigma",
+        )
+        ax[1].axvline(
+            x=np.mean(intensity_list_at_freq) - np.std(intensity_list_at_freq),
+            color="orange",
+            linestyle="dashed",
+            linewidth=2,
+        )
+        ax[1].axvline(
+            x=np.median(intensity_list_at_freq),
+            color="blue",
+            linestyle="dashed",
+            linewidth=2,
+            label="median",
+        )
+
+        # グラフのラベルやタイトルを設定
+        ax[1].set_xlabel("Frequency")
+        ax[1].set_ylabel("Intensity")
+        ax[1].set_title(
+            object_name
+            + str(time_of_flybies)
+            + " time"
+            + str(plot_first_time)
+            + "-"
+            + str(plot_last_time)
+            + "freq(MHz)"
+            + str(histogram_freq)
+        )
+        ax[1].legend()
+        # グラフを表示
+        # plt.show()
+
         fig.savefig(
-            os.path.join("../result_for_yasudaetal2022/radio_plot/radio_if_plot.png")
+            os.path.join(
+                "../result_for_yasudaetal2022/radio_plot/"
+                + object_name
+                + str(time_of_flybies)
+                + "/histogram/mean_std_histogram_time_"
+                + str(plot_first_time)
+                + "-"
+                + str(plot_last_time)
+                + "_freq_"
+                + str(histogram_freq)
+                + ".png"
+            )
         )
 
     def plot_average_intensity_vs_time_and_save(first_freq, last_freq):
-        print(galileo_radio_intensity_row.shape)
+        # print(galileo_radio_intensity_row.shape)
         averaged_first_freq = np.where(galileo_data_freq > first_freq)[0][0]
         averaged_last_freq = np.where(galileo_data_freq < last_freq)[0][-1]
-        print(averaged_first_freq, averaged_last_freq)
+        # print(averaged_first_freq, averaged_last_freq)
         usable_data = galileo_radio_intensity_row[
             averaged_first_freq:averaged_last_freq, :
         ]
 
-        print(usable_data.shape)
+        # print(usable_data.shape)
         mean_data = np.mean(usable_data, axis=0).T
 
         mean_data_with_time = np.vstack((galileo_data_time, mean_data))
@@ -398,24 +624,33 @@ def Make_FT_full():
             mean_data_with_time,
             delimiter=",",
         )
-        print(mean_data_with_time)
+        # print(mean_data_with_time)
 
         # ガリレオ探査機の電波データの時刻・周波数でメッシュ作成
         fig, ax = plt.subplots(1, 1)
 
         # ガリレオ探査機の電波強度を折線に
-        pcm = ax.plot(galileo_data_time, mean_data)
+        pcm = ax.plot(galileo_data_time, mean_data, color)
 
         ax.set_xlim(plot_first_time, plot_last_time)
         ax.set_ylim(averaged_min_intensity, averaged_max_intensity)
-        # ax.set_yscale("log")
+        ax.set_yscale("log")
         ax.set_xlabel("time")
         ax.set_ylabel("intensity")
+        ax.set_title(
+            object_name
+            + str(time_of_flybies)
+            + " fre"
+            + str(min_frequency)
+            + "-"
+            + str(max_frequency)
+        )
+        ax.axhline(y=boundary_intensity, color="red")
 
         # 横軸の幅は作りたい図によって変わるので引数用いる
-        plt.show()
+        # plt.show()
         fig.savefig(
-            os.path.join("../result_for_yasudaetal2022/radio_plot/radio_if_plot.png")
+            os.path.join("../result_for_yasudaetal2022/radio_plot/radio_it_plot.png")
         )
 
     plot_and_save(plot_first_time, plot_last_time)

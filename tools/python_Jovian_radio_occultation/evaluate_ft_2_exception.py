@@ -51,12 +51,12 @@ def maxandscale(file):
     t = filename.split(sep)
 
     if exclave_examine:
-        max_density = t[14]
-        scale_height = t[15]
+        max_density = t[15]
+        scale_height = t[16]
 
     else:
-        max_density = t[13]
-        scale_height = t[14]
+        max_density = t[14]
+        scale_height = t[15]
 
     print(max_density, scale_height)
     return max_density, scale_height
@@ -71,6 +71,7 @@ def plot_difference(
     boundary_intensity_str,
     radio_type,
     using_frequency_range,
+    exclude_frequency_range,
     exclave,
 ):
     # [[frequencyの配列] [time_lagの配列]]
@@ -84,7 +85,7 @@ def plot_difference(
             + str(time_of_flybies)
             + "_flyby_radioint_"
             + boundary_intensity_str
-            + "_examine/"
+            + "_examine/interpolated_"
             + object_name
             + "_"
             + highest
@@ -108,7 +109,7 @@ def plot_difference(
             + str(time_of_flybies)
             + "_flyby_radioint_"
             + boundary_intensity_str
-            + "/"
+            + "/interpolated_"
             + object_name
             + "_"
             + highest
@@ -136,10 +137,30 @@ def plot_difference(
 
     frequency_number = limited_time_maximum + 1 - limited_time_minimum
 
+    exclude_time_list = np.array(
+        np.where(
+            (time_diffrence_index[0][:] > exclude_frequency_range[0])
+            & (time_diffrence_index[0][:] < exclude_frequency_range[1])
+        )
+    )
+
+    exclude_time_minimum = exclude_time_list[0][0]  # 最低周波数の位置
+    exclude_time_maximum = exclude_time_list[0][
+        len(exclude_time_list[0][:]) - 1
+    ]  # 最高周波数の位置
+
+    excluded_frequency_number = exclude_time_maximum + 1 - exclude_time_minimum
+
     average_difference_time = (
         sum(time_diffrence_index[1][limited_time_minimum : limited_time_maximum + 1])
-        / frequency_number
-    )
+        - sum(time_diffrence_index[1][exclude_time_minimum : exclude_time_maximum + 1])
+    ) / (frequency_number - excluded_frequency_number)
+
+    print("using frequency")
+    print(time_diffrence_index[0][limited_time_minimum : limited_time_maximum + 1])
+
+    print("exception frequency")
+    print(time_diffrence_index[0][exclude_time_minimum : exclude_time_maximum + 1])
 
     # シグマを1と置いたときのkai2じょう
     kai2_temporary = np.dot(
@@ -176,7 +197,7 @@ def mindif_density():
             "scale_height="
             + str(sca)
             + "  dif_time ="
-            + str("{:.1f}".format(min_dif_time))
+            + str(round(min_dif_time, 1))
             + "  max_den = "
             + str(selected_max_density)
         )
@@ -227,7 +248,8 @@ def get_frequency_intensity_plotparameter(
                     or (radio_type == "C")
                     or (radio_type == "D")
                 ):
-                    using_frequency_range = [8.5e-1, 4]  # G1 ingress
+                    using_frequency_range = [8.0e-1, 4]  # G1 ingress
+                    exception_frequency_range = [1.2, 1.4]  # G1 ingress
                     boundary_intensity_str = "7e-16"
 
             elif ingress_or_egerss == "egress":
@@ -247,7 +269,7 @@ def get_frequency_intensity_plotparameter(
                     or (radio_type == "C")
                     or (radio_type == "D")
                 ):
-                    using_frequency_range = [5.5e-1, 6]  # G1 egress
+                    using_frequency_range = [6.0e-1, 5.5]  # G1 egress
                     boundary_intensity_str = "7e-16"
 
     if moon_name == "callisto":
@@ -269,7 +291,7 @@ def get_frequency_intensity_plotparameter(
                     or (radio_type == "C")
                     or (radio_type == "D")
                 ):
-                    using_frequency_range = [6.0e-1, 6]
+                    using_frequency_range = [8.0e-1, 5.5]
                     boundary_intensity_str = "7e-16"
 
             elif ingress_or_egerss == "egress":
@@ -284,18 +306,20 @@ def get_frequency_intensity_plotparameter(
                 fig_vertical = 5
 
                 if radio_type == "A":
-                    # using_frequency_range = [4.0e-1, 6]  # C30 egress A
-                    using_frequency_range = [4.0e-1, 3.5]  # C30 egress A
+                    using_frequency_range = [4.5e-1, 5.5]  # C30 egress A
+                    # using_frequency_range = [4.5e-1, 3.5]  # C30 egress A
+                    # using_frequency_range = [7.0e-1, 3.5]  # C30 egress A
                     boundary_intensity_str = "7e-16"
 
                 elif (radio_type == "B") or (radio_type == "C"):
-                    # using_frequency_range = [7.0e-1, 6]  # C30 egress B&C
-                    using_frequency_range = [7.0e-1, 3.5]  # C30 egress B&C
+                    using_frequency_range = [7.0e-1, 5.5]  # C30 egress B&C
+                    # using_frequency_range = [7.0e-1, 3.5]  # C30 egress B&C
                     boundary_intensity_str = "7e-16"
 
                 elif radio_type == "D":
-                    # using_frequency_range = [4.5e-1, 6]  # C30 egress D
-                    using_frequency_range = [4.5e-1, 3.5]  # C30 egress D
+                    using_frequency_range = [5.0e-1, 5.5]  # C30 egress D
+                    # using_frequency_range = [5.0e-1, 3.5]  # C30 egress D
+                    # using_frequency_range = [7.0e-1, 3.5]  # C30 egress D
                     boundary_intensity_str = "7e-16"
 
         elif flyby_time == 9:
@@ -322,6 +346,7 @@ def get_frequency_intensity_plotparameter(
 
     return (
         using_frequency_range,
+        exception_frequency_range,
         boundary_intensity_str,
         timelag_max,
         timelag_min,
@@ -379,7 +404,7 @@ def fig_and_save_def(
         + str(time_of_flybies)
         + "_flyby_radioint_"
         + radio_intensity
-        + "/"
+        + "/interpolated_"
         + spacecraft_name
         + "_"
         + object_name
@@ -432,7 +457,8 @@ def fig_and_save_def(
             + str(time_of_flybies)
             + "_flyby_radioint_"
             + radio_intensity,
-            spacecraft_name
+            "interpolated_"
+            + spacecraft_name
             + "_"
             + object_name
             + "_"
@@ -456,6 +482,7 @@ def fig_and_save_def(
 def main():
     (
         using_frequency_range,
+        exception_frequency_range,
         boundary_intensity,
         vmaximum,
         vminimum,
@@ -480,7 +507,7 @@ def main():
                 + str(time_of_flybies)
                 + "_flyby_radioint_"
                 + boundary_intensity
-                + "_examine/"
+                + "_examine/interpolated_"
                 + object_name
                 + "_*_"
                 + occultaion_type
@@ -503,7 +530,7 @@ def main():
                 + str(time_of_flybies)
                 + "_flyby_radioint_"
                 + boundary_intensity
-                + "/"
+                + "/interpolated_"
                 + object_name
                 + "_*_"
                 + occultaion_type
@@ -524,6 +551,7 @@ def main():
             boundary_intensity,
             radio_type_A2D,
             using_frequency_range,
+            exception_frequency_range,
             exclave_examine,
         )
 
@@ -566,7 +594,8 @@ def main():
                 + str(time_of_flybies)
                 + "_flyby_radioint_"
                 + boundary_intensity,
-                spacecraft_name
+                "interpolated_"
+                + spacecraft_name
                 + "_"
                 + object_name
                 + "_"
