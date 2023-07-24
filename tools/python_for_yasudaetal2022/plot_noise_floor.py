@@ -13,9 +13,9 @@ import sys
 
 args = sys.argv
 ## プロットしたいフライバイを指定
-object_name = "callisto"  # ganydeme/europa/calisto`
+object_name = "ganymede"  # ganydeme/europa/calisto`
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 30  # ..th flyby
+time_of_flybies = 1  # ..th flyby
 
 
 ## 詳細設定
@@ -25,10 +25,10 @@ time_of_flybies = 30  # ..th flyby
 # G1
 plot_first_time = 0
 plot_last_time = 5400
-
+"""
 plot_first_time = 2100
 plot_last_time = 2700
-"""
+
 """
 # C09
 plot_first_time = 0
@@ -41,12 +41,12 @@ plot_last_time = 6000
 """
 # C30
 plot_first_time = 0
-plot_last_time = 10800
-"""
+plot_last_tsime = 10800
+
 # C30
 plot_first_time = 5400
 plot_last_time = 6000
-
+"""
 
 # カラーマップの強度範囲（）
 max_intensity = 1e-12  # カラーマップの最大強度
@@ -60,7 +60,7 @@ averaged_min_intensity = 1e-17
 color = "g"
 
 # ftダイヤグラムに等高線をひく強度を指定
-boundary_intensity_str = "4e-10"  # boundary_intensity_str = '1e-15'
+boundary_intensity_str = "7e-16"  # boundary_intensity_str = '1e-15'
 boundary_intensity = float(boundary_intensity_str)
 
 # プロットする周波数範囲 (MHz)
@@ -70,7 +70,8 @@ min_frequency = 0.1
 # ヒストグラムを作りたい場合
 histogram = True
 histogram_freq = float(args[1])  # MHz
-# histogram_freq = 3.034e-01  # MHz
+# histogram_freq = 5.770e00  # MHz
+print(histogram_freq)
 hictgram_interval = 5e-18
 
 # ガリレオ探査機によって取得される周波数・探査機が変わったらこの周波数も変わってくるはず
@@ -463,24 +464,21 @@ def Make_FT_full():
         return 0
 
     def plot_average_intensity_vs_freq_and_save(first_time, last_time):
-        # print(galileo_radio_intensity_row.shape)
+        # 全周波数に対して計算
+        # 掩蔽のタイミングのデータに制限
         averaged_first_time = np.where(galileo_data_time > first_time)[0][0]
         averaged_last_time = np.where(galileo_data_time < last_time)[0][-1]
-        # print(averaged_first_time, averaged_last_time)
         usable_data = galileo_radio_intensity_row[
             :, averaged_first_time:averaged_last_time
         ]
-        print(usable_data)
-        print(usable_data.shape)
+
+        # 周波数ごとの平均値、１シグマ値（標準偏差）、中央値を計算⇨保存
         mean_data = np.mean(usable_data, axis=1)
         std_data = np.std(usable_data, axis=1)
         median_data = np.median(usable_data, axis=1)
         statistical_data_with_frequency = np.vstack(
             (galileo_data_freq, mean_data, std_data, median_data)[0]
         )
-        freq_num = np.where(galileo_data_freq == histogram_freq)[0][0]
-        intensity_list_at_freq = usable_data[freq_num][:]
-
         np.savetxt(
             "../result_for_yasudaetal2022/radio_plot/galileo_noise_floor_"
             + object_name
@@ -489,16 +487,61 @@ def Make_FT_full():
             statistical_data_with_frequency,
             delimiter=",",
         )
+        # 周波数ごとに2σより外れた電波強度を除いて電波強度の値を連ねた配列を作成（時間の情報は抜け落ちる）[[周波数1での電波強度一覧][周波数2での電波強度一覧]...]　list
+        # 選ばれた電波データのみを使って平均値、中央値、標準偏差を計算する numpy配列
+
+        frequency_channels = len(galileo_data_freq)
+        usable_data_excepted_two_sigma = []
+        mean_data_excepted_two_sigma = np.zeros(frequency_channels)
+        std_data_excepted_two_sigma = np.zeros(frequency_channels)
+        median_data_excepted_two_sigma = np.zeros(frequency_channels)
+
+        for i in range(frequency_channels):
+            selected_data = usable_data[i][:]
+            condition = (selected_data >= mean_data[i] - 2 * std_data[i]) & (
+                selected_data <= mean_data[i] + 2 * std_data[i]
+            )
+            selected_data_excepted_two_sigma = selected_data[condition]
+
+            mean_data_excepted_two_sigma[i] = np.mean(selected_data_excepted_two_sigma)
+            std_data_excepted_two_sigma[i] = np.std(selected_data_excepted_two_sigma)
+            median_data_excepted_two_sigma[i] = np.median(
+                selected_data_excepted_two_sigma
+            )
+            usable_data_excepted_two_sigma.append(
+                selected_data_excepted_two_sigma.tolist()
+            )
+
+        statistical_data_excepted_two_sigma_with_frequency = np.vstack(
+            (
+                galileo_data_freq,
+                mean_data_excepted_two_sigma,
+                std_data_excepted_two_sigma,
+                median_data_excepted_two_sigma,
+            )[0]
+        )
+        np.savetxt(
+            "../result_for_yasudaetal2022/radio_plot/galileo_noise_floor_excepted_two_sigma_"
+            + object_name
+            + str(time_of_flybies)
+            + ".csv",
+            statistical_data_excepted_two_sigma_with_frequency,
+            delimiter=",",
+        )
+
         # print(statistical_data_with_frequency)
 
+        # histogram_freq　で指定した周波数データを抽出
+        freq_num = np.where(galileo_data_freq == histogram_freq)[0][0]
+
         # ガリレオ探査機の電波データの時刻・周波数でメッシュ作成
-        fig, ax = plt.subplots(2, 1, figsize=(8, 10))
+        fig, ax = plt.subplots(5, 1, figsize=(10, 25))
 
         # ガリレオ探査機の電波強度を折線へ
         # print(np.shape(galileo_data_freq))
         # print(np.shape(mean_data))
         # print(np.shape(median_data))
-        pcm = ax[0].errorbar(
+        ax[0].errorbar(
             galileo_data_freq,
             mean_data,
             c="red",
@@ -533,6 +576,8 @@ def Make_FT_full():
 
         ax[0].axvline(x=histogram_freq, color="green", linestyle="dotted")
 
+        intensity_list_at_freq = usable_data[freq_num][:]
+
         ax[1].hist(
             intensity_list_at_freq,
             bins=np.arange(
@@ -547,27 +592,27 @@ def Make_FT_full():
         )
         # 縦線を引く
         ax[1].axvline(
-            x=np.mean(intensity_list_at_freq),
+            x=mean_data[freq_num],
             color="red",
             linestyle="dashed",
             linewidth=2,
             label="mean",
         )
         ax[1].axvline(
-            x=np.mean(intensity_list_at_freq) + np.std(intensity_list_at_freq),
+            x=mean_data[freq_num] + std_data[freq_num],
             color="orange",
             linestyle="dashed",
             linewidth=2,
             label="1sigma",
         )
         ax[1].axvline(
-            x=np.mean(intensity_list_at_freq) - np.std(intensity_list_at_freq),
+            x=mean_data[freq_num] - std_data[freq_num],
             color="orange",
             linestyle="dashed",
             linewidth=2,
         )
         ax[1].axvline(
-            x=np.median(intensity_list_at_freq),
+            x=median_data[freq_num],
             color="blue",
             linestyle="dashed",
             linewidth=2,
@@ -591,6 +636,7 @@ def Make_FT_full():
         # グラフを表示
         # plt.show()
 
+        """
         fig.savefig(
             os.path.join(
                 "../result_for_yasudaetal2022/radio_plot/"
@@ -603,6 +649,222 @@ def Make_FT_full():
                 + "_freq_"
                 + str(histogram_freq)
                 + ".png"
+            )
+        )
+        """
+
+        intensity_list_excepted_two_sigma_at_freq = np.array(
+            usable_data_excepted_two_sigma[freq_num]
+        )
+        # print(usable_data_excepted_two_sigma)
+        # print(intensity_list_excepted_two_sigma_at_freq)
+
+        # ガリレオ探査機の電波強度から外れ値を外したものでグラフを作成
+        # print(np.shape(galileo_data_freq))
+        # print(np.shape(mean_data))
+        # print(np.shape(median_data))
+        ax[2].errorbar(
+            galileo_data_freq,
+            mean_data_excepted_two_sigma,
+            c="red",
+            fmt="o",
+            yerr=std_data_excepted_two_sigma,
+            label="mean & std",
+        )
+
+        ax[2].scatter(
+            galileo_data_freq, median_data_excepted_two_sigma, c="b", label="median"
+        )
+        ax[2].set_xlim(min_frequency, max_frequency)
+        ax[2].set_ylim(
+            averaged_min_intensity,
+            np.maximum(
+                averaged_max_intensity,
+                (
+                    mean_data_excepted_two_sigma[freq_num]
+                    + std_data_excepted_two_sigma[freq_num]
+                )
+                * 1.05,
+            ),
+        )
+        ax[2].set_xscale("log")
+        # ax[0].set_yscale("log")
+        ax[2].set_xlabel("Frequency (MHz)")
+        ax[2].set_ylabel("intensity")
+        ax[2].set_title(
+            object_name
+            + str(time_of_flybies)
+            + " time"
+            + str(plot_first_time)
+            + "-"
+            + str(plot_last_time)
+            + "except_2sigma"
+        )
+        ax[2].axhline(y=boundary_intensity, color="red")
+        ax[2].legend()
+
+        ax[2].axvline(x=histogram_freq, color="green", linestyle="dotted")
+
+        # ガリレオ探査機の電波強度から外れ値を外したものでヒストグラムを作成
+        ax[3].hist(
+            intensity_list_excepted_two_sigma_at_freq,
+            bins=np.arange(
+                np.minimum(
+                    averaged_min_intensity,
+                    np.min(intensity_list_excepted_two_sigma_at_freq),
+                ),
+                np.maximum(
+                    averaged_max_intensity,
+                    np.max(intensity_list_excepted_two_sigma_at_freq)
+                    + hictgram_interval,
+                ),
+                hictgram_interval,
+            ),
+            edgecolor="black",
+        )
+        # 縦線を引く
+        ax[3].axvline(
+            x=mean_data_excepted_two_sigma[freq_num],
+            color="red",
+            linestyle="dashed",
+            linewidth=2,
+            label="mean",
+        )
+        ax[3].axvline(
+            x=mean_data_excepted_two_sigma[freq_num]
+            + std_data_excepted_two_sigma[freq_num],
+            color="orange",
+            linestyle="dashed",
+            linewidth=2,
+            label="1sigma",
+        )
+        ax[3].axvline(
+            x=mean_data_excepted_two_sigma[freq_num]
+            - std_data_excepted_two_sigma[freq_num],
+            color="orange",
+            linestyle="dashed",
+            linewidth=2,
+        )
+        ax[3].axvline(
+            x=median_data_excepted_two_sigma[freq_num],
+            color="blue",
+            linestyle="dashed",
+            linewidth=2,
+            label="median",
+        )
+
+        # グラフのラベルやタイトルを設定
+        ax[3].set_xlabel("Frequency")
+        ax[3].set_ylabel("Intensity")
+        ax[3].set_title(
+            object_name
+            + str(time_of_flybies)
+            + " time"
+            + str(plot_first_time)
+            + "-"
+            + str(plot_last_time)
+            + "freq(MHz)"
+            + str(histogram_freq)
+            + "except_2sigma"
+        )
+        ax[3].legend()
+        # グラフを表示
+        # plt.show()
+
+        # 最後に外れ値除去前・除去後で3,5,10シグマの値がどうなっているかをプロット
+
+        ax[4].plot(
+            galileo_data_freq,
+            mean_data + std_data * 3,
+            marker="o",
+            ms=4,
+            linestyle="-",
+            color="b",
+            label="row data 3 sigma",
+        )
+
+        ax[4].plot(
+            galileo_data_freq,
+            mean_data + std_data * 5,
+            marker="o",
+            ms=4,
+            linestyle="-",
+            color="g",
+            label="row data 5 sigma",
+        )
+        """
+        ax[4].plot(
+            galileo_data_freq,
+            mean_data + std_data * 10,
+            marker="o",
+            linestyle="-",
+            color="r",
+            label="row data 10 sigma",
+        )
+        """
+        ax[4].plot(
+            galileo_data_freq,
+            mean_data_excepted_two_sigma + std_data_excepted_two_sigma * 3,
+            marker="x",
+            linestyle="--",
+            color="b",
+            label="selected data 3 sigma",
+        )
+
+        ax[4].plot(
+            galileo_data_freq,
+            mean_data_excepted_two_sigma + std_data_excepted_two_sigma * 5,
+            marker="x",
+            linestyle="--",
+            color="g",
+            label="selected data 5 sigma",
+        )
+        """
+        ax[4].plot(
+            galileo_data_freq,
+            mean_data_excepted_two_sigma + std_data_excepted_two_sigma * 10,
+            marker="x",
+            linestyle="--",
+            color="r",
+            label="selected data 10 sigma",
+        )
+        """
+        ax[4].set_xlim(min_frequency, max_frequency)
+        ax[4].set_xscale("log")
+
+        ax[4].set_ylim(0.2 * (10**-16), boundary_intensity * 1.5)
+        # ax[4].set_yscale("log")
+
+        ax[4].axhline(y=boundary_intensity, color="red")
+        ax[4].axvline(x=histogram_freq, color="green", linestyle="dotted")
+
+        ax[4].set_xlabel("Frequency")
+        ax[4].set_ylabel("Intensity")
+        ax[4].set_title(
+            object_name
+            + str(time_of_flybies)
+            + " time"
+            + str(plot_first_time)
+            + "-"
+            + str(plot_last_time)
+            + "freq(MHz)"
+            + str(histogram_freq)
+            + "threshold"
+        )
+        ax[4].legend()
+
+        fig.savefig(
+            os.path.join(
+                "../result_for_yasudaetal2022/radio_plot/"
+                + object_name
+                + str(time_of_flybies)
+                + "/histogram/mean_std_histogram_time_"
+                + str(plot_first_time)
+                + "-"
+                + str(plot_last_time)
+                + "_freq_"
+                + str(histogram_freq)
+                + "except_2sigma.png"
             )
         )
 
