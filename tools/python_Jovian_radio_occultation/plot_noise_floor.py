@@ -13,7 +13,7 @@ import sys
 
 args = sys.argv
 ## プロットしたいフライバイを指定
-object_name = "ganymede"  # ganydeme/europa/calisto`
+object_name = "ganymede"  # ganydeme/europa/callisto`
 spacecraft_name = "galileo"  # galileo/JUICE(?)
 time_of_flybies = 1  # ..th flyby
 
@@ -26,8 +26,9 @@ time_of_flybies = 1  # ..th flyby
 plot_first_time = 0
 plot_last_time = 5400
 """
-plot_first_time = 2100
-plot_last_time = 2700
+# plot_first_time = 2100  # 06:05 7?
+plot_first_time = 2280  # 06:08
+plot_last_time = 2700  # 06:15
 
 """
 # C09
@@ -320,7 +321,10 @@ if (
 # 初めの数行は読み取らないよう設定・時刻データを読み取って時刻をプロットするためここがずれても影響はないが、データがない行を読むと怒られるのでその時はd2sファイルを確認
 
 radio_row_data = pd.read_csv(
-    "../result_for_yasudaetal2022/galileo_radio_data/" + radio_data_name,
+    "../result_for_yasudaetal2022/"
+    + spacecraft_name
+    + "_radio_data/"
+    + radio_data_name,
     header=None,
     skiprows=24,
     delimiter="  ",
@@ -449,14 +453,10 @@ def Make_FT_full():
                 "../result_for_yasudaetal2022/radio_plot/"
                 + object_name
                 + str(time_of_flybies)
-                + "/radio_ft_plot_time:"
+                + "/radio_ft_plot_time_"
                 + str(plot_first_time)
                 + "-"
                 + str(plot_last_time)
-                + "_int:"
-                + str(averaged_min_intensity)
-                + "-"
-                + str(averaged_max_intensity)
                 + ".png"
             )
         )
@@ -468,6 +468,7 @@ def Make_FT_full():
         # 掩蔽のタイミングのデータに制限
         averaged_first_time = np.where(galileo_data_time > first_time)[0][0]
         averaged_last_time = np.where(galileo_data_time < last_time)[0][-1]
+        print("first time posotion " + str(galileo_data_time[averaged_first_time]))
         usable_data = galileo_radio_intensity_row[
             :, averaged_first_time:averaged_last_time
         ]
@@ -477,10 +478,15 @@ def Make_FT_full():
         std_data = np.std(usable_data, axis=1)
         median_data = np.median(usable_data, axis=1)
         statistical_data_with_frequency = np.vstack(
-            (galileo_data_freq, mean_data, std_data, median_data)[0]
+            (galileo_data_freq, mean_data, std_data, median_data)
         )
         np.savetxt(
-            "../result_for_yasudaetal2022/radio_plot/galileo_noise_floor_"
+            "../result_for_yasudaetal2022/radio_plot/"
+            + object_name
+            + str(time_of_flybies)
+            + "/"
+            + spacecraft_name
+            + "_noise_floor_"
             + object_name
             + str(time_of_flybies)
             + ".csv",
@@ -518,10 +524,15 @@ def Make_FT_full():
                 mean_data_excepted_two_sigma,
                 std_data_excepted_two_sigma,
                 median_data_excepted_two_sigma,
-            )[0]
+            )
         )
         np.savetxt(
-            "../result_for_yasudaetal2022/radio_plot/galileo_noise_floor_excepted_two_sigma_"
+            "../result_for_yasudaetal2022/radio_plot/"
+            + object_name
+            + str(time_of_flybies)
+            + "/"
+            + spacecraft_name
+            + "_noise_floor_excepted_two_sigma_"
             + object_name
             + str(time_of_flybies)
             + ".csv",
@@ -562,7 +573,7 @@ def Make_FT_full():
         ax[0].set_xscale("log")
         # ax[0].set_yscale("log")
         ax[0].set_xlabel("Frequency (MHz)")
-        ax[0].set_ylabel("intensity")
+        ax[0].set_ylabel("Intensity (V2/m2/Hz)")
         ax[0].set_title(
             object_name
             + str(time_of_flybies)
@@ -620,8 +631,8 @@ def Make_FT_full():
         )
 
         # グラフのラベルやタイトルを設定
-        ax[1].set_xlabel("Frequency")
-        ax[1].set_ylabel("Intensity")
+        ax[1].set_xlabel("Intensity (V2/m2/Hz)")
+        ax[1].set_ylabel("Numbers")
         ax[1].set_title(
             object_name
             + str(time_of_flybies)
@@ -690,7 +701,7 @@ def Make_FT_full():
         ax[2].set_xscale("log")
         # ax[0].set_yscale("log")
         ax[2].set_xlabel("Frequency (MHz)")
-        ax[2].set_ylabel("intensity")
+        ax[2].set_ylabel("Intensity (V2/m2/Hz)")
         ax[2].set_title(
             object_name
             + str(time_of_flybies)
@@ -754,8 +765,8 @@ def Make_FT_full():
         )
 
         # グラフのラベルやタイトルを設定
-        ax[3].set_xlabel("Frequency")
-        ax[3].set_ylabel("Intensity")
+        ax[3].set_xlabel("Intensity (V2/m2/Hz)")
+        ax[3].set_ylabel("Numbers")
         ax[3].set_title(
             object_name
             + str(time_of_flybies)
@@ -837,9 +848,8 @@ def Make_FT_full():
 
         ax[4].axhline(y=boundary_intensity, color="red")
         ax[4].axvline(x=histogram_freq, color="green", linestyle="dotted")
-
-        ax[4].set_xlabel("Frequency")
-        ax[4].set_ylabel("Intensity")
+        ax[4].set_xlabel("Frequency (MHz)")
+        ax[4].set_ylabel("Intensity (V2/m2/Hz)")
         ax[4].set_title(
             object_name
             + str(time_of_flybies)
@@ -882,7 +892,12 @@ def Make_FT_full():
 
         mean_data_with_time = np.vstack((galileo_data_time, mean_data))
         np.savetxt(
-            "../result_for_yasudaetal2022/radio_plot/galileo_radio_intensity__time_average.csv",
+            "../result_for_yasudaetal2022/radio_plot/"
+            + object_name
+            + str(time_of_flybies)
+            + "/"
+            + spacecraft_name
+            + "_radio_intensity_time_average.csv",
             mean_data_with_time,
             delimiter=",",
         )
@@ -912,7 +927,12 @@ def Make_FT_full():
         # 横軸の幅は作りたい図によって変わるので引数用いる
         # plt.show()
         fig.savefig(
-            os.path.join("../result_for_yasudaetal2022/radio_plot/radio_it_plot.png")
+            os.path.join(
+                "../result_for_yasudaetal2022/radio_plot/"
+                + object_name
+                + str(time_of_flybies)
+                + "/radio_it_plot.png"
+            )
         )
 
     plot_and_save(plot_first_time, plot_last_time)
