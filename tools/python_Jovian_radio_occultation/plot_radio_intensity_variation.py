@@ -48,7 +48,7 @@ min_frequency = 0.1
 
 
 plot_freq = float(args[1])  # MHz
-#plot_freq = 2.162   # MHz
+# plot_freq = 2.162  # MHz
 
 # ガリレオ探査機によって取得される周波数・探査機が変わったらこの周波数も変わってくるはず
 gal_fleq_tag_row = [
@@ -208,153 +208,144 @@ gal_fleq_tag_row = [
 
 
 ## フライバイの共通データを指定
+def basic_data(object, spacecraft, flyby):
+    if (object == "callisto") and (spacecraft == "galileo") and (flyby == 30):
+        # プロットしたい電波データのパスを指定
+        radio_data_name = (
+            "Survey_Electric_2001-05-25T10-00_2001-05-25T13-00.d2s"  # C30 flyby
+        )
 
-if (
-    (object_name == "callisto")
-    and (spacecraft_name == "galileo")
-    and (time_of_flybies == 30)
-):
-    # プロットしたい電波データのパスを指定
-    radio_data_name = (
-        "Survey_Electric_2001-05-25T10-00_2001-05-25T13-00.d2s"  # C30 flyby
+        # 読み込んだデータの開始日時(実際の観測時刻の切り下げ値を代入)
+        start_day = 25  # 電波データの開始日
+        start_hour = 10  # 電波データの開始時刻
+        start_min = 0  # 電波データの開始分
+
+        # 電波データの時刻ラベルを作成（列番号と時刻の対応を示すもの）/
+        plot_time_step_sec = [0, 1800, 3600, 5400, 7200, 9000, 10800]
+        plot_time_step_label = [
+            "10:00",
+            "10:30",
+            "11:00",
+            "11:30",
+            "12:00",
+            "12:30",
+            "13:00",
+        ]
+
+    if (object == "callisto") and (spacecraft == "galileo") and (flyby == 9):
+        # プロットしたい電波データのパスを指定
+        radio_data_name = (
+            "Survey_Electric_1997-06-25T12-00_1997-06-25T15-00.d2s"  # C09 flyby
+        )
+
+        # 読み込んだデータの開始日時(実際の観測時刻の切り下げ値を代入)
+        start_day = 25  # 電波データの開始日
+        start_hour = 12  # 電波データの開始時刻
+        start_min = 0  # 電波データの開始分
+
+        # 電波データの時刻ラベルを作成（列番号と時刻の対応を示すもの）/
+        plot_time_step_sec = [0, 1800, 3600, 5400, 7200, 9000, 10800]
+        plot_time_step_label = [
+            "12:00",
+            "12:30",
+            "13:00",
+            "13:30",
+            "14:00",
+            "14:30",
+            "15:00",
+        ]
+
+    if (object == "ganymede") and (spacecraft == "galileo") and (flyby == 1):
+        # プロットしたい電波データのパスを指定
+        radio_data_name = (
+            "Survey_Electric_1996-06-27T05-30_1996-06-27T07-00.d2s"  # C30 flyby
+        )
+
+        # 読み込んだデータの開始日時(実際の観測時刻の切り下げ値を代入)
+        start_day = 27  # 電波データの開始日
+        start_hour = 5  # 電波データの開始時刻
+        start_min = 30  # 電波データの開始分
+
+        # 電波データの時刻ラベルを作成（列番号と時刻の対応を示すもの）/
+        plot_time_step_sec = [0, 900, 1800, 2700, 3600, 4500, 5400]
+        plot_time_step_label = [
+            "05:30",
+            "05:45",
+            "06:00",
+            "06:15",
+            "06:30",
+            "06:45",
+            "07;00",
+        ]
+
+    return (
+        radio_data_name,
+        start_day,
+        start_hour,
+        start_min,
+        plot_time_step_sec,
+        plot_time_step_label,
     )
 
-    # 読み込んだデータの開始日時(実際の観測時刻の切り下げ値を代入)
-    start_day = 25  # 電波データの開始日
-    start_hour = 10  # 電波データの開始時刻
-    start_min = 0  # 電波データの開始分
 
-    # 電波データの時刻ラベルを作成（列番号と時刻の対応を示すもの）/
-    plot_time_step_sec = [0, 1800, 3600, 5400, 7200, 9000, 10800]
-    plot_time_step_label = [
-        "10:00",
-        "10:30",
-        "11:00",
-        "11:30",
-        "12:00",
-        "12:30",
-        "13:00",
-    ]
+def time_range_data(object, spacecraft, flyby, timing):
+    if (object == "callisto") and (spacecraft == "galileo") and (flyby == 30):
+        if timing == "ingress":
+            plot_first_time = 4200  # 11:10
+            plot_last_time = 6000  # 11:40
 
-    if plot_kinds == "ingress":
-        plot_first_time = 4200  # 11:10
-        plot_last_time = 6000  # 11:40
+        elif timing == "egress":
+            plot_first_time = 6000  # 11:40
+            plot_last_time = 7800  # 12:10
 
-    elif plot_kinds == "egress":
-        plot_first_time = 6000  # 11:40
-        plot_last_time = 7800  # 12:10
+        elif timing == "noise_floor":
+            plot_first_time = 5400  # 11:30
+            plot_last_time = 6000  # 11:40
 
-    elif plot_kinds == "noise_floor":
-        plot_first_time = 5400  # 11:30
-        plot_last_time = 6000  # 11:40
+        elif timing == "full":
+            plot_first_time = 0  # 10:00
+            plot_last_time = 10800  # 10800
 
-    elif plot_kinds == "full":
-        plot_first_time = 0  # 10:00
-        plot_last_time = 10800  # 10800
+    if (object == "callisto") and (spacecraft == "galileo") and (flyby == 9):
+        if timing == "ingress":
+            plot_first_time = 0
+            plot_last_time = 0
 
+        elif timing == "egress":
+            plot_first_time = 5400  # 13:30
+            plot_last_time = 7200  # 14:00
 
-if (
-    (object_name == "callisto")
-    and (spacecraft_name == "galileo")
-    and (time_of_flybies == 9)
-):
-    # プロットしたい電波データのパスを指定
-    radio_data_name = (
-        "Survey_Electric_1997-06-25T12-00_1997-06-25T15-00.d2s"  # C09 flyby
-    )
+        elif timing == "noise_floor":
+            plot_first_time = 5700  # 13:35
+            plot_last_time = 6000  # 13:40
 
-    # 読み込んだデータの開始日時(実際の観測時刻の切り下げ値を代入)
-    start_day = 25  # 電波データの開始日
-    start_hour = 12  # 電波データの開始時刻
-    start_min = 0  # 電波データの開始分
+        elif timing == "full":
+            plot_first_time = 0  # 12:00
+            plot_last_time = 10800  # 15:00
 
-    # 電波データの時刻ラベルを作成（列番号と時刻の対応を示すもの）/
-    plot_time_step_sec = [0, 1800, 3600, 5400, 7200, 9000, 10800]
-    plot_time_step_label = [
-        "12:00",
-        "12:30",
-        "13:00",
-        "13:30",
-        "14:00",
-        "14:30",
-        "15:00",
-    ]
+    if (object == "ganymede") and (spacecraft == "galileo") and (flyby == 1):
+        if timing == "ingress":
+            plot_first_time = 900  # 05:45
+            plot_last_time = 2700  # 06:15
 
-    if plot_kinds == "ingress":
-        plot_first_time = 0
-        plot_last_time = 0
+        elif timing == "egress":
+            plot_first_time = 2400  # 06:10
+            plot_last_time = 3600  # 07:30
 
-    elif plot_kinds == "egress":
-        plot_first_time = 5400  # 13:30
-        plot_last_time = 7200  # 14:00
+        elif timing == "noise_floor":
+            # plot_first_time = 2100  # 06:05
+            plot_first_time = 2280  # 06:08
+            plot_last_time = 2700  # 06:15
 
-    elif plot_kinds == "noise_floor":
-        plot_first_time = 5700  # 13:35
-        plot_last_time = 6000  # 13:40
+        elif timing == "full":
+            plot_first_time = 0  # 05:30
+            plot_last_time = 5400  # 07:00
 
-    elif plot_kinds == "full":
-        plot_first_time = 0  # 12:00
-        plot_last_time = 10800  # 15:00
-
-
-if (
-    (object_name == "ganymede")
-    and (spacecraft_name == "galileo")
-    and (time_of_flybies == 1)
-):
-    # プロットしたい電波データのパスを指定
-    radio_data_name = (
-        "Survey_Electric_1996-06-27T05-30_1996-06-27T07-00.d2s"  # C30 flyby
-    )
-
-    # 読み込んだデータの開始日時(実際の観測時刻の切り下げ値を代入)
-    start_day = 27  # 電波データの開始日
-    start_hour = 5  # 電波データの開始時刻
-    start_min = 30  # 電波データの開始分
-
-    # 電波データの時刻ラベルを作成（列番号と時刻の対応を示すもの）/
-    plot_time_step_sec = [0, 900, 1800, 2700, 3600, 4500, 5400]
-    plot_time_step_label = [
-        "05:30",
-        "05:45",
-        "06:00",
-        "06:15",
-        "06:30",
-        "06:45",
-        "07;00",
-    ]
-
-    if plot_kinds == "ingress":
-        plot_first_time = 900  # 05:45
-        plot_last_time = 2700  # 06:15
-
-    elif plot_kinds == "egress":
-        plot_first_time = 2400  # 06:10
-        plot_last_time = 3600  # 07:30
-
-    elif plot_kinds == "noise_floor":
-        # plot_first_time = 2100  # 06:05
-        plot_first_time = 2280  # 06:08
-        plot_last_time = 2700  # 06:15
-
-    elif plot_kinds == "full":
-        plot_first_time = 0  # 05:30
-        plot_last_time = 5400  # 07:00
+    return plot_first_time, plot_last_time
 
 
 # 電波強度のデータを取得（一列目は時刻データになってる）
 # 初めの数行は読み取らないよう設定・時刻データを読み取って時刻をプロットするためここがずれても影響はないが、データがない行を読むと怒られるのでその時はd2sファイルを確認
-
-radio_row_data = pd.read_csv(
-    "../result_for_yasudaetal2022/"
-    + spacecraft_name
-    + "_radio_data/"
-    + radio_data_name,
-    header=None,
-    skiprows=24,
-    delimiter="  ",
-    engine="python",
-)
 
 
 """ここから下は基本いじらない"""
@@ -369,6 +360,15 @@ def Prepare_Galileo_data(rad_row_data):
     Returns:
         _type_: _電波データの時刻の配列・周波数の配列・電波強度の配列_
     """
+
+    (
+        radio_data_name,
+        start_day,
+        start_hour,
+        start_min,
+        plot_time_step_sec,
+        plot_time_step_label,
+    ) = basic_data(object_name, spacecraft_name, time_of_flybies)
 
     # 電波データの周波数の単位をHzからMHzに変換する
     gal_fleq_tag = np.array(gal_fleq_tag_row, dtype="float64") / 1000000
@@ -446,6 +446,30 @@ def output_noisefoor(frequency):
 
 
 def Make_FT_full():
+    (
+        radio_data_name,
+        start_day,
+        start_hour,
+        start_min,
+        plot_time_step_sec,
+        plot_time_step_label,
+    ) = basic_data(object_name, spacecraft_name, time_of_flybies)
+
+    plot_first_time, plot_last_time = time_range_data(
+        object_name, spacecraft_name, time_of_flybies, plot_kinds
+    )
+
+    radio_row_data = pd.read_csv(
+        "../result_for_yasudaetal2022/"
+        + spacecraft_name
+        + "_radio_data/"
+        + radio_data_name,
+        header=None,
+        skiprows=24,
+        delimiter="  ",
+        engine="python",
+    )
+
     # ガリレオ探査機のデータ取得開始時刻からの経過時間（sec) , ガリレオ探査機のデータ取得周波数（MHz), ガリレオ探査機の取得した電波強度（代入したデータと同じ単位）
     (
         galileo_data_time,
@@ -483,7 +507,6 @@ def Make_FT_full():
         ax[0].axhline(
             y=(19 / 20) * galileo_data_freq[selected_freq_position], color="red"
         )
-
 
         # raytrace_time_information ['year', 'month', 'start_day', 'end_day','start_hour', 'end_hour', 'start_min', 'end_min','occultaton_center_day','occultaton_center_hour','occultaton_center_min']
         # ax.set_xlabel("Time of 27 June 1996")
@@ -560,8 +583,28 @@ def Make_FT_full():
                 label=str(m) + " min after ave/ before ave ",
             )
 
-            max_index = np.argmax(intensity_ratio_array)
-            min_index = np.argmin(intensity_ratio_array)
+            ingress_begin_time, ingress_end_time = time_range_data(
+                object_name, spacecraft_name, time_of_flybies, "ingress"
+            )
+            ingress_range_position = np.where(
+                (galileo_intermediate_time > ingress_begin_time)
+                & (galileo_intermediate_time < ingress_end_time)
+            )[0]
+
+            egress_begin_time, egress_end_time = time_range_data(
+                object_name, spacecraft_name, time_of_flybies, "egress"
+            )
+            egress_range_position = np.where(
+                (galileo_intermediate_time > egress_begin_time)
+                & (galileo_intermediate_time < egress_end_time)
+            )[0]
+
+            min_index = ingress_range_position[
+                np.argmin(intensity_ratio_array[ingress_range_position])
+            ]
+            max_index = egress_range_position[
+                np.argmax(intensity_ratio_array[egress_range_position])
+            ]
 
             ax[1].scatter(
                 (
@@ -597,8 +640,25 @@ def Make_FT_full():
                 s=50,
                 label="inc max " + str(m) + "min",
             )
-            ax[0].axvline((selected_galileo_data_time[min_index] + selected_galileo_data_time[min_index + 1])/ 2,label="inc min " + str(m) + "min", color="white")
-            ax[0].axvline((selected_galileo_data_time[max_index] + selected_galileo_data_time[max_index + 1])/ 2,label="inc max " + str(m) + "min", color="white", linestyle='dashed')
+            ax[0].axvline(
+                (
+                    selected_galileo_data_time[min_index]
+                    + selected_galileo_data_time[min_index + 1]
+                )
+                / 2,
+                label="inc min " + str(m) + "min",
+                color="white",
+            )
+            ax[0].axvline(
+                (
+                    selected_galileo_data_time[max_index]
+                    + selected_galileo_data_time[max_index + 1]
+                )
+                / 2,
+                label="inc max " + str(m) + "min",
+                color="white",
+                linestyle="dashed",
+            )
 
         ax[2].set_xticks(plot_time_step_sec)
         ax[2].set_xticklabels(plot_time_step_label)
@@ -608,9 +668,9 @@ def Make_FT_full():
         ax[2].set_ylabel("intensity_change (dB)")
         ax[2].set_title("intensity change")
         ax[2].legend()
-        ax[1].legend()    
+        ax[1].legend()
 
-        #plt.show()
+        # plt.show()
 
         fig.savefig(
             os.path.join(
