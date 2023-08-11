@@ -45,8 +45,8 @@ min_frequency = 0.1
 
 # ヒストグラムを作りたい場合
 histogram = True
-# histogram_freq = float(args[1])  # MHz
-histogram_freq = 0.8934  # MHz
+histogram_freq = float(args[1])  # MHz
+# histogram_freq = 0.8934  # MHz
 print(histogram_freq)
 hictgram_interval = 5e-17
 

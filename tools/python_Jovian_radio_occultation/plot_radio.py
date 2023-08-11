@@ -13,11 +13,16 @@ import sys
 
 args = sys.argv
 ## プロットしたいフライバイを指定
-object_name = args[1]  # ganydeme/europa/calisto`
 spacecraft_name = "galileo"  # galileo/JUICE(?)
+
+object_name = args[1]  # ganydeme/europa/calisto
 time_of_flybies = int(args[2])  # ..th flyby
 plot_timing = args[3]  # ingress/egress/full/occultation/manual
-
+"""
+object_name = "ganymede"  # ganydeme/europa/calisto`
+time_of_flybies = 1  # ..th flyby
+plot_timing = "ingress"  # ingress/egress/full/occultation/manual
+"""
 
 ## 詳細設定
 # 自由にプロットしたい時間範囲を指定する場合には plot_timing = "manual"にして以下で開始・終了時間（秒）を指定
@@ -31,9 +36,12 @@ min_intensity = 1e-16  # カラーマップの最小強度
 # ftダイヤグラムに等高線をひく強度を指定
 # 電波データから掩蔽・非掩蔽を判定する際に全周波数チャンネルに対して単一の電波強度を閾値とする場合には boundary="V^2/m2/Hz"
 # 周波数ごとに観測装置のノイズの大きさ（平均値）とばらつき（標準偏差）を調べ、平均値＋（n x 標準偏差）を閾値とする場合には boundary="sigma"
-boundary = "sigma"  # "V^2/m2/Hz" or "sigma"
-boundary_intensity_str = "4e-16"  # (V^2/m2/Hzの場合)boundary_intensity_str = '1e-15'[V^2/m2/Hz] (sigmaの場合)boundary_intensity_str = '1'[sigma]
-boundary_sigma_str = "20"
+boundary = "V^2/m2/Hz"  # "V^2/m2/Hz" or "sigma" or "average"
+boundary_intensity_str = (
+    "7e-16"  # (V^2/m2/Hzの場合)boundary_intensity_str = '1e-15'[V^2/m2/Hz]
+)
+boundary_sigma_str = "20"  # (sigmaの場合)boundary_sigma_str = '1'[sigma]
+boundary_average_str = "10"  # (average場合)boundary_intensity_str = '1'[sigma]
 
 print(object_name + str(time_of_flybies) + plot_timing + boundary_sigma_str)
 
@@ -462,6 +470,40 @@ def Make_FT_full():
             galileo_radio_intensity[i, detectable_position_array] = 1
             galileo_radio_intensity[i, undetectable_position_array] = 0
 
+    elif boundary == "average":
+        # [[周波数一覧][各周波数でのノイズフロアの電波強度平均][角周波数でのノイズフロアの電波強度標準偏差][各周波数でのノイズフロアの電波強度の中央値]]
+        noise_data = np.genfromtxt(
+            "../result_for_yasudaetal2022/radio_plot/"
+            + object_name
+            + str(time_of_flybies)
+            + "/"
+            + spacecraft_name
+            + "_noise_floor_excepted_two_sigma_"
+            + object_name
+            + str(time_of_flybies)
+            + ".csv",
+            delimiter=",",
+        )
+        boundary_average = float(boundary_average_str)
+        boundary_intensity_array = np.zeros(len(galileo_data_freq))
+
+        for i in range(len(galileo_data_freq)):
+            certain_freq_data = galileo_radio_intensity[i]  # i番目の周波数の全データ
+            boundary_intensity = (
+                boundary_average * noise_data[1, i] + noise_data[2, i]
+            )  # i番目の周波数の強度平均値＋標準偏差×σ値
+            boundary_intensity_array[i] = boundary_intensity
+            # print(certain_freq_data.shape)
+            detectable_position_array = np.where(
+                certain_freq_data > boundary_intensity
+            )[0]
+            undetectable_position_array = np.where(
+                certain_freq_data <= boundary_intensity
+            )[0]
+            print(certain_freq_data)
+            galileo_radio_intensity[i, detectable_position_array] = 1
+            galileo_radio_intensity[i, undetectable_position_array] = 0
+
         # print(noise_data)
         # print(len(noise_data[0]))  # 周波数(行)のみ一次元
         # print(noise_data[0][0])  # 左上のみを抽出
@@ -528,11 +570,11 @@ def Make_FT_full():
             )
             ax[1].set_xlim(min_frequency, max_frequency)
             ax[1].set_xscale("log")
-            ax[1].set_ylim(min_intensity / 5, min_intensity * 20)
+            ax[1].set_ylim(min_intensity, min_intensity * 100)
             ax[1].set_yscale("log")
             ax[1].set_xlabel("Frequency (MHz)")
             ax[1].set_ylabel("Threshold intensity (V^2/m2/Hz)")
-            plt.show()
+            # plt.show()
 
             fig.savefig(
                 os.path.join(
@@ -568,7 +610,7 @@ def Make_FT_full():
             )
             ax[1].set_xlim(min_frequency, max_frequency)
             ax[1].set_xscale("log")
-            ax[1].set_ylim(min_intensity / 5, min_intensity * 20)
+            ax[1].set_ylim(min_intensity / 5, min_intensity * 100)
             ax[1].set_yscale("log")
             ax[1].set_xlabel("Frequency [MHz]")
             ax[1].set_ylabel("Threshold intensity (V^2/m2/Hz)")
@@ -589,7 +631,45 @@ def Make_FT_full():
                 )
             )
 
-        return 0
+        elif boundary == "average":
+            ax[0].set_title(
+                "Radio intensity boundary : noise floor average + "
+                + boundary_average_str
+                + " x average "
+                + object_name
+                + str(time_of_flybies)
+            )
+
+            ax[1].plot(
+                galileo_data_freq,
+                boundary_intensity_array,
+                marker="x",
+                linestyle="-",
+                color="b",
+                label=boundary_intensity_str,
+            )
+            ax[1].set_xlim(min_frequency, max_frequency)
+            ax[1].set_xscale("log")
+            ax[1].set_ylim(min_intensity, min_intensity * 100)
+            ax[1].set_yscale("log")
+            ax[1].set_xlabel("Frequency [MHz]")
+            ax[1].set_ylabel("Threshold intensity (V^2/m2/Hz)")
+            # plt.show()
+
+            fig.savefig(
+                os.path.join(
+                    "../result_for_yasudaetal2022/radio_plot/"
+                    + object_name
+                    + str(time_of_flybies)
+                    + "/average_boundary/radio_ft_plot_time_"
+                    + str(plot_first_time)
+                    + "-"
+                    + str(plot_last_time)
+                    + "_intensity_boundary_average"
+                    + boundary_sigma_str
+                    + ".png"
+                )
+            )
 
     plot_and_save(plot_first_time, plot_last_time)
 
