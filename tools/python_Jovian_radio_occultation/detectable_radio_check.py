@@ -14,13 +14,13 @@ import sys
 args = sys.argv
 rng = np.random.default_rng()
 
-object_name = "callisto"  # ganydeme/europa/calisto``
+object_name = "ganymede"  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 9  # ..th flyby
-# highest_plasma = "0e2"  # 単位は(/cc) 2e2/4e2/16e22 #12.5 13.5
-# plasma_scaleheight = "4e2"  # 単位は(km) 1.5e2/3e2/6e2
-highest_plasma = args[1]  # 単位は(/cc) 2e2/4e2/16e22 #12.5 13.5
-plasma_scaleheight = args[2]  # 単位は(km) 1.5e2/3e2/6e2
+time_of_flybies = 1  # ..th flyby
+highest_plasma = "0.25e2"  # 単位は(/cc) 2e2/4e2/16e22 #12.5 13.5
+plasma_scaleheight = "10e2"  # 単位は(km) 1.5e2/3e2/6e2
+# highest_plasma = args[1]  # 単位は(/cc) 2e2/4e2/16e22 #12.5 13.5
+# plasma_scaleheight = args[2]  # 単位は(km) 1.5e2/3e2/6e2
 
 
 Radio_range_cdf = (
@@ -45,6 +45,10 @@ if int(float(highest_plasma) - 50) % 100 == 0:
 
 elif int(float(highest_plasma) - 50) % 100 == 50:
     before_highest_plasma = str(int(float(highest_plasma) - 50) / 100) + "e2"
+
+else:
+    before_highest_plasma = "none_none_none"
+
 
 file_path = (
     "/Users/yasudarikuto/research/icymoon_raytracing/tools/result_for_yasudaetal2022/raytracing_"
@@ -117,7 +121,7 @@ if object_name == "ganymede":
     ]
 
     if time_of_flybies == 1:
-        judge_start_time = np.array([5.0, 30.0])  # 5:30 前は全て受信可能判定
+        judge_start_time = np.array([5.0, 45.0])  # 5:45 前は全て受信可能判定
         judge_end_time = np.array([7.0, 0.0])  # 7:00 後は全て受信可能判定
 
 if object_name == "callisto":
@@ -224,14 +228,27 @@ def MoveFile():
 
 
 def Judgemet_array(data):
-    before_nonjudge_number = np.intersect1d(
+    before_nonjudge_array = np.intersect1d(
         np.where(data[:, 0] <= judge_start_time[0]),
         np.where(data[:, 1] < judge_start_time[1]),
-    )[-1]
-    after_nonjudge_number = np.intersect1d(
+    ) 
+
+    after_nonjudge_array = np.intersect1d(
         np.where(data[:, 0] >= judge_end_time[0]),
         np.where(data[:, 1] > judge_end_time[1]),
-    )[0]
+    )
+
+    if len(before_nonjudge_array)==0:
+       before_nonjudge_number = 0
+
+    else:
+        before_nonjudge_number = before_nonjudge_array[-1]
+
+    if len(after_nonjudge_array)==0:
+        after_nonjudge_number = len(data)
+
+    else:
+        after_nonjudge_number = after_nonjudge_array[0]
 
     judge_time_array = np.intersect1d(
         np.arange(before_nonjudge_number, after_nonjudge_number, 1),
@@ -430,7 +447,9 @@ def lineNotify(message):
 
 def main():
     # MakeFolder()  # フォルダ作成　基本的にはoccultation_range_plot.py で移動しているから基本使わない
+    
     # MoveFile()  # ファイル移動
+
     (
         judge_array,
         no_judge_detectable_array,
@@ -443,7 +462,7 @@ def main():
     start = time.time()
     # 受かっているかの検証　processesの引数で並列数を指定
 
-    with Pool(processes=30) as pool:
+    with Pool(processes=20) as pool:
         result_list = list(pool.map(Judge_occultation, total_radio_number))
 
     # 受かっている電波のみを保存

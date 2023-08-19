@@ -13,8 +13,8 @@ time_of_flybies = 1  # ..th flyby
 highest_plasma = '0.125e2'  # 単位は(/cc) 2e2/4e2/16e2
 plasma_scaleheight = '0.5e2'  # 単位は(km) 1.5e2/3e2/6e2
 
-raytrace_lowest_altitude = -500  # レイトレーシングの下端の初期高度(km) 100の倍数で
-raytrace_highest_altitude = 3100  # レイトレーシング上端の初期高度(km) 500の倍数+100で
+raytrace_lowest_altitude = -300  # レイトレーシングの下端の初期高度(km) 100の倍数で
+raytrace_highest_altitude = 1600  # レイトレーシング上端の初期高度(km) 500の倍数+100で
 
 information_list = ['year', 'month', 'start_day', 'end_day',
                     'start_hour', 'end_hour', 'start_min', 'end_min']

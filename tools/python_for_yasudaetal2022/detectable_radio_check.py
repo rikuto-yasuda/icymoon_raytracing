@@ -13,7 +13,7 @@ import requests
 object_name = 'ganymede'  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
 time_of_flybies = 1   # ..th flyby
-highest_plasma = '0e2'  # 単位は(/cc) 2e2/4e2/16e22 #12.5 13.5
+highest_plasma = '0.125e2'  # 単位は(/cc) 2e2/4e2/16e22 #12.5 13.5
 plasma_scaleheight = '0.5e2'  # 単位は(km) 1.5e2/3e2/6e2
 
 

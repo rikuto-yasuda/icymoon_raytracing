@@ -62,7 +62,7 @@ psi_deg1 = calc_psi_deg(max_density1,scale_height1)
 psi_deg2 = calc_psi_deg(max_density2, scale_height2)
 
 
-"""
+
 deg_1MHz = psi_deg[int(np.where(frequency == 1000000)[0])]
 
 deg_1MHz_plus_pi = deg_1MHz+180
@@ -87,9 +87,9 @@ print("max_density(/cc):"+str(max_density/(10**6))
       + " / scale_height(km):"+str(scale_height/1000))
 print("psi_radian:", psi_rad)
 print("psi_degree:", psi_deg)
-"""
+
 # 以下電波強度用
-"""
+
 reshape_intensity = np.reshape(radio_intensity, (1, len(radio_intensity)))
 c = np.concatenate([reshape_intensity, reshape_intensity]).T
 # print(b)
@@ -97,34 +97,33 @@ c = np.concatenate([reshape_intensity, reshape_intensity]).T
 
 xx, yy = np.meshgrid([0, 1], frequency)
 #print(xx, yy)
-fig, ax = plt.subplots(1, 1)
+fig, ax = plt.subplots(1, 2)
 
 # ガリレオ探査機の電波強度をカラーマップへ
 pcm = ax.pcolormesh(xx, yy, c, norm=mpl.colors.LogNorm(
     vmin=1e-3, vmax=10), cmap='Spectral_r')
 fig.colorbar(pcm, extend='max', label='normalized radio intensity')
 
-ax.set_yscale("log")
-ax.set_ylim(100000, 6000000)
-ax.axhline(y=1000000, xmin=0, xmax=1, color="green",
+ax[0].set_yscale("log")
+ax[0].set_ylim(100000, 6000000)
+ax[0].axhline(y=1000000, xmin=0, xmax=1, color="green",
            label='1MHz', linestyle="dashed")
-ax.axhline(y=fre_1MHz_plus_pi, xmin=0, xmax=1, color="blue",
+ax[0].axhline(y=fre_1MHz_plus_pi, xmin=0, xmax=1, color="blue",
            label='1MHz-pi', linestyle="dashed")
-ax.axhline(y=fre_1MHz_plus_2pi, xmin=0, xmax=1, color="grey",
+ax[0].axhline(y=fre_1MHz_plus_2pi, xmin=0, xmax=1, color="grey",
            label='1MHz-2pi', linestyle="dashed")
-ax.axhline(y=fre_1MHz_plus_3pi, xmin=0, xmax=1, color="purple",
+ax[0].axhline(y=fre_1MHz_plus_3pi, xmin=0, xmax=1, color="purple",
            label='1MHz-3pi', linestyle="dashed")
-ax.set_ylabel("radio frequency (Hz)")
-ax.set_title("max:"+str(max_density/1000000) + "(/cc) h_s " +
+ax[0].set_ylabel("radio frequency (Hz)")
+ax[0].set_title("max:"+str(max_density/1000000) + "(/cc) h_s " +
              str(scale_height/1000)+"(km) TEC:"+str('{:.2e}'.format(TEC))+"(/m2)"+" \n width(MHz):"+str('{:.2e}'.format(width_1/1000000))+","+str('{:.2e}'.format(width_2/1000000))+","+str('{:.2e}'.format(width_3/1000000)), fontsize=10)
-ax.axes.xaxis.set_visible(False)
-ax.legend()
-plt.savefig("others/max_" + str(int(max_density/1000000)) +
-            "_cc_scaleheight_"+str(int(scale_height/1000))+"_km.png")
-plt.show()
+ax[0].axes.xaxis.set_visible(False)
+ax[0].legend()
+
+
 
 print("total_width:"+str(width_total/1000000))
-"""
+
 # 以下電波位相用
 
 
@@ -141,31 +140,9 @@ plt.title("faraday rotation effect", fontsize=10)
 plt.xlabel("radio frequency (MHz)")
 plt.ylabel("rotation angle (deg)")
 plt.xticks([1000000, 2000000, 3000000, 4000000, 5000000, 6000000, 7000000,8000000,9000000,10000000], ['1', '2', '3', '4', '5', '6', '7','8','9','10'])
+plt.savefig("others/max_" + str(int(max_density/1000000)) +
+            "_cc_scaleheight_"+str(int(scale_height/1000))+"_km.png")
 
-
-
-# 以下ゴミ
-"""
-X, Y = np.mgrid[:2, :9700]
-
-xx, yy = np.meshgrid([0, 1], frequency)
-#print(xx, yy)
-fig, ax = plt.subplots(1, 1)
-
-# ガリレオ探査機の電波強度をカラーマップへ
-pcm = ax.pcolormesh(xx, yy, b, cmap='Spectral_r', vmin=0, vmax=90)
-fig.colorbar(pcm, extend='max', label='rotation angle (deg)')
-
-ax.set_yscale("log")
-ax.set_ylim(1000000, 4000000)
-ax.set_ylabel("radio frequency (Hz)")
-ax.set_title("max:"+str(max_density/1000000) + "(/cc) h_s " +
-             str(scale_height/1000)+"(km) TEC:"+str('{:.2e}'.format(TEC))+"(/m2)", fontsize=10)
-ax.axes.xaxis.set_visible(False)
-ax.legend()
-plt.savefig("max_" + str(int(max_density/1000000)) +
-            "_cc_scaleheight_"+str(int(scale_height/1000))+"_km_phase.png")
-"""
 plt.show()
 
 # %%

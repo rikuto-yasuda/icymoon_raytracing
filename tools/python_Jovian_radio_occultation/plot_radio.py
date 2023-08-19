@@ -14,15 +14,15 @@ import sys
 args = sys.argv
 ## プロットしたいフライバイを指定
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-
+"""
 object_name = args[1]  # ganydeme/europa/calisto
 time_of_flybies = int(args[2])  # ..th flyby
 plot_timing = args[3]  # ingress/egress/full/occultation/manual
 """
-object_name = "ganymede"  # ganydeme/europa/calisto`
-time_of_flybies = 1  # ..th flyby
-plot_timing = "ingress"  # ingress/egress/full/occultation/manual
-"""
+object_name = "callisto"  # ganydeme/europa/calisto`
+time_of_flybies = 30  # ..th flyby
+plot_timing = "egress"  # ingress/egress/full/occultation/manual
+
 
 ## 詳細設定
 # 自由にプロットしたい時間範囲を指定する場合には plot_timing = "manual"にして以下で開始・終了時間（秒）を指定
@@ -36,7 +36,7 @@ min_intensity = 1e-16  # カラーマップの最小強度
 # ftダイヤグラムに等高線をひく強度を指定
 # 電波データから掩蔽・非掩蔽を判定する際に全周波数チャンネルに対して単一の電波強度を閾値とする場合には boundary="V^2/m2/Hz"
 # 周波数ごとに観測装置のノイズの大きさ（平均値）とばらつき（標準偏差）を調べ、平均値＋（n x 標準偏差）を閾値とする場合には boundary="sigma"
-boundary = "V^2/m2/Hz"  # "V^2/m2/Hz" or "sigma" or "average"
+boundary = "average"  # "V^2/m2/Hz" or "sigma" or "average"
 boundary_intensity_str = (
     "7e-16"  # (V^2/m2/Hzの場合)boundary_intensity_str = '1e-15'[V^2/m2/Hz]
 )
@@ -216,7 +216,7 @@ if (
 ):
     # プロットしたい電波データのパスを指定
     radio_data_name = (
-        "Survey_Electric_2001-05-25T10-00_2001-05-25T13-00_for_examine.d2s"  # C30 flyby
+        "Survey_Electric_2001-05-25T10-00_2001-05-25T13-00.d2s"  # C30 flyby
     )
 
     # 読み込んだデータの開始日時(実際の観測時刻の切り下げ値を代入)
@@ -489,9 +489,7 @@ def Make_FT_full():
 
         for i in range(len(galileo_data_freq)):
             certain_freq_data = galileo_radio_intensity[i]  # i番目の周波数の全データ
-            boundary_intensity = (
-                boundary_average * noise_data[1, i] + noise_data[2, i]
-            )  # i番目の周波数の強度平均値＋標準偏差×σ値
+            boundary_intensity = boundary_average * noise_data[1, i]  # i番目の周波数の強度平均値×σ値
             boundary_intensity_array[i] = boundary_intensity
             # print(certain_freq_data.shape)
             detectable_position_array = np.where(
