@@ -6,22 +6,23 @@ import matplotlib as mpl
 import os
 import pathlib
 
-max_electron_density = 100 * (
+max_electron_density = 150 * (
     10**6
 )  # 最大電子密度 m-3 //n(/cc)=n*10**6(/m3)  250 or 100 /cc
-electron_density_scale_height = 100 * (
+electron_density_scale_height = 600 * (
     10**3
 )  # スケールハイト m //l(km)=l*10**3(m) 1500 or 300 km
 frequency_array = np.arange(10000, 10000000, 1)
 magnetic_field_intensity = 750 * (10**-9)  # 　磁場強度 T //ガニメデ赤道表面 750 nT 木星磁場 100 nT
 moon_radius = 2634100  # 半径 m ガニメデ半球 2634.1 km = 2634100 m
 diameter_raio = 0.2  # 楕円の長辺と短辺の比率(0-1)円偏波度の考慮はここで起こる
+offset_angle_deg = 90
 
 # ガリレオ周波数バンド幅 (Hz)
-gal_fleq_band = 1340
+gal_freq_band = 1340
 
 # ガリレオ周波数チャンネル (Hz)
-gal_fleq_tag_row = np.array(
+gal_freq_tag_row = np.array(
     [
         1.030e05,
         1.137e05,
@@ -72,7 +73,7 @@ gal_fleq_tag_row = np.array(
 # JUICE バンド幅
 juice_freq_band = 37000
 # JUICE周波数チャンネル
-juice_fleq_tag_row = np.linspace(80000, 2096000, 72)
+juice_freq_tag_row = np.linspace(80000, 2096000, 72)
 
 
 def calc_psi_deg(max_density, scale_height, frequency, magnetic_field, radius):
@@ -107,11 +108,18 @@ def calc_psi_deg(max_density, scale_height, frequency, magnetic_field, radius):
 
     TEC = s * max_density
     psi_rad = TEC * coefficient  # 0.1MHzから10MHzのψ角
+    psi_deg = np.rad2deg(psi_rad)
+
+    offset_angle_rad = np.deg2rad(offset_angle_deg)
+    offseted_psi_rad = psi_rad + offset_angle_rad
     e_magnitude = np.reciprocal(
-        np.sqrt(np.square(np.cos(psi_rad)) + np.square(np.sin(psi_rad) / diameter_raio))
+        np.sqrt(
+            np.square(np.cos(offseted_psi_rad))
+            + np.square(np.sin(offseted_psi_rad) / diameter_raio)
+        )
     )
     radio_int = np.square(e_magnitude)
-    psi_deg = np.rad2deg(psi_rad)
+
     return psi_deg, radio_int, TEC
 
 
@@ -134,11 +142,11 @@ def plot_original_faraday_stripe(frequency, radio_intensity, total_electron_cont
     fig.colorbar(pcm, extend="max", label="Radio intensity (nomarized)")
 
     ax.set_yscale("log")
-    ax.set_ylim(100000, 2000000)
+    ax.set_ylim(3e5, 2.2e6)
     ax.set_ylabel("Frequency (Hz)")
     ax.axes.xaxis.set_visible(False)
     ax.set_title(
-        "original radio intensity\nmax:"
+        "Original radio intensity\nmax:"
         + str(max_electron_density / 1000000)
         + "(/cc) h_s "
         + str(electron_density_scale_height / 1000)
@@ -148,63 +156,141 @@ def plot_original_faraday_stripe(frequency, radio_intensity, total_electron_cont
         fontsize=10,
     )
     plt.savefig(
-        "../result_for_yasudaetal2022/faraday_stripe/row_data/max_"
+        "../result_for_yasudaetal2022/faraday_stripe/row_data/sgepss_max_"
         + str(int(max_electron_density / 1000000))
         + "_cc_scaleheight_"
         + str(int(electron_density_scale_height / 1000))
-        + "_km.png"
+        + "_km_offset_"
+        + str(offset_angle_deg)
+        + "_deg.png"
     )
     return
 
 
-def plot_binning_raraday_stripe(
-    radio_frequency,
-    instrment_frequency,
+def binning_faraday_stripe(
+    row_radio_frequency_array,
+    row_radio_intensity_array,
+    row_radio_angle_array,
+    instrment_frequency_array,
     instrment_freq_band,
-    radio_intensity,
-    total_electron_content,
-    instrument,
 ):
-    instrment_intensity = np.zeros(len(instrment_frequency))
+    binning_intensity_array = np.zeros(len(instrment_frequency_array))
+    binning_angle_array = np.zeros(len(instrment_frequency_array))
 
-    for i in range(len(instrment_frequency)):
-        minimum_freqency_in_band = instrment_frequency[i] - (instrment_freq_band / 2)
-        maximum_freqency_in_band = instrment_frequency[i] + (instrment_freq_band / 2)
+    for i in range(len(instrment_frequency_array)):
+        minimum_freqency_in_band = instrment_frequency_array[i] - (
+            instrment_freq_band / 2
+        )
+        maximum_freqency_in_band = instrment_frequency_array[i] + (
+            instrment_freq_band / 2
+        )
 
         minimum_freqency_position = np.where(
-            radio_frequency > minimum_freqency_in_band
+            row_radio_frequency_array > minimum_freqency_in_band
         )[0][0]
         maximum_freqency_position = np.where(
-            radio_frequency < maximum_freqency_in_band
+            row_radio_frequency_array < maximum_freqency_in_band
         )[0][-1]
 
         average_intensity_in_band = np.mean(
-            radio_intensity[minimum_freqency_position:maximum_freqency_position]
+            row_radio_intensity_array[
+                minimum_freqency_position:maximum_freqency_position
+            ]
+        )
+        binning_intensity_array[i] = average_intensity_in_band
+
+        average_angle_in_band = np.mean(
+            row_radio_angle_array[minimum_freqency_position:maximum_freqency_position]
+        )
+        binning_angle_array[i] = average_angle_in_band
+
+    # 極大値を見つける
+    maxima_indices = (np.diff(np.sign(np.diff(binning_intensity_array))) < 0).nonzero()[
+        0
+    ] + 1
+    maxima_values = binning_intensity_array[maxima_indices]
+
+    # 極小値を見つける
+    minima_indices = (np.diff(np.sign(np.diff(binning_intensity_array))) > 0).nonzero()[
+        0
+    ] + 1
+    minima_values = binning_intensity_array[minima_indices]
+
+    print("極大値のインデックス:", maxima_indices)
+    print("極大強度:", maxima_values)
+    print("極大周波数:", instrment_frequency_array[maxima_indices])
+
+    print("極小値のインデックス:", minima_indices)
+    print("極小強度:", minima_values)
+    print("極小周波数:", instrment_frequency_array[minima_indices])
+
+    return instrment_frequency_array, binning_intensity_array, binning_angle_array
+
+
+def plot_binning_raraday_stripe(
+    row_radio_frequency_array,
+    row_radio_intensity_array,
+    row_radio_angle_array,
+    instrment_frequency_array,
+    binning_intensity_array,
+    binning_angle_array,
+    total_electron_content,
+    instrument,
+):
+    fig, ax = plt.subplots(3, 1, figsize=(8, 16))
+    ax[0].scatter(
+        row_radio_frequency_array,
+        (row_radio_angle_array % 180.0),
+        label="row radio",
+        s=0.001,
+        c="blue",
+    )
+    ax[0].scatter(
+        instrment_frequency_array,
+        (binning_angle_array % 180.0),
+        label="Observed results",
+        s=50,
+        c="red",
+        marker="x",
+    )
+    # ax[0].set_xlabel("Frequency (Hz)")
+    ax[0].set_ylabel("Rotation angle (deg)", fontsize=15, fontname="Helvetica")
+    ax[0].set_xlim(3e5, 2.2e6)
+    ax[0].legend(fontsize=12)
+    ax[0].set_xscale("log")
+    ax[0].set_xticks([3e5, 4e5, 6e5, 10e5, 20e5])
+    ax[0].set_xticklabels([0.3, 0.4, 0.6, 1.0, 2.0], fontsize=12, fontname="Helvetica")
+    ax[0].text(
+        1.8e6,
+        offset_angle_deg + 5,
+        "Antenna axis",
+        fontsize=15,
+        fontname="Helvetica",
+        color="black",
+        ha="center",
+        va="center",
+    )
+    ax[0].hlines(
+        offset_angle_deg,
+        3e5,
+        2.2e6,
+        colors="black",
+        linestyle="dashed",
+        linewidths=1,
+    )
+    if offset_angle_deg == 0:
+        ax[0].hlines(
+            offset_angle_deg + 180,
+            3e5,
+            2.2e6,
+            colors="black",
+            linestyle="dashed",
+            linewidths=1,
         )
 
-        instrment_intensity[i] = average_intensity_in_band
-
-    reshape_intensity = np.reshape(instrment_intensity, (1, len(instrment_intensity)))
-
-    c = np.concatenate([reshape_intensity, reshape_intensity]).T
-
-    xx, yy = np.meshgrid([0, 1], instrment_frequency)
-    # print(xx, yy)
-    fig, ax = plt.subplots(1, 1)
-
-    # ガリレオ探査機の電波強度をカラーマップへ
-    pcm = ax.pcolormesh(
-        xx, yy, c, norm=mpl.colors.LogNorm(vmin=1e-3, vmax=10), cmap="Spectral_r"
-    )
-    fig.colorbar(pcm, extend="max", label="Radio intensity (nomarized)")
-
-    ax.set_yscale("log")
-    ax.set_ylim(100000, 2000000)
-    ax.set_ylabel("Frequency (Hz)")
-    ax.axes.xaxis.set_visible(False)
-    ax.set_title(
+    ax[0].set_title(
         instrument
-        + " radio intensity\nmax:"
+        + " max:"
         + str(max_electron_density / 1000000)
         + "(/cc) h_s "
         + str(electron_density_scale_height / 1000)
@@ -212,22 +298,71 @@ def plot_binning_raraday_stripe(
         + str("{:.2e}".format(total_electron_content))
         + "(/m2)",
         fontsize=10,
+        fontname="Helvetica",
     )
+
+    ax[1].plot(row_radio_frequency_array, row_radio_intensity_array, label="row radio")
+    ax[1].plot(
+        instrment_frequency_array,
+        binning_intensity_array,
+        label="observed results",
+        c="red",
+    )
+    ax[1].scatter(
+        instrment_frequency_array,
+        binning_intensity_array,
+        label="Observed results",
+        c="red",
+    )
+    ax[1].set_xlabel("Frequency (MHz)", fontsize=15, fontname="Helvetica")
+    ax[1].set_ylabel("Radio intensity (nomarized)", fontsize=15, fontname="Helvetica")
+    ax[1].legend(fontsize=12)
+    # ax[1].set_title("Radio intensity", fontsize=10)
+    ax[1].set_xlim(3e5, 2.2e6)
+    ax[1].set_xscale("log")
+    ax[1].set_yticks([0, 0.5, 1])
+    ax[1].set_yticklabels([0, 0.5, 1], fontsize=12, fontname="Helvetica")
+    ax[1].set_xticks([3e5, 4e5, 6e5, 10e5, 20e5])
+    ax[1].set_xticklabels([0.3, 0.4, 0.6, 1.0, 2.0], fontsize=12, fontname="Helvetica")
+
+    reshape_intensity = np.reshape(
+        binning_intensity_array, (1, len(binning_intensity_array))
+    )
+
+    c = np.concatenate([reshape_intensity, reshape_intensity]).T
+
+    xx, yy = np.meshgrid([0, 1], instrment_frequency_array)
+    # print(xx, yy)
+
+    # ガリレオ探査機の電波強度をカラーマップへ
+    pcm = ax[2].pcolormesh(
+        xx, yy, c, norm=mpl.colors.LogNorm(vmin=1e-3, vmax=10), cmap="Spectral_r"
+    )
+    fig.colorbar(pcm, extend="max", label="Radio intensity (nomarized)")
+
+    ax[2].set_yscale("log")
+    ax[2].set_ylim(3e5, 2.2e6)
+    ax[2].set_ylabel("Frequency (Hz)", fontname="Helvetica")
+    ax[2].axes.xaxis.set_visible(False)
+    ax[2].set_title("Spectrogram", fontsize=10, fontname="Helvetica")
 
     plt.savefig(
         "../result_for_yasudaetal2022/faraday_stripe/"
         + instrument
-        + "/max_"
+        + "/sgepss_max_"
         + str(int(max_electron_density / 1000000))
         + "_cc_scaleheight_"
         + str(int(electron_density_scale_height / 1000))
-        + "_km.png"
+        + "_km_offset_"
+        + str(offset_angle_deg)
+        + "_deg.png"
     )
 
     return
 
 
 def main():
+    # ファラデー回転角を計算する
     angle_array, radio_intensity, total_electron_content = calc_psi_deg(
         max_electron_density,
         electron_density_scale_height,
@@ -236,24 +371,55 @@ def main():
         moon_radius,
     )
 
+    # ビニング前のスペクトログラムをプロットする
     plot_original_faraday_stripe(
         frequency_array, radio_intensity, total_electron_content
     )
 
+    # ガリレオPWSの周波数ステップ・分解能に元データをビニングする
+    print("galileo_pws")
+    (
+        galileo_frequency_array,
+        galileo_binning_intensity_array,
+        galileo_binning_angle_array,
+    ) = binning_faraday_stripe(
+        frequency_array, radio_intensity, angle_array, gal_freq_tag_row, gal_freq_band
+    )
+
+    # ガリレオPWSの性能に合わせてビニングしたファラデー回転角と強度をプロットする
     plot_binning_raraday_stripe(
         frequency_array,
-        gal_fleq_tag_row,
-        gal_fleq_band,
         radio_intensity,
+        angle_array,
+        galileo_frequency_array,
+        galileo_binning_intensity_array,
+        galileo_binning_angle_array,
         total_electron_content,
         "galileo_pws",
     )
 
+    # JUICE RPWIの周波数ステップ・分解能に元データをビニングする
+    print("juice_rpwi")
+    (
+        JUICE_frequency_array,
+        JUICE_binning_intensity_array,
+        JUICE_binning_angle_array,
+    ) = binning_faraday_stripe(
+        frequency_array,
+        radio_intensity,
+        angle_array,
+        juice_freq_tag_row,
+        juice_freq_band,
+    )
+
+    # JUICE RPWIの性能に合わせてビニングしたファラデー回転角と強度をプロットする
     plot_binning_raraday_stripe(
         frequency_array,
-        juice_fleq_tag_row,
-        juice_freq_band,
         radio_intensity,
+        angle_array,
+        JUICE_frequency_array,
+        JUICE_binning_intensity_array,
+        JUICE_binning_angle_array,
         total_electron_content,
         "juice_rpwi",
     )

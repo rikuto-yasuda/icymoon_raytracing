@@ -13,22 +13,22 @@ import sys
 # あらかじめ ../result_sgepss2021/~/~ に必要なレイトレーシング結果とパラメータセットを入れること
 args = sys.argv
 
-object_name = "callisto"  # ganydeme/europa/calisto``
+object_name = "ganymede"  # ganydeme/europa/calisto``
 
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 30  # ..th flyby
-highest_plasma = "0.125e2"  # 単位は(/cc) 2e2/4e2/16e22
-plasma_scaleheight = "6e2"  # 単位は(km) 1.5e2/3e2/6e2
+time_of_flybies = 1  # ..th flyby
+highest_plasma = "1e2"  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = "0.25e2"  # 単位は(km) 1.5e2/3e2/6e2
 
 # object_name = args[1]  # ganydeme/europa/calisto``
 # time_of_flybies = int(args[2])  # ..th flyby
-#highest_plasma = args[1]  # 単位は(/cc) 2e2/4e2/16e22 #12.5 13.5
-#plasma_scaleheight = args[2]  # 単位は(km) 1.5e2/3e2/6e2
+# highest_plasma = args[1]  # 単位は(/cc) 2e2/4e2/16e22 #12.5 13.5
+# plasma_scaleheight = args[2]  # 単位は(km) 1.5e2/3e2/6e2
 # boundary_intensity_str = "7e-16"  # boundary_intensity_str = '1e-15'
 boundary_average_str = "10"  # boundary_intensity_str = '10'⇨ノイズフロアの10倍強度まで
 
-vertical_line_freq = np.array([0.8, 4.5])  # MHz
-#vertical_line_freq = np.array([0])  # MHz
+vertical_line_freq = np.array([0.65, 4.5])  # MHz
+# vertical_line_freq = np.array([0])  # MHz
 # print(args[1] + args[2] + " max:" + args[3] + " scale:" + args[4])
 
 information_list = [
@@ -75,6 +75,8 @@ if object_name == "ganymede" and time_of_flybies == 1:
         "07;00",
     ]
     exclave_exception = np.array([[4.298], [1], [0]])
+    ingress_egress_time_window = 1800
+
 
 if object_name == "europa" and time_of_flybies == 12:
     # E12 flyby
@@ -93,11 +95,13 @@ if object_name == "europa" and time_of_flybies == 12:
 
 if object_name == "callisto" and time_of_flybies == 30:
     # C30 flyby
-    plot_time_step_sec = [0, 1800, 3600, 5400, 7200, 9000, 10800]
+    plot_time_step_sec = [0, 1800, 3600, 4200, 4800, 5400, 7200, 9000, 10800]
     plot_time_step_label = [
         "10:00",
         "10:30",
         "11:00",
+        "11:10",
+        "11:20",
         "11:30",
         "12:00",
         "12:30",
@@ -124,22 +128,25 @@ if object_name == "callisto" and time_of_flybies == 30:
             [0, 2, 0, 1, 2, 9, 12, 10, 3, 7, 1, 1, 1],
         ]
     )
+    ingress_egress_time_window = 600
 
 if object_name == "callisto" and time_of_flybies == 9:
     # C9 flyby
-    plot_time_step_sec = [0, 1800, 3600, 5400, 7200, 9000, 10800]
+    plot_time_step_sec = [0, 1800, 3600, 5400, 6000, 6600, 7200, 9000, 10800]
     plot_time_step_label = [
         "12:00",
         "12:30",
         "13:00",
         "13:30",
+        "13:40",
+        "13:50",
         "14:00",
         "14:30",
         "15:00",
     ]
 
     exclave_exception = np.array([[1.960, 2.902, 3.201], [0, 0, 0], [1, 1, 1]])
-
+    ingress_egress_time_window = 900
 
 # europa & ganymede
 if object_name == "ganymede" or object_name == "europa":
@@ -212,7 +219,6 @@ if object_name == "callisto":
     ]
 
     Freq_underline = 0.32744
-
 
 Freq_num = []
 for idx in Freq_str:
@@ -714,7 +720,7 @@ def Make_FT_full(
         ax.contour(time_list, FREQ, DataB, levels=[0.5], colors="0.6")
         # ax.contour(time_list, FREQ, DataC, levels=[0.5], colors="0.3")
         ax.contour(time_list, FREQ, DataD, levels=[0.5], colors="0")
-        ax.contour(time_list, FREQ, DataC, levels=[0.5], colors="orange")   
+        ax.contour(time_list, FREQ, DataC, levels=[0.5], colors="orange")
         ax.scatter(
             ingress_time_list[1],
             ingress_time_list[0],
@@ -764,6 +770,32 @@ def Make_FT_full(
 
         # 横軸の幅は作りたい図によって変わるので引数用いる
         ax.set_xlim(start_time, end_time)
+
+        # 最大電子密度の動画作るときはこっち
+        """
+        ax.text(
+            3700,
+            0.13,
+            str(float(highest_plasma)) + " (cm⁻³)",
+            fontsize=30,
+            fontname="Helvetica",
+            color="white",
+            ha="center",
+            va="center",
+        )
+        """
+
+        # スケールハイトの動画作るときはこっち
+        ax.text(
+            3700,
+            0.13,
+            str(float(plasma_scaleheight)) + " (km)",
+            fontsize=30,
+            fontname="Helvetica",
+            color="white",
+            ha="center",
+            va="center",
+        )
 
         for hline in vertical_line_freq:
             plt.hlines(
@@ -853,8 +885,8 @@ def Make_FT_full(
         )
 
     plot_and_save(int(plot_time_step_sec[0]), int(plot_time_step_sec[-1]), "full")
-    plot_and_save(middle_time, middle_time + 1800, "egress")
-    plot_and_save(middle_time - 1800, middle_time, "ingress")
+    plot_and_save(middle_time, middle_time + ingress_egress_time_window, "egress")
+    plot_and_save(middle_time - ingress_egress_time_window, middle_time, "ingress")
 
     # 以下は電波データにおける掩蔽タイミングを決めるものなので、閾値を買えない限りは毎回やる必要はない
     # print(ingress_time_list)

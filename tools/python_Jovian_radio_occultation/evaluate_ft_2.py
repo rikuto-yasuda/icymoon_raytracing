@@ -12,18 +12,18 @@ import sys
 args = sys.argv
 
 ####################################################
-object_name = "ganymede"  # ganydeme/europa/calisto`
+object_name = "callisto"  # ganydeme/europa/calisto`
 
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 1  # ..th flyby
+time_of_flybies = 30  # ..th flyby
 occultaion_type = "ingress"  # 'ingress' or 'egress
-#radio_type_A2D = "A"  # 'A' or 'B' or 'C' or 'D'
+radio_type_A2D = "C"  # 'A' or 'B' or 'C' or 'D'
 
-#object_name = args[1]  # ganydeme/europa/calisto`
-#spacecraft_name = "galileo"  # galileo/JUICE(?)
-#time_of_flybies = int(args[2])  # ..th flyby
-#occultaion_type = args[3]  # 'ingress' or 'egress
-radio_type_A2D = args[1]  # 'A' or 'B' or 'C' or 'D'
+# object_name = args[1]  # ganydeme/europa/calisto`
+# spacecraft_name = "galileo"  # galileo/JUICE(?)
+# time_of_flybies = int(args[2])  # ..th flyby
+# occultaion_type = args[3]  # 'ingress' or 'egress
+# radio_type_A2D = args[1]  # 'A' or 'B' or 'C' or 'D'
 print(radio_type_A2D)
 
 # "time_difference" or "kai_2" please choose what you want to plot
@@ -182,13 +182,15 @@ def get_frequency_intensity_plotparameter(
 ):
     # print(moon_name, flyby_time, ingress_or_egerss, radio_type)
     if moon_name == "ganymede":
+        plot_scale_list = np.array([50, 100, 300, 600, 1000, 1500])
+
         if flyby_time == 1:
             if ingress_or_egerss == "ingress":
                 timelag_max = 80
                 timelag_min = 20
 
                 scale_max = 2000
-                scale_min = 20
+                scale_min = 30
 
                 dot_size = 40
                 fig_holizontal = 7
@@ -201,15 +203,17 @@ def get_frequency_intensity_plotparameter(
                 timelag_min = 20
 
                 scale_max = 2000
-                scale_min = 20
+                scale_min = 30
 
                 dot_size = 40
                 fig_holizontal = 7
                 fig_vertical = 5
 
-                using_frequency_range = [6.0e-1, 4.5]  # G1 egress
+                using_frequency_range = [6.5e-1, 4.5]  # G1 egress
 
     if moon_name == "callisto":
+        plot_scale_list = np.array([400, 600, 900])
+
         if flyby_time == 30:
             if ingress_or_egerss == "ingress":
                 timelag_max = 150
@@ -262,6 +266,7 @@ def get_frequency_intensity_plotparameter(
         dot_size,
         fig_holizontal,
         fig_vertical,
+        plot_scale_list,
     )
 
 
@@ -300,6 +305,7 @@ def fig_and_save_def(
     dot,
     ymin,
     ymax,
+    plot_scale,
 ):
     np.savetxt(
         "../result_for_yasudaetal2022/evaluate_f-t_diagram_plot_"
@@ -331,14 +337,35 @@ def fig_and_save_def(
     )
 
     cmap = ListedColormap(
-        ["#dc143c", "#ffa055", "#a7f89d", "#3be9d6", "#2e7bf7", "#4b0082"]
+        [
+            "#ff1900",
+            "#ff7e00",
+            "#ffdb00",
+            "#aaff4d",
+            "#39ffbd",
+            "#00beff",
+            "#0063fe",
+            "#1203ff",
+            "#040080",
+        ]
     )
-    bounds = np.linspace(0, 180, 7)
+    bounds = np.linspace(0, 90, 10)
     norm = BoundaryNorm(bounds, cmap.N)
 
     plt.figure(figsize=(holizontal_size, vertical_size))
 
-    sc = plt.scatter(max, scale, s=dot, c=dif, norm=norm, cmap=cmap)
+    # 指定されたスケールハイトの結果のみをプロットするためのfor and if文
+    # 四捨五入
+    for i in range(len(max)):
+        if np.any(plot_scale == scale[i]):
+            if round(dif[i], 1) == round(np.min(dif), 1):
+                sc = plt.scatter(
+                    max[i], scale[i], s=dot, marker="*", c=dif[i], norm=norm, cmap=cmap
+                )
+            else:
+                sc = plt.scatter(
+                    max[i], scale[i], s=dot, c=dif[i], norm=norm, cmap=cmap
+                )
 
     plt.yscale("log")
     plt.ylim(ymin, ymax)
@@ -399,6 +426,7 @@ def main():
         dot_size,
         fig_holizontal_size,
         fig_vertical_size,
+        plot_scale_array,
     ) = get_frequency_intensity_plotparameter(
         object_name, time_of_flybies, occultaion_type, radio_type_A2D
     )
@@ -455,6 +483,7 @@ def main():
             dot_size,
             yminimum,
             ymaximum,
+            plot_scale_array,
         )  # ずれ時間とカラーマップを保存
     ### ここまで###
 
