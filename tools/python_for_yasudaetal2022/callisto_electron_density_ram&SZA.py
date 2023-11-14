@@ -14,13 +14,13 @@ object_name = "callisto"  # ganydeme/europa/calisto``
 occultation_detection_density = [4300, 5100, 15300, 8500, 17400, 3000]
 occultation_detection_density_range = [440, 3300, 2300, 17000, 1500, 1600]
 occultation_detection_ram = [82.8, 97.8, 80.9, 99.2, 81.7, 98.8]
-occultation_detection_sza = [85.0, 94.0, 78.7, 101.3, 82.5, 97.6]
+occultation_detection_sza = [85.0, 95.0, 78.7, 101.3, 82.5, 97.6]
 
 # occultation closed magnetic field
 occultation_nodetection_ram = [105.7, 74.4]
 occultation_nodetection_sza = [81.5, 98.5]
-occultation_nodetection_density = [500, 500]
-occultation_nodetection_density_range = [500, 500]
+occultation_nodetection_density = [0, 0]
+occultation_nodetection_density_range = [1000, 1000]
 
 # in situ detection magnetic field
 insitu_detection_density = [100, 400]
@@ -37,13 +37,12 @@ insitu_nodetection_sza = [149.65]
 insitu_nodetection_sza_range = [29.85]
 
 # jovian occultation
-jovian_occultation_density = [18.75, 2200, 375]
-jovian_occultation_density_range = [6.25, 0, 75]
+jovian_occultation_density = [12.5, 350]
 
-jovian_occultation_ram = [167.05, 18.55, 4.75]
-jovian_occultation_ram_range = [3.65, 9.85, 3.05]
-jovian_occultation_sza = [106.3, 70.6, 173.75]
-jovian_occultation_sza_range = [3.9, 4, 2.85]
+jovian_occultation_ram = [166.55, 4.6]
+jovian_occultation_ram_range = [0.65, 2.8]
+jovian_occultation_sza = [104.65, 173.8]
+jovian_occultation_sza_range = [0.75, 2.5]
 
 fig, ax = plt.subplots(figsize=(9.0, 5.0))
 
@@ -95,6 +94,7 @@ ax.errorbar(insitu_nodetection_ram, insitu_nodetection_density, xerr=insitu_node
 ax.scatter(
     jovian_occultation_ram, jovian_occultation_density, c="red", marker=",", alpha=1
 )
+"""
 ax.errorbar(
     jovian_occultation_ram,
     jovian_occultation_density,
@@ -105,12 +105,13 @@ ax.errorbar(
     ecolor="black",
     alpha=0.3,
 )
+"""
 
 
 # 緯度経度指定
 ax.set_xlim(0, 180)
-ax.set_ylim(10, 30000)
-ax.set_yscale("log")
+ax.set_ylim(-2000, 28000)
+# ax.set_yscale("log")
 ax.set_xticks(np.linspace(0, 180, 5))
 ax.set_xticklabels(["0", "45", "90", "135", "180"])
 
@@ -190,6 +191,7 @@ ax.errorbar(insitu_nodetection_sza, insitu_nodetection_density, xerr=insitu_node
 ax.scatter(
     jovian_occultation_sza, jovian_occultation_density, c="red", marker=",", alpha=1
 )
+"""
 ax.errorbar(
     jovian_occultation_sza,
     jovian_occultation_density,
@@ -200,11 +202,12 @@ ax.errorbar(
     ecolor="black",
     alpha=0.3,
 )
+"""
 
 # 緯度経度指定
 ax.set_xlim(0, 180)
-ax.set_ylim(10, 30000)
-ax.set_yscale("log")
+ax.set_ylim(-2000, 28000)
+# ax.set_yscale("log")
 ax.set_xticks(np.linspace(0, 180, 5))
 ax.set_xticklabels(["0", "45", "90", "135", "180"])
 plt.title("Callisto ionospheric observation results")

@@ -6,3 +6,9 @@ tools/results/
 raytrace.tohoku/src/rtc2
 raytrace.tohoku/src/rtc3(now_testing)
 raytrace.tohoku/src/rtc4
+src_venv/rtc/tools/map_model/
+src_venv/rtc/src/StdAfx.h.gch
+src_venv/rtc/src/testing.h.gch
+src_venv/rtc/model/StdAfx.h.gch
+src_venv/rtc/planet/StdAfx.h.gch
+src_venv/rtc/testing/testing.h.gch

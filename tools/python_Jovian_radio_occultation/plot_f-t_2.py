@@ -13,12 +13,12 @@ import sys
 # あらかじめ ../result_sgepss2021/~/~ に必要なレイトレーシング結果とパラメータセットを入れること
 args = sys.argv
 
-object_name = "ganymede"  # ganydeme/europa/calisto``
+object_name = "callisto"  # ganydeme/europa/calisto``
 
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 1  # ..th flyby
-highest_plasma = "1e2"  # 単位は(/cc) 2e2/4e2/16e22
-plasma_scaleheight = "0.25e2"  # 単位は(km) 1.5e2/3e2/6e2
+time_of_flybies = 30  # ..th flyby
+highest_plasma = "0e2"  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = "4e2"  # 単位は(km) 1.5e2/3e2/6e2
 
 # object_name = args[1]  # ganydeme/europa/calisto``
 # time_of_flybies = int(args[2])  # ..th flyby
@@ -27,8 +27,9 @@ plasma_scaleheight = "0.25e2"  # 単位は(km) 1.5e2/3e2/6e2
 # boundary_intensity_str = "7e-16"  # boundary_intensity_str = '1e-15'
 boundary_average_str = "10"  # boundary_intensity_str = '10'⇨ノイズフロアの10倍強度まで
 
-vertical_line_freq = np.array([0.65, 4.5])  # MHz
-# vertical_line_freq = np.array([0])  # MHz
+# vertical_line_freq = np.array([0.8, 4.5])  # MHz
+# vertical_line_freq = np.array([0.65])  # MHz
+vertical_line_freq = np.array([0])  # MHz
 # print(args[1] + args[2] + " max:" + args[3] + " scale:" + args[4])
 
 information_list = [
@@ -718,15 +719,15 @@ def Make_FT_full(
         # レイトレーシングの結果をコンタープロットで表示
         ax.contour(time_list, FREQ, DataA, levels=[0.5], colors="1.0")
         ax.contour(time_list, FREQ, DataB, levels=[0.5], colors="0.6")
-        # ax.contour(time_list, FREQ, DataC, levels=[0.5], colors="0.3")
+        ax.contour(time_list, FREQ, DataC, levels=[0.5], colors="0.35")
         ax.contour(time_list, FREQ, DataD, levels=[0.5], colors="0")
-        ax.contour(time_list, FREQ, DataC, levels=[0.5], colors="orange")
+        # ax.contour(time_list, FREQ, DataC, levels=[0.5], colors="orange")
         ax.scatter(
             ingress_time_list[1],
             ingress_time_list[0],
             c="red",
             marker=".",
-            s=8,
+            s=20,
             zorder=2,
         )
         ax.scatter(
@@ -734,7 +735,7 @@ def Make_FT_full(
             egress_time_list[0],
             c="red",
             marker=".",
-            s=8,
+            s=20,
             zorder=3,
         )
         ax.contour(
@@ -783,7 +784,7 @@ def Make_FT_full(
             ha="center",
             va="center",
         )
-        """
+
 
         # スケールハイトの動画作るときはこっち
         ax.text(
@@ -796,6 +797,7 @@ def Make_FT_full(
             ha="center",
             va="center",
         )
+        """
 
         for hline in vertical_line_freq:
             plt.hlines(
@@ -807,12 +809,21 @@ def Make_FT_full(
                 linewidths=1,
             )
             """
+            plt.hlines(
+                hline,
+                start_time,
+                end_time,
+                colors="hotpink",
+                linestyle="dashed",
+                linewidths=1,
+            )
             plt.annotate(
                 str(hline) + "MHz",
                 (start_time + 20, hline + 0.05),
                 color="hotpink",
             )
             """
+        """
         ax.set_title(
             "Maximum density "
             + highest_plasma
@@ -820,7 +831,8 @@ def Make_FT_full(
             + plasma_scaleheight
             + "(km)"
         )
-        # ax.set_title("No ionosphere")
+        """
+        ax.set_title("No ionosphere")
 
         # plt.show()
 

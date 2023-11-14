@@ -15,9 +15,9 @@ args = sys.argv
 object_name = "callisto"  # ganydeme/europa/calisto`
 
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 30  # ..th flyby
-occultaion_type = "ingress"  # 'ingress' or 'egress
-radio_type_A2D = "C"  # 'A' or 'B' or 'C' or 'D'
+time_of_flybies = 9  # ..th flyby
+occultaion_type = "egress"  # 'ingress' or 'egress
+radio_type_A2D = "D"  # 'A' or 'B' or 'C' or 'D'
 
 # object_name = args[1]  # ganydeme/europa/calisto`
 # spacecraft_name = "galileo"  # galileo/JUICE(?)
@@ -26,8 +26,7 @@ radio_type_A2D = "C"  # 'A' or 'B' or 'C' or 'D'
 # radio_type_A2D = args[1]  # 'A' or 'B' or 'C' or 'D'
 print(radio_type_A2D)
 
-# "time_difference" or "kai_2" please choose what you want to plot
-purpose = "time_difference"
+
 boundary_average_str = "10"  # boundary_intensity_str = '10'⇨ノイズフロアの10倍強度まで
 
 # %%
@@ -157,26 +156,6 @@ def mindif_density():
     return 0
 
 
-# カイ二乗計算関数・保存機能なし
-
-
-def kai2(maximum, scaleheight, kai2, frequency_n):
-    minimum_kai_position = np.argmin(kai2)
-    minimum_kai_maximum_density = maximum[minimum_kai_position]
-    minimum_kai_scale_height = scaleheight[minimum_kai_position]
-    minimum_kai_kai2 = kai2[minimum_kai_position]
-    minimum_kai_sigma2 = minimum_kai_kai2 / frequency_n
-    print(minimum_kai_maximum_density, minimum_kai_scale_height)
-
-    complete_kai2_list = kai2 / minimum_kai_sigma2
-    complete_minimum_kai = complete_kai2_list[minimum_kai_position]
-
-    delta_kai_2 = complete_kai2_list - complete_minimum_kai
-    print(frequency_n - 2)
-
-    return delta_kai_2
-
-
 def get_frequency_intensity_plotparameter(
     moon_name, flyby_time, ingress_or_egerss, radio_type
 ):
@@ -186,8 +165,8 @@ def get_frequency_intensity_plotparameter(
 
         if flyby_time == 1:
             if ingress_or_egerss == "ingress":
-                timelag_max = 80
-                timelag_min = 20
+                maxdensity_max = 420
+                maxdensity_min = -20
 
                 scale_max = 2000
                 scale_min = 30
@@ -195,12 +174,13 @@ def get_frequency_intensity_plotparameter(
                 dot_size = 40
                 fig_holizontal = 7
                 fig_vertical = 5
+                time_lag_color_bar = np.linspace(10, 60, 11)
 
                 using_frequency_range = [8.0e-1, 4.5]  # G1 ingress
 
             elif ingress_or_egerss == "egress":
-                timelag_max = 80
-                timelag_min = 20
+                maxdensity_max = 420
+                maxdensity_min = -20
 
                 scale_max = 2000
                 scale_min = 30
@@ -208,6 +188,7 @@ def get_frequency_intensity_plotparameter(
                 dot_size = 40
                 fig_holizontal = 7
                 fig_vertical = 5
+                time_lag_color_bar = np.linspace(10, 60, 11)
 
                 using_frequency_range = [6.5e-1, 4.5]  # G1 egress
 
@@ -216,35 +197,8 @@ def get_frequency_intensity_plotparameter(
 
         if flyby_time == 30:
             if ingress_or_egerss == "ingress":
-                timelag_max = 150
-                timelag_min = 20
-
-                scale_max = 1000
-                scale_min = 350
-
-                dot_size = 15
-                fig_holizontal = 7
-                fig_vertical = 5
-
-                using_frequency_range = [8.0e-1, 4.5]
-
-            elif ingress_or_egerss == "egress":
-                timelag_max = 150
-                timelag_min = 20
-
-                scale_max = 1000
-                scale_min = 350
-
-                dot_size = 15
-                fig_holizontal = 7
-                fig_vertical = 5
-
-                using_frequency_range = [6.5e-1, 4.5]
-
-        elif flyby_time == 9:
-            if ingress_or_egerss == "egress":
-                timelag_max = 150
-                timelag_min = 20
+                maxdensity_max = 1020
+                maxdensity_min = -20
 
                 scale_max = 1000
                 scale_min = 350
@@ -252,49 +206,52 @@ def get_frequency_intensity_plotparameter(
                 dot_size = 40
                 fig_holizontal = 7
                 fig_vertical = 5
+                time_lag_color_bar = np.linspace(10, 20, 11)
 
+                using_frequency_range = [8.0e-1, 4.5]
+
+            elif ingress_or_egerss == "egress":
+                maxdensity_max = 1020
+                maxdensity_min = -20
+
+                scale_max = 1000
+                scale_min = 350
+
+                dot_size = 40
+                fig_holizontal = 7
+                fig_vertical = 5
+                time_lag_color_bar = np.linspace(10, 20, 11)
+
+                using_frequency_range = [6.5e-1, 4.5]
+
+        elif flyby_time == 9:
+            if ingress_or_egerss == "egress":
+                maxdensity_max = 1020
+                maxdensity_min = -20
+
+                scale_max = 1000
+                scale_min = 350
+
+                dot_size = 40
+                fig_holizontal = 7
+                fig_vertical = 5
+                time_lag_color_bar = np.linspace(10, 60, 11)
                 using_frequency_range = [6.5e-1, 5.0]  # C9 egres
 
     # print(using_frequency_range)
 
     return (
         using_frequency_range,
-        timelag_max,
-        timelag_min,
+        maxdensity_max,
+        maxdensity_min,
         scale_max,
         scale_min,
         dot_size,
         fig_holizontal,
         fig_vertical,
         plot_scale_list,
+        time_lag_color_bar,
     )
-
-
-# 　カイ二乗値補間・プロット関数　保存機能付き
-
-
-def plot_kai2(max, scale, delta_kai, ymin, ymax):
-    # 補間するためのグリッドを作成
-    max = np.array(max)
-    scale = np.array(scale)
-    xi = np.arange(max.min(), max.max(), 25)
-    yi = np.arange(scale.min(), scale.max(), 25)
-    xi, yi = np.meshgrid(xi, yi)
-
-    # データの補間
-    zi = griddata((max, scale), delta_kai, (xi, yi), method="linear")
-
-    # 等高線の描画
-    cs = plt.contour(xi, yi, zi, levels=[10, 20, 30, 40])
-    plt.clabel(cs)
-
-    # データの散布図を重ねて描画
-    plt.scatter(max, scale, c=delta_kai, cmap="jet", vmax=100)
-
-    plt.xlim(0, max.max())
-    plt.ylim(ymin, ymax)
-    plt.yscale("log")
-    plt.colorbar()
 
 
 def fig_and_save_def(
@@ -303,9 +260,12 @@ def fig_and_save_def(
     holizontal_size,
     vertical_size,
     dot,
-    ymin,
     ymax,
+    ymin,
     plot_scale,
+    xmax,
+    xmin,
+    color_bar,
 ):
     np.savetxt(
         "../result_for_yasudaetal2022/evaluate_f-t_diagram_plot_"
@@ -347,29 +307,66 @@ def fig_and_save_def(
             "#0063fe",
             "#1203ff",
             "#040080",
+            "#000000",
         ]
     )
-    bounds = np.linspace(0, 90, 10)
-    norm = BoundaryNorm(bounds, cmap.N)
+    # bounds = np.linspace(10, 20, 11)
+    # bounds = np.linspace(10, 60, 11)
+    norm = BoundaryNorm(color_bar, cmap.N)
 
     plt.figure(figsize=(holizontal_size, vertical_size))
+    plt.rcParams["axes.axisbelow"] = True
 
     # 指定されたスケールハイトの結果のみをプロットするためのfor and if文
     # 四捨五入
+    label_swich = 1
     for i in range(len(max)):
         if np.any(plot_scale == scale[i]):
             if round(dif[i], 1) == round(np.min(dif), 1):
-                sc = plt.scatter(
-                    max[i], scale[i], s=dot, marker="*", c=dif[i], norm=norm, cmap=cmap
-                )
+                if label_swich == 1:
+                    sc = plt.scatter(
+                        max[i],
+                        scale[i],
+                        s=dot * 3,
+                        marker="*",
+                        c=dif[i],
+                        norm=norm,
+                        cmap=cmap,
+                        edgecolor="black",
+                        zorder=2,
+                        label="Best-fit parameter set",
+                    )
+                    label_swich = 0
+
+                else:
+                    sc = plt.scatter(
+                        max[i],
+                        scale[i],
+                        s=dot * 3,
+                        marker="*",
+                        c=dif[i],
+                        norm=norm,
+                        cmap=cmap,
+                        edgecolor="black",
+                        zorder=2,
+                    )
+
             else:
                 sc = plt.scatter(
-                    max[i], scale[i], s=dot, c=dif[i], norm=norm, cmap=cmap
+                    max[i],
+                    scale[i],
+                    s=dot,
+                    c=dif[i],
+                    norm=norm,
+                    cmap=cmap,
+                    zorder=1,
                 )
 
+    plt.legend(loc="lower right")
     plt.yscale("log")
+    plt.xlim(xmin, xmax)
     plt.ylim(ymin, ymax)
-    plt.colorbar(sc, label="Average time difference (sec)")
+    plt.colorbar(sc, label="Average time lag (sec)")
     plt.xlabel("Maximum density (cm-3)")
     plt.ylabel("Scale height (km)")
     plt.title(
@@ -413,20 +410,21 @@ def fig_and_save_def(
         format="jpg",
         dpi=600,
     )
-    # plt.show()
+    plt.show()
 
 
 def main():
     (
         using_frequency_range,
-        vmaximum,
-        vminimum,
+        xmaximum,
+        xminimum,
         ymaximum,
         yminimum,
         dot_size,
         fig_holizontal_size,
         fig_vertical_size,
         plot_scale_array,
+        color_bar_array,
     ) = get_frequency_intensity_plotparameter(
         object_name, time_of_flybies, occultaion_type, radio_type_A2D
     )
@@ -474,59 +472,19 @@ def main():
 
     # print(output_array)
 
-    if purpose == "time_difference":
-        fig_and_save_def(
-            output_array,
-            using_frequency_range,
-            fig_holizontal_size,
-            fig_vertical_size,
-            dot_size,
-            yminimum,
-            ymaximum,
-            plot_scale_array,
-        )  # ずれ時間とカラーマップを保存
-    ### ここまで###
-
-    elif purpose == "kai_2":
-        # カイ二乗を計算する部分
-        kai2_completed_list = list(kai2(max, scale, kai2_temp, frequency_kinds))
-        output_kai2 = np.array(kai2_completed_list)
-        # output_kai2 = output_kai2.reshape(3, int(len(output_kai2)/3)).T
-        print(output_kai2)
-
-        plot_kai2(max, scale, output_kai2, yminimum, ymaximum)
-        plt.savefig(
-            os.path.join(
-                "../result_for_yasudaetal2022/evaluate_f-t_diagram_plot_"
-                + spacecraft_name
-                + "_"
-                + object_name
-                + "_"
-                + str(time_of_flybies)
-                + "_flyby_radioint_"
-                + boundary_average_str
-                + "dB",
-                "interpolated_"
-                + spacecraft_name
-                + "_"
-                + object_name
-                + "_"
-                + str(time_of_flybies)
-                + "flyby_radiointensity_"
-                + boundary_average_str
-                + "dB_"
-                + occultaion_type
-                + "_"
-                + radio_type_A2D
-                + "_"
-                + str(using_frequency_range)
-                + "_f-t_kai2.png",
-            )
-        )
-        # plt.show()
-
-    else:
-        print("porpose is not correct")
+    fig_and_save_def(
+        output_array,
+        using_frequency_range,
+        fig_holizontal_size,
+        fig_vertical_size,
+        dot_size,
+        ymaximum,
+        yminimum,
+        plot_scale_array,
+        xmaximum,
+        xminimum,
+        color_bar_array,
+    )  # ずれ時間とカラーマップを保存
 
     return 0
 

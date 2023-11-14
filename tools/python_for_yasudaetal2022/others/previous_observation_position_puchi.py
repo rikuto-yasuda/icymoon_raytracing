@@ -9,42 +9,42 @@ import math
 
 # %%
 
-first_lat_low = -6.6
-first_lat_high = -1.2  # deg表記
-first_lon_low = 264.5
-first_lon_high = 267.5
+first_lat_low = -6.3
+first_lat_high = -1.3  # deg表記
+first_lon_low = 264.8
+first_lon_high = 267.4
 
-second_lat_low = 0
-second_lat_high = 0.1
-second_lon_low = 268.5
-second_lon_high = 268.6
+second_lat_low = -0.1
+second_lat_high = 0
+second_lon_low = 81.4
+second_lon_high = 81.5
 
 # %%
 
 
 def calc_deg(naiseki_calced):
-
     Deg = np.degrees(np.arccos(naiseki_calced))
 
     return Deg
 
 
 def naiseki_calc(lat_deg1, lon_deg1, lat_deg2, lon_deg2):
-
     lat1 = np.radians(lat_deg1)
     lon1 = np.radians(lon_deg1)
     lat2 = np.radians(lat_deg2)
     lon2 = np.radians(lon_deg2)
-    first = np.cos(lat1)*np.cos(lat2)*np.cos(lon1)*np.cos(lon2)
-    second = np.cos(lat1)*np.cos(lat2)*np.sin(lon1)*np.sin(lon2)
-    third = np.sin(lat1)*np.sin(lat2)
+    first = np.cos(lat1) * np.cos(lat2) * np.cos(lon1) * np.cos(lon2)
+    second = np.cos(lat1) * np.cos(lat2) * np.sin(lon1) * np.sin(lon2)
+    third = np.sin(lat1) * np.sin(lat2)
 
-    naiseki = first+second+third
+    naiseki = first + second + third
 
     return naiseki
 
 
-def angle_range(lat1_low, lat1_high, lon1_low, lon1_high, lat2_low, lat2_high, lon2_low, lon2_high):
+def angle_range(
+    lat1_low, lat1_high, lon1_low, lon1_high, lat2_low, lat2_high, lon2_low, lon2_high
+):
     min_angle = 180
     max_angle = 0
 
@@ -72,8 +72,16 @@ def angle_range(lat1_low, lat1_high, lon1_low, lon1_high, lat2_low, lat2_high, l
 
 
 def main():
-    max, min = angle_range(first_lat_low, first_lat_high, first_lon_low, first_lon_high,
-                           second_lat_low, second_lat_high, second_lon_low, second_lon_high)
+    max, min = angle_range(
+        first_lat_low,
+        first_lat_high,
+        first_lon_low,
+        first_lon_high,
+        second_lat_low,
+        second_lat_high,
+        second_lon_low,
+        second_lon_high,
+    )
     print(max, min)
     return 0
 

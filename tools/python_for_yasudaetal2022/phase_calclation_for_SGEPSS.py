@@ -15,8 +15,8 @@ electron_density_scale_height = 600 * (
 frequency_array = np.arange(10000, 10000000, 1)
 magnetic_field_intensity = 750 * (10**-9)  # 　磁場強度 T //ガニメデ赤道表面 750 nT 木星磁場 100 nT
 moon_radius = 2634100  # 半径 m ガニメデ半球 2634.1 km = 2634100 m
-diameter_raio = 0.2  # 楕円の長辺と短辺の比率(0-1)円偏波度の考慮はここで起こる
-offset_angle_deg = 90
+diameter_raio = 0.95  # 楕円の長辺と短辺の比率(0-1)円偏波度の考慮はここで起こる
+offset_angle_deg = 0
 
 # ガリレオ周波数バンド幅 (Hz)
 gal_freq_band = 1340
@@ -139,7 +139,7 @@ def plot_original_faraday_stripe(frequency, radio_intensity, total_electron_cont
     pcm = ax.pcolormesh(
         xx, yy, c, norm=mpl.colors.LogNorm(vmin=1e-3, vmax=10), cmap="Spectral_r"
     )
-    fig.colorbar(pcm, extend="max", label="Radio intensity (nomarized)")
+    fig.colorbar(pcm, extend="max", label="Radio intensity (normalized)")
 
     ax.set_yscale("log")
     ax.set_ylim(3e5, 2.2e6)
@@ -241,14 +241,14 @@ def plot_binning_raraday_stripe(
     ax[0].scatter(
         row_radio_frequency_array,
         (row_radio_angle_array % 180.0),
-        label="row radio",
-        s=0.001,
+        label="Model spectrum",
+        s=0.1,
         c="blue",
     )
     ax[0].scatter(
         instrment_frequency_array,
         (binning_angle_array % 180.0),
-        label="Observed results",
+        label="Estimeted observation results",
         s=50,
         c="red",
         marker="x",
@@ -256,7 +256,7 @@ def plot_binning_raraday_stripe(
     # ax[0].set_xlabel("Frequency (Hz)")
     ax[0].set_ylabel("Rotation angle (deg)", fontsize=15, fontname="Helvetica")
     ax[0].set_xlim(3e5, 2.2e6)
-    ax[0].legend(fontsize=12)
+    ax[0].legend(fontsize=12, loc="upper left")
     ax[0].set_xscale("log")
     ax[0].set_xticks([3e5, 4e5, 6e5, 10e5, 20e5])
     ax[0].set_xticklabels([0.3, 0.4, 0.6, 1.0, 2.0], fontsize=12, fontname="Helvetica")
@@ -301,27 +301,25 @@ def plot_binning_raraday_stripe(
         fontname="Helvetica",
     )
 
-    ax[1].plot(row_radio_frequency_array, row_radio_intensity_array, label="row radio")
+    ax[1].plot(
+        row_radio_frequency_array, row_radio_intensity_array, label="Model spectrum"
+    )
     ax[1].plot(
         instrment_frequency_array,
         binning_intensity_array,
-        label="observed results",
+        label="Estimeted observation results",
         c="red",
-    )
-    ax[1].scatter(
-        instrment_frequency_array,
-        binning_intensity_array,
-        label="Observed results",
-        c="red",
+        marker="o",
     )
     ax[1].set_xlabel("Frequency (MHz)", fontsize=15, fontname="Helvetica")
-    ax[1].set_ylabel("Radio intensity (nomarized)", fontsize=15, fontname="Helvetica")
-    ax[1].legend(fontsize=12)
+    ax[1].set_ylabel("Radio intensity (normalized)", fontsize=15, fontname="Helvetica")
+    ax[1].legend(fontsize=12, loc="upper left")
     # ax[1].set_title("Radio intensity", fontsize=10)
     ax[1].set_xlim(3e5, 2.2e6)
+    ax[1].set_ylim(0.5, 1.2)
     ax[1].set_xscale("log")
-    ax[1].set_yticks([0, 0.5, 1])
-    ax[1].set_yticklabels([0, 0.5, 1], fontsize=12, fontname="Helvetica")
+    ax[1].set_yticks([0.5, 1])
+    ax[1].set_yticklabels([0.5, 1], fontsize=12, fontname="Helvetica")
     ax[1].set_xticks([3e5, 4e5, 6e5, 10e5, 20e5])
     ax[1].set_xticklabels([0.3, 0.4, 0.6, 1.0, 2.0], fontsize=12, fontname="Helvetica")
 
@@ -338,7 +336,7 @@ def plot_binning_raraday_stripe(
     pcm = ax[2].pcolormesh(
         xx, yy, c, norm=mpl.colors.LogNorm(vmin=1e-3, vmax=10), cmap="Spectral_r"
     )
-    fig.colorbar(pcm, extend="max", label="Radio intensity (nomarized)")
+    fig.colorbar(pcm, extend="max", label="Radio intensity (normalized)")
 
     ax[2].set_yscale("log")
     ax[2].set_ylim(3e5, 2.2e6)
@@ -350,6 +348,59 @@ def plot_binning_raraday_stripe(
         "../result_for_yasudaetal2022/faraday_stripe/"
         + instrument
         + "/sgepss_max_"
+        + str(int(max_electron_density / 1000000))
+        + "_cc_scaleheight_"
+        + str(int(electron_density_scale_height / 1000))
+        + "_km_offset_"
+        + str(offset_angle_deg)
+        + "_deg.png"
+    )
+
+    return
+
+
+def compare_binning_raraday_stripe(
+    row_radio_frequency_array,
+    row_radio_intensity_array,
+    instrument1,
+    instrment_frequency_array1,
+    binning_intensity_array1,
+    instrument2,
+    instrment_frequency_array2,
+    binning_intensity_array2,
+):
+    fig, ax = plt.subplots(1, 1, figsize=(8, 5))
+    ax.plot(
+        row_radio_frequency_array, row_radio_intensity_array, label="Model spectrum"
+    )
+    ax.plot(
+        instrment_frequency_array1,
+        binning_intensity_array1,
+        label=str(instrument1),
+        c="red",
+        marker="o",
+    )
+    ax.plot(
+        instrment_frequency_array2,
+        binning_intensity_array2,
+        label=str(instrument2),
+        c="blue",
+        marker="o",
+    )
+
+    ax.set_xlabel("Frequency (MHz)", fontsize=15, fontname="Helvetica")
+    ax.set_ylabel("Radio intensity (normalized)", fontsize=15, fontname="Helvetica")
+    ax.legend(fontsize=12)
+    # ax.set_title("Radio intensity", fontsize=10)
+    ax.set_xlim(3e5, 2.2e6)
+    ax.set_xscale("log")
+    ax.set_yticks([0, 0.5, 1])
+    ax.set_yticklabels([0, 0.5, 1], fontsize=12, fontname="Helvetica")
+    ax.set_xticks([3e5, 4e5, 6e5, 10e5, 20e5])
+    ax.set_xticklabels([0.3, 0.4, 0.6, 1.0, 2.0], fontsize=12, fontname="Helvetica")
+
+    fig.savefig(
+        "../result_for_yasudaetal2022/faraday_stripe/compare/sgepss_max_"
         + str(int(max_electron_density / 1000000))
         + "_cc_scaleheight_"
         + str(int(electron_density_scale_height / 1000))
@@ -422,6 +473,17 @@ def main():
         JUICE_binning_angle_array,
         total_electron_content,
         "juice_rpwi",
+    )
+
+    compare_binning_raraday_stripe(
+        frequency_array,
+        radio_intensity,
+        "JUICE_RPWI",
+        JUICE_frequency_array,
+        JUICE_binning_intensity_array,
+        "Galileo_PWS",
+        galileo_frequency_array,
+        galileo_binning_intensity_array,
     )
 
 

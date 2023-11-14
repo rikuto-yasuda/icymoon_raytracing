@@ -21,7 +21,6 @@ CC_FLAG = -c -O2          \
     -D_REENTRANT          \
     -finline-functions    \
     -funroll-loops        \
-	-lboost_system        \
 
 #    -march=`arch`
 

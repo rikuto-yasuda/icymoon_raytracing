@@ -18,16 +18,16 @@ occultation_detectable_density = [3200, 5000, 2000]
 occultation_undetectable_longitude = [38]
 occultation_undetectable_latitude = [20]
 
-insitu_longitude = [105.55, 87.8]
-insitu_longitude_range = [13.15, 38.9]
+insitu_longitude = [107.75, 87.8]
+insitu_longitude_range = [10.95, 38.9]
 insitu_latitude = [30.7, 76.3]
 insitu_latitude_range = [1.2, 3.6]
 insitu_density = [100, 2500]
 
-jovian_occultation_longitude = [263.4, 106.15]
-jovian_occultation_longitude_range = [4.5, 6.05]
-jovian_occultation_latitude = [25.9, 45.1]
-jovian_occultation_latitude_range = [12.8, 5.5]
+jovian_occultation_longitude = [263.55, 105.45]
+jovian_occultation_longitude_range = [4.65, 5.35]
+jovian_occultation_latitude = [25.6, 44.3]
+jovian_occultation_latitude_range = [13.2, 4.7]
 jovian_occultation_density = [12.5, 150]
 
 

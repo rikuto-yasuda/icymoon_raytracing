@@ -10,7 +10,7 @@ from matplotlib.colors import ListedColormap, BoundaryNorm
 
 
 # %%
-
+##!!! Not latest version (latest version is /python_Jovian_radio_occultation/evaluate_ft_2.py)
 ####################################################
 object_name = "ganymede"  # ganydeme/europa/calisto`
 

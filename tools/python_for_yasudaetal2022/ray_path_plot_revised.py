@@ -10,7 +10,7 @@ object_name = "ganymede"  # europa/ganymde/callisto
 spacecraft_name = "galileo"  # galileo/JUICE(?)
 time_of_flybies = 1  # ..th flyby
 highest_plasma = "1e2"  # 単位は(/cc) 2e2/4e2/16e2
-plasma_scaleheight = "3e2"  # 単位は(km) 1.5e2/3e2/6e2
+plasma_scaleheight = "10e2"  # 単位は(km) 1.5e2/3e2/6e2
 frequency = "6.510338783264160156e5"  # MHz
 altitiude_interval = 20
 radio_type = "A"  # 複数選択可能にしたい
@@ -285,6 +285,7 @@ def spacecraft_plot():
     """
 
     # スケールハイト用を作る用
+    """
     plt.text(
         3800,
         -380,
@@ -295,6 +296,7 @@ def spacecraft_plot():
         ha="center",
         va="center",
     )
+    """
 
     plt.legend(loc="lower right")
 
