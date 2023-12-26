@@ -5,33 +5,37 @@ import numpy as np
 
 # %%
 cdf_file = cdflib.CDF(
-    '/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/expres_gll_jupiter_0d-30r_jrm09_lossc-wid1deg_5kev_19960627_v11.cdf')
+    "/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/expres_gll_jupiter_0d-30r_jrm09_lossc-wid1deg_5kev_19960627_v11.cdf"
+)
 
 # epoch frequency longtitude source position
 x = cdf_file.varget("SrcPosition", startrec=0, endrec=180)
-# %%
-'''
+
 print(x)
 
-'''
+# %%
+
 time = cdf_file.varget(
-    "Epoch")  # time (need to check galireo spacecraft position as time)
+    "Epoch"
+)  # time (need to check galireo spacecraft position as time)
+
+
 TIME2 = cdflib.cdfepoch.breakdown(time[:])
 
 fre = cdf_file.varget("Frequency")  # frequency (important for altitude)
-'''
+"""
 print(fre)
 
 long = cdf_file.varget("Src_ID_Label")  # longtitude from which magnetic field line (north 360 and south 360)
 print(long)
-'''
+"""
 
 # galireo spacecraft can catch the radio or not (if can, where the radio is emitted)
 y = cdf_file.varget("Src_Pos_Coord")
 print(y)
 
 
-idx = np.where(x > -1.0e+31)
+idx = np.where(x > -1.0e31)
 """
 print(idx)
 """
@@ -49,7 +53,7 @@ print(fres)
 print(fres.shape)
 """
 
-n = int(times.shape[0]/3)
+n = int(times.shape[0] / 3)
 
 position = x[idx].reshape(n, 3)
 timess = times.reshape(n, 3)
@@ -59,9 +63,9 @@ TIME4 = np.array(TIME3)
 fress = fres.reshape(n, 3)
 FRE = fress[:, 0]
 
-print('TIME')
+print("TIME")
 print(TIME4)
-print('FRE')
+print("FRE")
 print(FRE)
 print(position)
 
@@ -93,8 +97,9 @@ print(position5.shape)
 
 DATA = np.hstack((TIME5, np.reshape(FRE5, [FRE5.shape[0], 1]), position5))
 print(DATA.shape)
+"""
 np.savetxt(
     '/Users/yasudarikuto/research/icymoon_raytracing/tools/result_sgepss_2021/Radio_data.txt', DATA)
-
+"""
 
 # %%

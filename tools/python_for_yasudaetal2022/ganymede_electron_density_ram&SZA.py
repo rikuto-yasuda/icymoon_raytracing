@@ -21,12 +21,26 @@ occultation_closed_sza = [80]
 occultation_closed_density = [0]
 occultation_closed_density_range = [1000]
 
+# occutataion errorbar
+# junoの観測論文ではしっかりとエラー範囲が示されているので本プロットにも付与する
+occultation_error_ram = [72, 125]
+occultation_error_sza = [95, 80]
+occultation_error_density = [2000, 500]
+occultation_error_density_range = [500, 500]
+
 # in situ open magnetic field
-insitu_density = [100, 2500]
-insitu_ram = [144.6, 100.75]
-insitu_ram_range = [3.3, 1.75]
-insitu_sza = [68.4, 90.85]
-insitu_sza_range = [9.4, 7.95]
+insitu_open_density = [2500]
+insitu_open_ram = [99.1]
+# insitu_ram_range = [3.3, 1.75]
+insitu_open_sza = [83.5]
+# insitu_sza_range = [9.4, 7.95]
+
+# in situ o/c boundary region
+insitu_oc_density = [100]
+insitu_oc_ram = [143.6]
+# insitu_ram_range = [3.3, 1.75]
+insitu_oc_sza = [63.7]
+# insitu_sza_range = [9.4, 7.95]
 
 # jovian occultation open
 jovian_occultation_open_density = [150]
@@ -61,16 +75,18 @@ ax.scatter(
     s=100,
 )
 ax.errorbar(
-    occultation_closed_ram,
-    occultation_closed_density,
-    yerr=occultation_closed_density_range,
+    occultation_error_ram,
+    occultation_error_density,
+    yerr=occultation_error_density_range,
     capsize=4,
     fmt="none",
     ecolor="black",
     alpha=0.3,
 )
 
-ax.scatter(insitu_ram, insitu_density, c="red", marker="o")
+ax.scatter(insitu_open_ram, insitu_open_density, c="red", marker="o")
+ax.scatter(insitu_oc_ram, insitu_oc_density, c="green", marker="o")
+"""
 ax.errorbar(
     insitu_ram,
     insitu_density,
@@ -80,6 +96,7 @@ ax.errorbar(
     ecolor="black",
     alpha=0.3,
 )
+"""
 
 ax.scatter(
     jovian_occultation_open_ram,
@@ -129,6 +146,7 @@ ax.legend(
         "Radio occultation (open)",
         "Radio occultation (cloesd & no detectable)",
         "In situ (open)",
+        "In situ (boundary region)",
         "Jovian radio occulatation (open)",
         "Jovian radio occulatation (closed)",
     ],
@@ -166,16 +184,18 @@ ax.scatter(
     s=100,
 )
 ax.errorbar(
-    occultation_closed_sza,
-    occultation_closed_density,
-    yerr=occultation_closed_density_range,
+    occultation_error_sza,
+    occultation_error_density,
+    yerr=occultation_error_density_range,
     capsize=4,
     fmt="none",
     ecolor="black",
     alpha=0.3,
 )
 
-ax.scatter(insitu_sza, insitu_density, c="red", marker="o")
+ax.scatter(insitu_open_sza, insitu_open_density, c="red", marker="o")
+ax.scatter(insitu_oc_sza, insitu_oc_density, c="green", marker="o")
+"""
 ax.errorbar(
     insitu_sza,
     insitu_density,
@@ -185,6 +205,7 @@ ax.errorbar(
     ecolor="black",
     alpha=0.3,
 )
+"""
 
 ax.scatter(
     jovian_occultation_open_sza,
@@ -234,6 +255,7 @@ ax.legend(
         "Radio occultation (open)",
         "Radio occultation (cloesd & no detectable)",
         "In situ (open)",
+        "In situ (boundary region)",
         "Jovian radio occulatation (open)",
         "Jovian radio occulatation (closed)",
     ],
@@ -266,9 +288,9 @@ ax[0].scatter(
     s=100,
 )
 ax[0].errorbar(
-    occultation_closed_ram,
-    occultation_closed_density,
-    yerr=occultation_closed_density_range,
+    occultation_error_ram,
+    occultation_error_density,
+    yerr=occultation_error_density_range,
     capsize=4,
     fmt="none",
     ecolor="black",
@@ -280,7 +302,9 @@ ax[0].set_title("Radio occultation", fontsize=10)
 ax[0].legend(["Open magnetic field", "Closed magnetic field"], loc="upper left")
 
 
-ax[1].scatter(insitu_sza, insitu_density, c="red", marker="o")
+ax[1].scatter(insitu_open_sza, insitu_open_density, c="red", marker="o")
+ax[1].scatter(insitu_oc_sza, insitu_oc_density, c="green", marker="o")
+"""
 ax[1].errorbar(
     insitu_sza,
     insitu_density,
@@ -290,7 +314,7 @@ ax[1].errorbar(
     ecolor="black",
     alpha=0.3,
 )
-
+"""
 ax[1].set_title("In situ", fontsize=10)
 ax[1].set_xlim(0, 180)
 

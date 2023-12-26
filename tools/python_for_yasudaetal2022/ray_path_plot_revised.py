@@ -308,7 +308,7 @@ def spacecraft_plot():
 
     for i, label in enumerate(annotations):
         plt.annotate(
-            label, (X[i], Z[i]), xytext=(X[i] - 150, Z[i] - 70), annotation_clip=None
+            label, (X[i], Z[i]), xytext=(X[i] - 320, Z[i] - 50), annotation_clip=None
         )
 
 
@@ -353,7 +353,7 @@ def main():
 
     raytrace_lowest_altitude = Lowest[freq]
     raytrace_highest_altitude = Highest[freq]
-    plt.figure(figsize=(16, 4))
+    plt.figure(figsize=(9, 4))
     plt.title(
         "Maximum density "
         + highest_plasma
@@ -365,8 +365,8 @@ def main():
     )
     plt.xlabel("x (km) / tangential direction")
     plt.ylabel("z (km) / normal direction")
-    plt.xlim(-2000, 6000)
-    plt.ylim(-500, 700)
+    plt.xlim(-1500, 5500)
+    plt.ylim(-200, 700)
 
     print(raytrace_lowest_altitude)
 
@@ -383,7 +383,7 @@ def main():
     n = -1600 + t * 0
     plt.plot(t, n, color="black")
     plt.fill_between(t, c, n, facecolor="black")
-    plt.annotate("Ganymede", (-450, -300), color="white", fontsize="xx-large")
+    plt.annotate("Ganymede", (-680, -160), color="white", fontsize="xx-large")
     spacecraft_plot()
     plt.savefig(
         "../result_for_yasudaetal2022/ray_path_plot_for_paper/maximum density "

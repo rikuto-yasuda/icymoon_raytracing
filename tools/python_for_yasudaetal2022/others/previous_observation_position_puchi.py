@@ -9,15 +9,15 @@ import math
 
 # %%
 
-first_lat_low = -6.3
-first_lat_high = -1.3  # deg表記
-first_lon_low = 264.8
-first_lon_high = 267.4
+first_lat_low = 30.4
+first_lat_high = 30.5  # deg表記
+first_lon_low = 113.4
+first_lon_high = 113.5
 
-second_lat_low = -0.1
-second_lat_high = 0
-second_lon_low = 81.4
-second_lon_high = 81.5
+second_lat_low = -1.9
+second_lat_high = -1.8
+second_lon_low = 171.2
+second_lon_high = 171.3
 
 # %%
 

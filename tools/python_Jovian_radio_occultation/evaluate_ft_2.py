@@ -15,9 +15,9 @@ args = sys.argv
 object_name = "callisto"  # ganydeme/europa/calisto`
 
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 9  # ..th flyby
-occultaion_type = "egress"  # 'ingress' or 'egress
-radio_type_A2D = "D"  # 'A' or 'B' or 'C' or 'D'
+time_of_flybies = 30  # ..th flyby
+occultaion_type = "ingress"  # 'ingress' or 'egress
+radio_type_A2D = "A"  # 'A' or 'B' or 'C' or 'D'
 
 # object_name = args[1]  # ganydeme/europa/calisto`
 # spacecraft_name = "galileo"  # galileo/JUICE(?)
