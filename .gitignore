@@ -12,6 +12,7 @@ src_venv/rtc/src/testing.h.gch
 src_venv/rtc/model/StdAfx.h.gch
 src_venv/rtc/planet/StdAfx.h.gch
 src_venv/rtc/testing/testing.h.gch
+src_venv/rtc/template/stdlib.h.gc
 tools/result_moon_flyby
 tools/python_moon_flyby
 juice/results
