@@ -21,6 +21,7 @@ src_venv/rtc_moon/src/testing.h.gch
 src_venv/rtc_moon/model/StdAfx.h.gch
 src_venv/rtc_moon/planet/StdAfx.h.gch
 src_venv/rtc_moon/testing/testing.h.gch
+src_venv/rtc/template/stdlib.h.gch
 src_local_env/rtc/tools/map_model/
 src_local_env/rtc/src/StdAfx.h.gch
 src_local_env/rtc/src/testing.h.gch
