@@ -17,8 +17,8 @@ rng = np.random.default_rng()
 object_name = "ganymede"  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
 time_of_flybies = 1  # ..th flyby
-highest_plasma = "0.25e2"  # 単位は(/cc) 2e2/4e2/16e22 #12.5 13.5
-plasma_scaleheight = "10e2"  # 単位は(km) 1.5e2/3e2/6e2
+highest_plasma = "5.5e2"  # 単位は(/cc) 2e2/4e2/16e22 #12.5 13.5
+plasma_scaleheight = "0.25e2"  # 単位は(km) 1.5e2/3e2/6e2
 # highest_plasma = args[1]  # 単位は(/cc) 2e2/4e2/16e22 #12.5 13.5
 # plasma_scaleheight = args[2]  # 単位は(km) 1.5e2/3e2/6e2
 
@@ -231,20 +231,20 @@ def Judgemet_array(data):
     before_nonjudge_array = np.intersect1d(
         np.where(data[:, 0] <= judge_start_time[0]),
         np.where(data[:, 1] < judge_start_time[1]),
-    ) 
+    )
 
     after_nonjudge_array = np.intersect1d(
         np.where(data[:, 0] >= judge_end_time[0]),
         np.where(data[:, 1] > judge_end_time[1]),
     )
 
-    if len(before_nonjudge_array)==0:
-       before_nonjudge_number = 0
+    if len(before_nonjudge_array) == 0:
+        before_nonjudge_number = 0
 
     else:
         before_nonjudge_number = before_nonjudge_array[-1]
 
-    if len(after_nonjudge_array)==0:
+    if len(after_nonjudge_array) == 0:
         after_nonjudge_number = len(data)
 
     else:
@@ -447,8 +447,8 @@ def lineNotify(message):
 
 def main():
     # MakeFolder()  # フォルダ作成　基本的にはoccultation_range_plot.py で移動しているから基本使わない
-    
-    # MoveFile()  # ファイル移動
+
+    MoveFile()  # ファイル移動
 
     (
         judge_array,

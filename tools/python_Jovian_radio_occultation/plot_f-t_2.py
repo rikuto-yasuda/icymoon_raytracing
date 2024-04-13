@@ -13,12 +13,12 @@ import sys
 # あらかじめ ../result_sgepss2021/~/~ に必要なレイトレーシング結果とパラメータセットを入れること
 args = sys.argv
 
-object_name = "callisto"  # ganydeme/europa/calisto``
+object_name = "ganymede"  # ganydeme/europa/calisto``
 
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 30  # ..th flyby
-highest_plasma = "0e2"  # 単位は(/cc) 2e2/4e2/16e22
-plasma_scaleheight = "4e2"  # 単位は(km) 1.5e2/3e2/6e2
+time_of_flybies = 1  # ..th flyby
+highest_plasma = "3.5e2"  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = "0.25e2"  # 単位は(km) 1.5e2/3e2/6e2
 
 # object_name = args[1]  # ganydeme/europa/calisto``
 # time_of_flybies = int(args[2])  # ..th flyby
@@ -562,7 +562,9 @@ def Make_FT_full(
 ):
     time_step = Time_step(raytrace_time_information)
 
-    time_list = np.arange(0, time_step, 1)  # エクスプレスコードで計算している時間幅（sec)を60で割る
+    time_list = np.arange(
+        0, time_step, 1
+    )  # エクスプレスコードで計算している時間幅（sec)を60で割る
 
     # ガリレオ探査機のデータ取得開始時刻からの経過時間（sec) , ガリレオ探査機のデータ取得周波数（MHz), ガリレオ探査機の取得した電波強度（代入したデータと同じ単位）
     (
@@ -947,7 +949,9 @@ def ingress(data, raytrace_time_information):
         _type_: _レイトレーシングデータにおける掩蔽開始時刻け[[周波数一覧][掩蔽開始時刻一覧]]の二次元データ_
     """
     time_step = Time_step(raytrace_time_information)
-    raytrace_time = np.arange(0, time_step, 1)  # レイトレーシング計算した間隔での時間リスト（秒）
+    raytrace_time = np.arange(
+        0, time_step, 1
+    )  # レイトレーシング計算した間隔での時間リスト（秒）
 
     # csvファイルから読み取ったstart時刻から掩蔽中心時刻までの差分（秒）を計算
     middle_time = (
@@ -974,7 +978,9 @@ def ingress(data, raytrace_time_information):
         A = over_judge_time_list[over_judge_time_list < occulted_time]
 
         if len(A) > 0:
-            a = A[len(A) - 1]  # 電波がうかっている且つ掩蔽中心時刻より早い且つその中で一番遅いものの配列番号
+            a = A[
+                len(A) - 1
+            ]  # 電波がうかっている且つ掩蔽中心時刻より早い且つその中で一番遅いものの配列番号
             ingress_time_list = np.append(
                 ingress_time_list, ((raytrace_time[a] + raytrace_time[a + 1]) / 2)
             )  # その時刻とその次の時刻の中心時刻を配列に追加
@@ -1003,7 +1009,9 @@ def egress(data, raytrace_time_information):
     """
 
     time_step = Time_step(raytrace_time_information)
-    raytrace_time = np.arange(0, time_step, 1)  # レイトレーシング計算した間隔での時間リスト（秒）
+    raytrace_time = np.arange(
+        0, time_step, 1
+    )  # レイトレーシング計算した間隔での時間リスト（秒）
 
     # csvファイルから読み取ったstart時刻から掩蔽中心時刻までの差分（秒）を計算
     middle_time = (
@@ -1028,7 +1036,9 @@ def egress(data, raytrace_time_information):
         B = over_judge_time_list[over_judge_time_list > occulted_time]
 
         if len(B) > 0:
-            b = B[0]  # 電波がうかっている且つ掩蔽中心時刻より遅い且つその中で一番早いものの配列番号
+            b = B[
+                0
+            ]  # 電波がうかっている且つ掩蔽中心時刻より遅い且つその中で一番早いものの配列番号
             egress_time_list = np.append(
                 egress_time_list, ((raytrace_time[b] + raytrace_time[b - 1]) / 2)
             )  # その時刻とその前の時刻の中心時刻を配列に追加
@@ -1112,7 +1122,9 @@ def Evaluate_ionosphere_density(raytrace_data, galileo_data):
     """
 
     time_defference_index = galileo_data.copy()
-    num = galileo_data.shape[1]  # 2（周波数・時間）✖️(ガリレオ周波数の種類分)の２つ目の要素　⇨ ガリレオ周波数の種類分
+    num = galileo_data.shape[
+        1
+    ]  # 2（周波数・時間）✖️(ガリレオ周波数の種類分)の２つ目の要素　⇨ ガリレオ周波数の種類分
 
     # レイトレーシングの周波数種類ごとに
     for i in range(num):

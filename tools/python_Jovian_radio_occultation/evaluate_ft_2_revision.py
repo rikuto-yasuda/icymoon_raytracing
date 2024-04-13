@@ -12,12 +12,19 @@ import sys
 args = sys.argv
 
 ####################################################
-object_name = "ganymede"  # ganydeme/europa/calisto`
+# object_name = "ganymede"  # ganyindeme/europa/callisto`
+object_name = "callisto"  # ganyindeme/europa/callisto`
 
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 1  # ..th flyby
-occultaion_type = "egress"  # 'ingress' or 'egress
-radio_type_A2D = "A"  # 'A' or 'B' or 'C' or 'D'
+# time_of_flybies = 9  # ..th flyby
+time_of_flybies = 30  # ..th flyby
+
+occultaion_type = "ingress"  # 'ingress' or 'egress
+
+radio_type_A2D = "C"  # 'A' or 'B' or 'C' or 'D'
+# radio_type_A2D = "C"  # 'A' or 'B' or 'C' or 'D'
+
+uncertainty_off = "off"
 
 # object_name = args[1]  # ganydeme/europa/calisto`
 # spacecraft_name = "galileo"  # galileo/JUICE(?)
@@ -161,8 +168,8 @@ def get_frequency_intensity_plotparameter(
 ):
     # print(moon_name, flyby_time, ingress_or_egerss, radio_type)
     if moon_name == "ganymede":
-        plot_scale_list = np.array([50, 100, 300, 600, 1000, 1500])
-        # plot_scale_list = np.array([25, 50, 100, 300, 600, 1000, 1500])
+        # plot_scale_list = np.array([50, 100, 300, 600, 1000, 1500])
+        plot_scale_list = np.array([25, 50, 100, 300, 600, 1000, 1500])
 
         if flyby_time == 1:
             if ingress_or_egerss == "ingress":
@@ -170,7 +177,7 @@ def get_frequency_intensity_plotparameter(
                 maxdensity_min = -20
 
                 scale_max = 2000
-                scale_min = 30
+                scale_min = 20
 
                 dot_size = 40
                 fig_holizontal = 7
@@ -178,15 +185,15 @@ def get_frequency_intensity_plotparameter(
                 time_lag_color_bar = np.linspace(10, 60, 11)
 
                 using_frequency_range = [8.0e-1, 4.5]  # G1 ingress
+                contor_dif = [30, 40, 50]
+                uncertainty = 36.3  # typeB
 
             elif ingress_or_egerss == "egress":
                 maxdensity_max = 420
-                # maxdensity_max = 520
                 maxdensity_min = -20
 
                 scale_max = 2000
-                scale_min = 30
-                # scale_min = 10
+                scale_min = 20
 
                 dot_size = 40
                 fig_holizontal = 7
@@ -194,6 +201,8 @@ def get_frequency_intensity_plotparameter(
                 time_lag_color_bar = np.linspace(10, 60, 11)
 
                 using_frequency_range = [6.5e-1, 4.5]  # G1 egress
+                contor_dif = [20, 30, 40]
+                uncertainty = 24.4  # typeA
 
     if moon_name == "callisto":
         plot_scale_list = np.array([400, 600, 900])
@@ -212,6 +221,8 @@ def get_frequency_intensity_plotparameter(
                 time_lag_color_bar = np.linspace(10, 20, 11)
 
                 using_frequency_range = [8.0e-1, 4.5]
+                contor_dif = [10, 11, 12, 13]
+                uncertainty = 5.5  # typeC
 
             elif ingress_or_egerss == "egress":
                 maxdensity_max = 1020
@@ -240,6 +251,8 @@ def get_frequency_intensity_plotparameter(
                 fig_vertical = 5
                 time_lag_color_bar = np.linspace(10, 60, 11)
                 using_frequency_range = [6.5e-1, 5.0]  # C9 egres
+                contor_dif = [35, 40, 45]
+                uncertainty = 9.7  # typeD
 
     # print(using_frequency_range)
 
@@ -254,6 +267,8 @@ def get_frequency_intensity_plotparameter(
         fig_vertical,
         plot_scale_list,
         time_lag_color_bar,
+        contor_dif,
+        uncertainty,
     )
 
 
@@ -269,6 +284,8 @@ def fig_and_save_def(
     xmax,
     xmin,
     color_bar,
+    contor_dif,
+    uncertainty,
 ):
     np.savetxt(
         "../result_for_yasudaetal2022/evaluate_f-t_diagram_plot_"
@@ -323,8 +340,15 @@ def fig_and_save_def(
     # 指定されたスケールハイトの結果のみをプロットするためのfor and if文
     # 四捨五入
     label_swich = 1
+    max_array = np.empty(0)
+    scale_array = np.empty(0)
+    dif_array = np.empty(0)
+
     for i in range(len(max)):
         if np.any(plot_scale == scale[i]):
+            max_array = np.append(max_array, max[i])
+            scale_array = np.append(scale_array, scale[i])
+            dif_array = np.append(dif_array, dif[i])
             if round(dif[i], 1) == round(np.min(dif), 1):
                 if label_swich == 1:
                     sc = plt.scatter(
@@ -333,12 +357,16 @@ def fig_and_save_def(
                         s=dot * 3,
                         marker="*",
                         c=dif[i],
-                        norm=norm,
-                        cmap=cmap,
+                        cmap="rainbow_r",
                         edgecolor="black",
                         zorder=2,
+                        vmin=color_bar[0],
+                        vmax=color_bar[-1],
                         label="Best-fit parameter set",
                     )
+                    best_max_value = max[i]
+                    best_scale_value = scale[i]
+
                     label_swich = 0
 
                 else:
@@ -348,9 +376,10 @@ def fig_and_save_def(
                         s=dot * 3,
                         marker="*",
                         c=dif[i],
-                        norm=norm,
-                        cmap=cmap,
+                        cmap="rainbow_r",
                         edgecolor="black",
+                        vmin=color_bar[0],
+                        vmax=color_bar[-1],
                         zorder=2,
                     )
 
@@ -360,16 +389,117 @@ def fig_and_save_def(
                     scale[i],
                     s=dot,
                     c=dif[i],
-                    norm=norm,
-                    cmap=cmap,
+                    cmap="rainbow_r",
                     zorder=1,
+                    vmin=color_bar[0],
+                    vmax=color_bar[-1],
                 )
 
-    plt.legend(loc="lower right")
+    x_int_array = np.arange(max_array.min(), max_array.max(), 0.5)
+    y_int_array = np.arange(scale_array.min(), scale_array.max(), 0.5)
+    xi, yi = np.meshgrid(x_int_array, y_int_array)
+
+    # データの補間
+    zi = griddata((max_array, scale_array), dif_array, (xi, yi), method="cubic")
+    contour_plot = plt.contour(xi, yi, zi, levels=contor_dif, colors="gray")
+    clabels = plt.clabel(
+        contour_plot, inline=True, fontsize=8, colors="black", fmt="%1.1f"
+    )
+
+    if uncertainty_off != "off":
+        uncertainty_color = "pink"
+        contour_plot2 = plt.contour(
+            xi,
+            yi,
+            zi,
+            levels=np.array([uncertainty]),
+            colors=uncertainty_color,
+        )
+
+        clabels = plt.clabel(
+            contour_plot2, inline=True, fontsize=8, colors="black", fmt="%1.1f"
+        )
+
+    if object_name == "ganymede" and uncertainty_off != "off":
+        plt.plot(
+            np.arange(1, 3, 1),
+            np.arange(1, 3, 1),
+            c=uncertainty_color,
+            label="Uncertainty range",
+        )
+        best_max_pos = np.where(x_int_array == best_max_value)[0]
+        best_scale_pos = np.where(y_int_array == best_scale_value)[0]
+
+        x_value_range = x_int_array[np.where(zi[best_scale_pos] < uncertainty)[1]]
+        y_value_range = np.where(zi[:, best_max_pos].T[0] < uncertainty)[0]
+
+        start_indices = np.where(y_value_range == best_scale_pos)[
+            0
+        ]  # 10が現れるインデックスを取得
+        sequences = []  # 単調数列を格納するリスト
+
+        # 各10を含む単調数列を取得
+        for start_index in start_indices:
+            sequence = [y_value_range[start_index]]  # 数列の最初の要素を追加
+            current_index = start_index
+
+            # 10を含む単調数列を前方に拡張
+            while (
+                current_index > 0
+                and y_value_range[current_index] - y_value_range[current_index - 1] == 1
+            ):
+                sequence.insert(0, y_value_range[current_index - 1])
+                current_index -= 1
+
+            current_index = start_index
+
+            # 10を含む単調数列を後方に拡張
+            while (
+                current_index < len(y_value_range) - 1
+                and y_value_range[current_index + 1] - y_value_range[current_index] == 1
+            ):
+                sequence.append(y_value_range[current_index + 1])
+                current_index += 1
+
+            sequences.append(sequence)
+
+            print("density " + str(x_value_range[0]) + "~" + str(x_value_range[-1]))
+            print(
+                "scale "
+                + str(y_int_array[sequences[0][0]])
+                + "~"
+                + str(y_int_array[sequences[0][-1]])
+            )
+
+            plt.errorbar(
+                best_max_value,
+                best_scale_value,
+                xerr=[
+                    [best_max_value - x_value_range[0]],
+                    [x_value_range[-1] - best_max_value],
+                ],
+                yerr=[
+                    [best_scale_value - y_int_array[sequences[0][0]]],
+                    [y_int_array[sequences[0][-1]] - best_scale_value],
+                ],
+                fmt=".",
+                markersize=0.001,
+                ecolor="black",
+                elinewidth=0.5,
+                markeredgecolor="black",
+                color="w",
+                capsize=3,
+            )
+    if object_name == "ganymede":
+        plt.legend(bbox_to_anchor=(1, 0.55))
+
+    if object_name == "callisto":
+        plt.legend(loc="lower right")
+
     plt.yscale("log")
     plt.xlim(xmin, xmax)
     plt.ylim(ymin, ymax)
-    plt.colorbar(sc, label="Average time lag (sec)")
+    plt.colorbar(sc, label="Average time difference (sec)")
     plt.xlabel("Maximum density (cm-3)")
     plt.ylabel("Scale height (km)")
     plt.title(
@@ -383,36 +513,69 @@ def fig_and_save_def(
         + str(frequency_range)
         + "MHz_time lags"
     )
-    plt.savefig(
-        os.path.join(
-            "../result_for_yasudaetal2022/evaluate_f-t_diagram_plot_"
-            + spacecraft_name
-            + "_"
-            + object_name
-            + "_"
-            + str(time_of_flybies)
-            + "_flyby_radioint_"
-            + boundary_average_str
-            + "dB",
-            "interpolated_"
-            + spacecraft_name
-            + "_"
-            + object_name
-            + "_"
-            + str(time_of_flybies)
-            + "flyby_radiointensity_"
-            + boundary_average_str
-            + "dB_"
-            + occultaion_type
-            + "_"
-            + radio_type_A2D
-            + "_"
-            + str(frequency_range)
-            + "_f-t_evaluate.jpg",
-        ),
-        format="jpg",
-        dpi=600,
-    )
+    if uncertainty_off != "off":
+        plt.savefig(
+            os.path.join(
+                "../result_for_yasudaetal2022/evaluate_f-t_diagram_plot_"
+                + spacecraft_name
+                + "_"
+                + object_name
+                + "_"
+                + str(time_of_flybies)
+                + "_flyby_radioint_"
+                + boundary_average_str
+                + "dB",
+                "interpolated_"
+                + spacecraft_name
+                + "_"
+                + object_name
+                + "_"
+                + str(time_of_flybies)
+                + "flyby_radiointensity_"
+                + boundary_average_str
+                + "dB_"
+                + occultaion_type
+                + "_"
+                + radio_type_A2D
+                + "_"
+                + str(frequency_range)
+                + "_f-t_evaluate_for_Fig7.jpg",
+            ),
+            format="jpg",
+            dpi=600,
+        )
+    else:
+        plt.savefig(
+            os.path.join(
+                "../result_for_yasudaetal2022/evaluate_f-t_diagram_plot_"
+                + spacecraft_name
+                + "_"
+                + object_name
+                + "_"
+                + str(time_of_flybies)
+                + "_flyby_radioint_"
+                + boundary_average_str
+                + "dB",
+                "interpolated_"
+                + spacecraft_name
+                + "_"
+                + object_name
+                + "_"
+                + str(time_of_flybies)
+                + "flyby_radiointensity_"
+                + boundary_average_str
+                + "dB_"
+                + occultaion_type
+                + "_"
+                + radio_type_A2D
+                + "_"
+                + str(frequency_range)
+                + "_f-t_evaluate.jpg",
+            ),
+            format="jpg",
+            dpi=600,
+        )
+
     plt.show()
 
 
@@ -428,6 +591,8 @@ def main():
         fig_vertical_size,
         plot_scale_array,
         color_bar_array,
+        contor_dif,
+        uncertainty,
     ) = get_frequency_intensity_plotparameter(
         object_name, time_of_flybies, occultaion_type, radio_type_A2D
     )
@@ -487,6 +652,8 @@ def main():
         xmaximum,
         xminimum,
         color_bar_array,
+        contor_dif,
+        uncertainty,
     )  # ずれ時間とカラーマップを保存
 
     return 0
