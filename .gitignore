@@ -32,6 +32,12 @@ src_local_env/rtc/src/testing.h.gch
 src_local_env/rtc/model/StdAfx.h.gch
 src_local_env/rtc/planet/StdAfx.h.gch
 src_local_env/rtc/testing/testing.h.gch
+src_local_env/rtc_3D/tools/map_model/
+src_local_env/rtc_3D/src/StdAfx.h.gch
+src_local_env/rtc_3D/src/testing.h.gch
+src_local_env/rtc_3D/model/StdAfx.h.gch
+src_local_env/rtc_3D/planet/StdAfx.h.gch
+src_local_env/rtc_3D/testing/testing.h.gch
 tools/python_for_3D_occultation/3d_ionospheric_model/Europa
 tools/python_for_3D_occultation/3d_ionospheric_model/Ganymede
 tools/python_for_3D_occultation/3d_ionospheric_model/LatHyS_simu
