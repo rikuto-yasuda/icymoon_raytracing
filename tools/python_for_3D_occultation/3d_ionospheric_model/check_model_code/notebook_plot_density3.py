@@ -740,7 +740,7 @@ def added_gaussinan_diffusion_function(X, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9
     )
 
     total = a0 + ((a1 + f) * np.exp(-1 * ((r_array / a9) ** np.abs(a10))))
-    print(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10)
+    # print(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10)
 
     return total
 
@@ -935,7 +935,7 @@ def density_fitting(src_dir, typefile, rundate, diagtime):
     theta_fitted = theta_modeled[not_nan_indices]
     phi_fitted = phi_modeled[not_nan_indices]
 
-    fitted_pos = np.where((1 < r_fitted) & (r_fitted < 3))[0]
+    fitted_pos = np.where((1 < r_fitted) & (r_fitted < 2))[0]
     Dn_fitted = Dn_fitted[fitted_pos]
     # print(Dn_fitted)
     r_fitted = r_fitted[fitted_pos]
@@ -980,12 +980,12 @@ def density_fitting(src_dir, typefile, rundate, diagtime):
         0,
         0,
         1,
-        100,
+        0.1,
         1,
     )  # 初期値
     A0_bound = (
-        [0, 0, 0, 0, -np.pi, -np.inf, -np.inf, -np.inf, -np.inf, 0, 0],
-        [100, 400, 1000, np.pi, 0, np.inf, np.inf, np.inf, np.inf, np.inf, 10],
+        [10, 10, 10, 0.8, -np.pi, -100, -100, -100, -100, 0, 0],
+        [100, 400, 1000, 2, 0, 100, 100, 100, 100, 1, 10],
     )  # 拘束条件
 
     input_param = np.array([r_fitted, theta_fitted, phi_fitted])

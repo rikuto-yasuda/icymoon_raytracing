@@ -636,6 +636,8 @@ def plot_in_yz_plane_simple(
 
 
 # %%
+
+
 def cartesian_to_spherical(x, y, z):
     """
     Converts Cartesian coordinates to spherical coordinates.
@@ -903,6 +905,378 @@ def density_fitting(src_dir, typefile, rundate, diagtime):
         y_pos=0,
         z_pos=0,
     )
+
+    """
+    # position array from moon center meshgrid (unit..Re)
+    x_meshgrid, y_meshgrid, z_meshgrid = np.meshgrid(
+        x_array_moon_center_Re,
+        y_array_moon_center_Re,
+        z_array_moon_center_Re,
+        indexing="ij",
+    )
+
+    x_meshgrid = np.matrix.transpose(x_meshgrid)
+    y_meshgrid = np.matrix.transpose(y_meshgrid)
+    z_meshgrid = np.matrix.transpose(z_meshgrid)
+
+    x_meshgrid_1d = x_meshgrid.flatten()
+    y_meshgrid_1d = y_meshgrid.flatten()
+    z_meshgrid_1d = z_meshgrid.flatten()
+
+    Dn_1d = Dn.flatten()
+    # print(Dn_1d)
+    not_nan_indices = np.where(~np.isnan(Dn_1d))[0]
+
+    r_modeled, theta_modeled, phi_modeled = cartesian_to_spherical(
+        x_meshgrid_1d, y_meshgrid_1d, z_meshgrid_1d
+    )
+
+    Dn_fitted = Dn_1d[not_nan_indices]
+    # print(Dn_fitted)
+    r_fitted = r_modeled[not_nan_indices]
+    # print(r_fitted)
+    theta_fitted = theta_modeled[not_nan_indices]
+    phi_fitted = phi_modeled[not_nan_indices]
+
+    fitted_pos = np.where((1 < r_fitted) & (r_fitted < 3))[0]
+    Dn_fitted = Dn_fitted[fitted_pos]
+    # print(Dn_fitted)
+    r_fitted = r_fitted[fitted_pos]
+    theta_fitted = theta_fitted[fitted_pos]
+    phi_fitted = phi_fitted[fitted_pos]
+
+    """
+    plt.scatter(
+        surface_phi,
+        surface_theta,
+        c=surface_Dn,
+        cmap="jet",
+        vmin=0,
+        vmax=1000,
+    )
+
+    plt.colorbar()
+    print(surface_phi[np.argmax(surface_Dn)], surface_theta[np.argmax(surface_Dn)])
+
+    plt.scatter(
+        surface_phi[np.argmax(surface_Dn)],
+        surface_theta[np.argmax(surface_Dn)],
+        s=30,
+        marker="*",
+        vmin=0,
+        vmax=1000,
+    )
+
+    plt.show()
+    """
+    # a0 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    #  theta_phi_array=np.array([theta-a[3],phi-a[4]])
+    #  matrix = np.array([[a[5], a[6]], [a[7], a[8]]])
+    # total = a[0] + (a[1] + (a[2] / (np.abs(np.linalg.det(matrix))**1/2)) * np.exp((-1 / 2) * theta_phi_array.T * np.linalg.inv(matrix) * theta_phi_array))* np.exp(-1 * (r / a[9]) ** a[10])
+    A0_ini = (
+        20,
+        200,
+        800,
+        1.4404480651226226,
+        -2.5899376710612465,
+        1,
+        0,
+        0,
+        1,
+        100,
+        1,
+    )  # 初期値
+    A0_bound = (
+        [0, 0, 0, 0, -np.pi, -np.inf, -np.inf, -np.inf, -np.inf, 0, 0],
+        [100, 400, 1000, np.pi, 0, np.inf, np.inf, np.inf, np.inf, np.inf, 10],
+    )  # 拘束条件
+
+    input_param = np.array([r_fitted, theta_fitted, phi_fitted])
+    # leastsqの戻り値は、最適化したパラメータのリストと、最適化の結果
+    start = time.time()  # 現在時刻（処理開始前）を取得
+    print("start")
+    A1, pcov = curve_fit(
+        added_gaussinan_diffusion_function,
+        input_param,
+        Dn_fitted,
+        p0=A0_ini,
+        maxfev=10000000,
+        bounds=A0_bound,
+    )
+
+    end = time.time()  # 現在時刻（処理完了後）を取得
+    time_diff = end - start  # 処理完了後の時刻から処理開始前の時刻を減算する
+    print(time_diff)  # 処理にかかった時間データを使用
+    print(A1)
+    r_meshgrid, theta_meshgrid, phi_meshgrid = cartesian_to_spherical(
+        x_meshgrid, y_meshgrid, z_meshgrid
+    )
+
+    fit_dense = np.zeros([len(Dn), len(Dn[0]), len(Dn[0][0])])
+    for z in range(len(Dn)):
+        print(z)
+        for y in range(len(Dn[0])):
+            for x in range(len(Dn[0][0])):
+                r, theta, phi = cartesian_to_spherical(
+                    x_array_moon_center_Re[x],
+                    y_array_moon_center_Re[y],
+                    z_array_moon_center_Re[z],
+                )
+                imput = np.array([r, theta, phi])
+
+                fit_dense[z, y, x] = added_gaussinan_diffusion_function(
+                    imput,
+                    A1[0],
+                    A1[1],
+                    A1[2],
+                    A1[3],
+                    A1[4],
+                    A1[5],
+                    A1[6],
+                    A1[7],
+                    A1[8],
+                    A1[9],
+                    A1[10],
+                )
+    np.save("../Europa/fiting_dense_1", fit_dense)
+
+    D1 = Dn - fit_dense
+    np.save("../Europa/error_fiting_dense_1", D1)
+    # print(x_array_moon_center_Reｐ
+    plot_in_xy_plane(
+        x_array_moon_center_Re,
+        y_array_moon_center_Re,
+        z_array_moon_center_Re,
+        fit_dense,
+        1,
+        [-4, 4],
+        [-4, 4],
+        z_pos=0,
+    )
+    plot_in_xz_plane(
+        x_array_moon_center_Re,
+        y_array_moon_center_Re,
+        z_array_moon_center_Re,
+        fit_dense,
+        1,
+        [-4, 4],
+        [-4, 4],
+        y_pos=0,
+    )
+    plot_in_yz_plane(
+        x_array_moon_center_Re,
+        y_array_moon_center_Re,
+        z_array_moon_center_Re,
+        fit_dense,
+        1,
+        [-4, 4],
+        [-4, 4],
+        x_pos=0,
+    )
+
+    plot_in_xy_plane_simple(
+        x_array_moon_center_Re,
+        y_array_moon_center_Re,
+        z_array_moon_center_Re,
+        D1,
+        1,
+        [-4, 4],
+        [-4, 4],
+        z_pos=0,
+    )
+    plot_in_xz_plane_simple(
+        x_array_moon_center_Re,
+        y_array_moon_center_Re,
+        z_array_moon_center_Re,
+        D1,
+        1,
+        [-4, 4],
+        [-4, 4],
+        y_pos=0,
+    )
+    plot_in_yz_plane_simple(
+        x_array_moon_center_Re,
+        y_array_moon_center_Re,
+        z_array_moon_center_Re,
+        D1,
+        1,
+        [-4, 4],
+        [-4, 4],
+        x_pos=0,
+    )
+
+
+def density_dif_plot(src_dir, typefile, rundate, diagtime):
+    for i in range(len(typefile)):
+        if i == 0:
+            ncfile = (
+                src_dir + typefile[i] + rundate + "_t" + diagtime + ".nc"
+            )  #'_extract_4Re_grid.nc'#
+
+            ncid = Dataset(ncfile)
+            var_nc = ncid.variables
+            # print(var_nc)
+
+            centr = var_nc["s_centr"][:]  # 3dim: planet center position
+            radius = var_nc["r_planet"][:]  # 1dim: planet radius
+
+            gs = var_nc["gstep"][:]  # space_dim(depend on the results?): grid length?
+            nptot = var_nc["nptot"][:]  # number of particles in the simulation
+            Dn = var_nc["Density"][:]  # /cc [z_num][y_num][x_num]
+            # nrm        = var_nc['phys_density'][:]
+            nrm_len = var_nc["phys_length"][:]
+            # X_axis = var_nc["X_axis"][:]
+            # Y_axis = var_nc["Y_axis"][:]
+            # Z_axis = var_nc["Z_axis"][:]
+
+        else:
+            ncfile1 = (
+                src_dir + typefile[i] + rundate + "_t" + diagtime + ".nc"
+            )  #'_extract_4Re_grid.nc'#
+            ncid1 = Dataset(ncfile1)
+            var_nc1 = ncid1.variables
+
+            ncfile0 = (
+                src_dir + typefile[i - 1] + rundate + "_t" + diagtime + ".nc"
+            )  #'_extract_4Re_grid.nc'#
+            ncid0 = Dataset(ncfile1)
+            var_nc0 = ncid1.variables
+
+            if (
+                np.allclose(var_nc0["s_centr"][:], var_nc1["s_centr"][:])
+                & np.allclose(var_nc0["r_planet"][:], var_nc1["r_planet"][:])
+                & np.allclose(var_nc0["gstep"][:], var_nc1["gstep"][:])
+                & np.allclose(var_nc0["nptot"][:], var_nc1["nptot"][:])
+                & np.allclose(var_nc0["phys_length"][:], var_nc1["phys_length"][:])
+            ):
+                Dn += var_nc1["Density"][:]  # /cc [z_num][y_num][x_num]
+
+            else:
+                print(
+                    "stop stop stop stop stop stop stop stop stop stop stop stop stop stop stop!"
+                )
+
+    Dn_x = Dn[:, :, :-1]  # (458, 458, 201)
+    Dn_x_plus1 = Dn[:, :, 1:]  # (458, 458, 201)
+    Dn_y = Dn[:, :-1]  # (458, 457, 202)
+    Dn_y_plus1 = Dn[:, 1:]  # (458, 457, 202)
+    Dn_z = Dn[:-1]  # (457, 458, 202)
+    Dn_z_plus1 = Dn[1:]  # (457, 458, 202)
+
+    Dn_x_diff = Dn_x_plus1 - Dn_x  # (458, 458, 201)
+    Dn_y_diff = Dn_y_plus1 - Dn_y  # (458, 457, 202)
+    Dn_z_diff = Dn_z_plus1 - Dn_z  # (457, 458, 202)
+
+    print(Dn_x[0][0][1])
+    print(Dn_x_plus1[0][0][0])
+    print(Dn_y[0][1][0])
+    print(Dn_y_plus1[0][0][0])
+    print(Dn_z[1][0][0])
+    print(Dn_z_plus1[0][0][0])
+
+    print(Dn_x[0][0][-1])
+    print(Dn_x_plus1[0][0][-2])
+    print(Dn_y[0][-1][0])
+    print(Dn_y_plus1[0][-2][0])
+    print(Dn_z[-1][0][0])
+    print(Dn_z_plus1[-2][0][0])
+
+    # radius=1
+    nc = [len(Dn[0][0]), len(Dn[0]), len(Dn)]  # like [len(x),len(y),len(z)]
+    # print(var_nc["X_axis"][:])
+
+    Dn = np.where(Dn <= 0, float("NaN"), Dn)
+    # maximum and minimum
+
+    # position array from moon center (unit..phys_length)
+    x_array_moon_center_phylen = np.arange(0, (nc[0]) * gs[0], gs[0]) - centr[0]
+    y_array_moon_center_phylen = np.arange(0, (nc[1]) * gs[1], gs[1]) - centr[1]
+    z_array_moon_center_phylen = np.arange(0, (nc[2]) * gs[2], gs[2]) - centr[2]
+
+    # position array from moon center (unit..Re)
+    x_array_moon_center_Re = x_array_moon_center_phylen * nrm_len / 1560.8
+    y_array_moon_center_Re = y_array_moon_center_phylen * nrm_len / 1560.8
+    z_array_moon_center_Re = z_array_moon_center_phylen * nrm_len / 1560.0
+
+    """
+    plot_in_xy_plane(
+        x_array_moon_center_Re,
+        y_array_moon_center_Re,
+        z_array_moon_center_Re,
+        Dn,
+        1,
+        [-4, 4],
+        [-4, 4],
+        z_pos=0,
+    )
+
+    plot_in_xz_plane(
+        x_array_moon_center_Re,
+        y_array_moon_center_Re,
+        z_array_moon_center_Re,
+        Dn,
+        1,
+        [-4, 4],
+        [-4, 4],
+        y_pos=0,
+    )
+
+    plot_in_yz_plane(
+        x_array_moon_center_Re,
+        y_array_moon_center_Re,
+        z_array_moon_center_Re,
+        Dn,
+        1,
+        [-4, 4],
+        [-4, 4],
+        x_pos=0,
+    )
+
+    plot_in_xaxis(
+        x_array_moon_center_Re,
+        y_array_moon_center_Re,
+        z_array_moon_center_Re,
+        Dn,
+        1,
+        [-4, 4],
+        y_pos=0,
+        z_pos=0,
+    )
+
+    plot_in_yaxis(
+        x_array_moon_center_Re,
+        y_array_moon_center_Re,
+        z_array_moon_center_Re,
+        Dn,
+        1,
+        [-4, 4],
+        x_pos=0,
+        z_pos=0,
+    )
+
+    plot_in_zaxis(
+        x_array_moon_center_Re,
+        y_array_moon_center_Re,
+        z_array_moon_center_Re,
+        Dn,
+        1,
+        [-4, 4],
+        x_pos=0,
+        y_pos=0,
+    )
+
+    plot_in_xy_diagonal_axis(
+        x_array_moon_center_Re,
+        y_array_moon_center_Re,
+        z_array_moon_center_Re,
+        Dn,
+        1,
+        [-4, 4],
+        x_pos=0,
+        y_pos=0,
+        z_pos=0,
+    )
+    
     """
     # position array from moon center meshgrid (unit..Re)
     x_meshgrid, y_meshgrid, z_meshgrid = np.meshgrid(
@@ -1116,5 +1490,5 @@ diagtime = "00600"
 # plot_density_ne(src_dir, typefile, rundate, diagtime, zoom=True)
 # density_interpolate(src_dir, typefile, rundate, diagtime)
 
-density_fitting(src_dir, typefile, rundate, diagtime)
+density_dif_plot(src_dir, typefile, rundate, diagtime)
 # %%
