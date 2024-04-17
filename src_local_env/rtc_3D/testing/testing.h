@@ -68,6 +68,7 @@ public:
 		model_test_simple,
 		model_europa_nonplume,
 		model_europa_plume,
+		model_europa_clare3D,
 		model_ganymede_nonplume,
 		model_callisto_nonplume,
 		model_sato_earth,
@@ -112,6 +113,9 @@ public:
 
 		case model_europa_nonplume:
 			return "europa_nonplume";
+
+		case model_europa_clare3D:
+			return "europa_clare3D";
 
 		case model_ganymede_nonplume:
 			return "ganymede_nonplume";

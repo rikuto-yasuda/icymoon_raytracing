@@ -80,6 +80,14 @@ namespace rtc
 				double getDensity(const vector &point) const;
 			};
 
+			// europa_clare3D model ---------------------------------------
+			// Clareさんの作ってEuropaのプラズマモデルを関数フィッティングしたモデル。
+			class europa_clare3D : public basic_plasma_model
+			{
+			protected:
+				double getDensity(const vector &point) const;
+			};
+
 			// ganymede_nonplume model ---------------------------------------
 			// Ganymedeの静水圧平衡プラズマのみのモデル。
 			class ganymede_nonplume : public basic_plasma_model

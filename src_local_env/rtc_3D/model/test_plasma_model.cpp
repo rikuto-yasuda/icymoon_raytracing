@@ -54,6 +54,72 @@ double plasma::europa_nonplume::getDensity(const vector &point) const //////////
 
 	return t;
 }
+
+double plasma::europa_clare3D::getDensity(const vector &point) const ///////////////Europa 3D ionospheric moddel in Clare's poster
+{
+	const double
+		a0 = 19.5731379e6; // unit .. m^-3
+
+	const double
+		a1 = 294.081049e6; // unit .. m^-3
+	const double
+		a2 = 132.767864e6; // unit .. m^-3
+
+	const double
+		a3 = 1.36171699; // unit .. rad
+
+	const double
+		a4 = -2.53645889; // unit .. rad
+
+	const double
+		a5 = 1.23674495e-01; // unit .. none
+
+	const double
+		a6 = 8.19197342e-03; // unit .. none
+
+	const double
+		a7 = 8.61898769e-03; // unit .. none
+
+	const double
+		a8 = 1.17890873e-01; // unit .. none
+
+	const double
+		a9 = 0.0996583124; // unit .. length (Re)
+
+	const double
+		a10 = 2.27077240; // unit .. none
+
+	const double
+		r = (std::sqrt(point(0) * point(0) + point(1) * point(1) + point(2) * point(2)) - 1.5608e6) / 1.5608e6; // unit .. Re
+
+	const double
+		theta_row = std::atan(point(2), sqrt(point(0) * point(0) + point(1) * point(1))); // unit .. rad
+
+	const double
+		phi = std::atan2(point(1), point(0)) - a4; // unit .. rad
+
+	const double nx = std::cos(theta_row);
+	const double ny = std::sin(theta_row);
+	const double n0x = std::cos(a3);
+	const double n0y = std::sin(a3);
+
+	const double theta = std::asin((nx * n0y - ny * n0x) /
+								   (std::sqrt(nx * nx + ny * ny) *
+									std::sqrt(n0x * n0x + n0y * n0y)));
+	const double theta_theta = theta * theta;
+	const double theta_phi = theta * phi;
+	const double phi_phi = phi * phi;
+
+	const double determinant = a5 * a8 - a6 * a7;
+
+	const double f = a2 * std::exp((a8 * theta_theta - (a6 + a7) * theta_phi + a5 * phi_phi) / (-2.0 * determinant)) /
+					 std::sqrt(std::abs(determinant));
+
+	const double total = a0 + (a1 + f) * std::exp(-1.0 * std::pow(r / a9, std::abs(a10)));
+
+	return total;
+}
+
 /*
 double plasma::ganymede_nonplume::getDensity( const vector& point ) const               ///////////////?¿½V?¿½?¿½?¿½?¿½?¿½v?¿½?¿½?¿½Y?¿½}?¿½?¿½?¿½f?¿½?¿½?¿½iz?¿½?¿½?¿½?¿½?¿½?¿½?¿½?¿½exp?¿½ÅŒï¿½?¿½?¿½?¿½j
 {

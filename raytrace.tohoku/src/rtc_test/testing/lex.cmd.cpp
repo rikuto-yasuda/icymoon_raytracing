@@ -148,7 +148,7 @@ typedef unsigned int flex_uint32_t;
  * to BEGIN to return to the state.  The YYSTATE alias is for lex
  * compatibility.
  */
-#define YY_START (((yy_start)-1) / 2)
+#define YY_START (((yy_start) - 1) / 2)
 #define YYSTATE YY_START
 
 /* Action number for EOF rule of a given start state. */
@@ -973,7 +973,7 @@ using namespace rtc;
 int cmdinput_local(char *buf, int max_size);
 
 ////////////////////////////////////////////////
-//ここで使う変数。
+// ここで使う変数。
 static char *pszInput;
 static testing_env g_env;
 
@@ -1983,7 +1983,7 @@ YY_DECL
 			YY_FATAL_ERROR(
 				"fatal flex scanner internal error--no action found");
 		} /* end of action switch */
-	}	  /* end of scanning one token */
+	} /* end of scanning one token */
 } /* end of cmdlex */
 
 /* yy_get_next_buffer - try to read in a new buffer

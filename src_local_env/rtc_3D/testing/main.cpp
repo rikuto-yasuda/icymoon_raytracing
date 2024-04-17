@@ -82,6 +82,7 @@ rtc::basic_plasma_model &getPlasmaModel(const testing_env *env)
 	static rtc::model::plasma::test_simple test_simple;
 	static rtc::model::plasma::europa_plume europa_plume;
 	static rtc::model::plasma::europa_nonplume europa_nonplume;
+	static rtc::model::plasma::europa_clare3D europa_clare3D;
 	static rtc::model::plasma::ganymede_nonplume ganymede_nonplume;
 	static rtc::model::plasma::callisto_nonplume callisto_nonplume;
 	static rtc::model::plasma::sato_earth sato;
@@ -107,6 +108,9 @@ rtc::basic_plasma_model &getPlasmaModel(const testing_env *env)
 
 	case testing_env::model_europa_nonplume:
 		return europa_nonplume;
+
+	case testing_env::model_europa_clare3D:
+		return europa_clare3D;
 
 	case testing_env::model_ganymede_nonplume:
 		return ganymede_nonplume;
