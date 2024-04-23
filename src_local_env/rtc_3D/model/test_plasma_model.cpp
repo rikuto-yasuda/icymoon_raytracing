@@ -28,13 +28,14 @@ double plasma::test_simple::getDensity(const vector &point) const //////////////
 double plasma::europa_plume::getDensity(const vector &point) const ///////////////?øΩV?øΩ?øΩ?øΩ?øΩ?øΩv?øΩ?øΩ?øΩY?øΩ}?øΩ?øΩ?øΩf?øΩ?øΩ?øΩiz?øΩ?øΩ?øΩ?øΩ?øΩ?øΩ?øΩ?øΩexp?øΩ≈åÔøΩ?øΩ?øΩ?øΩj
 {
 	const double
-		r = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)) + (pow(point(2) + 1.5608e6, 2.0)));
+		r = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)) + (pow(point(2), 2.0)));
 	const double
 		rxy = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)));
 	const double
-		plume = std::fabs(1.0e12 * exp(-(r - 1.5608e6) / 1.5e5) * exp(-((atan2(rxy, point(2))) / 0.261799) * ((atan2(rxy, point(2))) / 0.261799)));
+		plume = std::fabs(3e8 * exp(-(r - 1.5608e6) / 1.5e5) * exp(-((atan2(rxy, point(2) - 1.5608e6)) / 0.261799) * ((atan2(rxy, point(2) - 1.5608e6)) / 0.261799)));
 	const double
-		t = std::fabs(9e9 * exp(-(r - 1.5608e6) / 2.4e5)); //////////////?øΩG?øΩE?øΩ?øΩ?øΩp?øΩ√êÔøΩ?øΩ?øΩ?øΩ?øΩ?øΩs?øΩ?øΩ?øΩf?øΩ?øΩ ?øΩn?øΩ\?øΩ ÇÔøΩ9.0*10^3(/cc) ?øΩX?øΩP?øΩ[?øΩ?øΩ?øΩn?øΩC?øΩg240km
+		t = 2e7;
+	/// t = std::fabs(9e9 * exp(-(r - 1.5608e6) / 2.4e5)); //////////////?øΩG?øΩE?øΩ?øΩ?øΩp?øΩ√êÔøΩ?øΩ?øΩ?øΩ?øΩ?øΩs?øΩ?øΩ?øΩf?øΩ?øΩ ?øΩn?øΩ\?øΩ ÇÔøΩ9.0*10^3(/cc) ?øΩX?øΩP?øΩ[?øΩ?øΩ?øΩn?øΩC?øΩg240km
 	const double
 		d = t + plume;
 	;
@@ -93,7 +94,7 @@ double plasma::europa_clare3D::getDensity(const vector &point) const ///////////
 		r = (std::sqrt(point(0) * point(0) + point(1) * point(1) + point(2) * point(2)) - 1.5608e6) / 1.5608e6; // unit .. Re
 
 	const double
-		theta_row = std::atan(point(2), sqrt(point(0) * point(0) + point(1) * point(1))); // unit .. rad
+		theta_row = std::atan2(point(2), sqrt(point(0) * point(0) + point(1) * point(1))); // unit .. rad
 
 	const double
 		phi = std::atan2(point(1), point(0)) - a4; // unit .. rad

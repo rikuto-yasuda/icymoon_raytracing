@@ -4,8 +4,8 @@ OBJECT_EXP = o
 LIBRT = \
 	../../lib/core.a   \
 	../../lib/model.a  \
-	../../lib/planet.a
-
+	../../lib/planet.a  
+ 
 STDLIB = pthread boost_thread-mt
 
 include makefile.common
