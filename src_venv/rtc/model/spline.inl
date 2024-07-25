@@ -29,27 +29,27 @@ void spline_interpolation<D>::establish()
 	int i;
 	std::sort( m_data.begin(), m_data.end() );
 
-	// h1 ‚ÌŒvZ
+	// h1 ã®è¨ˆç®—
 	m_data[0].d = m_data[1].x - m_data[0].x;
 
-	// ƒÀ2‚ÌŒvZ
+	// Î²2ã®è¨ˆç®—
 	m_data[1].c = (m_data[1].y -m_data[0].y) / m_data[0].d;
 
-	// hi, ƒ¿i, ƒÀi‚ÌŒvZ
+	// hi, Î±i, Î²iã®è¨ˆç®—
 	for( int n = 1;	n < end_n; ++n )
 	{
 		//hi
 		m_data[n].d = m_data[n+1].x - m_data[n].x;
 
-		//ƒ¿i
+		//Î±i
 		m_data[n].b = 2.0 * ( m_data[n-1].d + m_data[n].d );
 
-		//ƒÀi
+		//Î²i
 		m_data[n+1].c = (m_data[n+1].y-m_data[n].y) / m_data[n].d;
 		m_data[n].c = m_data[n+1].c - m_data[n].c;
 	}
 
-	// ƒ¿1‚ÌŒvZ
+	//Î±1ã®è¨ˆç®—
 	m_data[0].b     = -m_data[0].d;
 	m_data[end_n].b = -m_data[end_n-1].d;
 
@@ -102,7 +102,7 @@ const D spline_interpolation<D>::get( const D& x ) const
 #	define TYPENAME typename
 #endif
 	
-	// out_of_range ƒ`ƒFƒbƒN
+	// out_of_range ãƒã‚§ãƒƒã‚¯
 	if( x < m_data.begin()->x || m_data.rbegin()->x < x ) {
 		throw std::out_of_range( boost::str( boost::format(
 			"spline_interpolation::get() %1% out of range."
@@ -110,10 +110,10 @@ const D spline_interpolation<D>::get( const D& x ) const
 		).c_str() );
 	}
 	
-	// ‚ÅAx‚É‘Î‰‚·‚éy‚ğ“¾‚éB
-	// upper_bound()‚Íw’è‚µ‚½’lu‚æ‚è‘å‚«‚¢v“_‚ğA
-	// lower_bound()‚Íw’è‚µ‚½’luˆÈãv‚Ì“_‚ğ•Ô‚·B
-	// ŠÔˆá‚¦‚â‚·‚¢‚Ì‚Å‹C‚ğ‚Â‚¯‚ÄB
+	// ã§ã€xã«å¯¾å¿œã™ã‚‹yã‚’å¾—ã‚‹ã€‚
+	// upper_bound()ã¯æŒ‡å®šã—ãŸå€¤ã€Œã‚ˆã‚Šå¤§ãã„ã€ç‚¹ã‚’ã€
+	// lower_bound()ã¯æŒ‡å®šã—ãŸå€¤ã€Œä»¥ä¸Šã€ã®ç‚¹ã‚’è¿”ã™ã€‚
+	// é–“é•ãˆã‚„ã™ã„ã®ã§æ°—ã‚’ã¤ã‘ã¦ã€‚
 	TYPENAME dataset_t::const_iterator
 		ptr = std::upper_bound(
 			m_data.begin(),

@@ -10,7 +10,7 @@ STDLIB = stdc++ guide pthread boost_thread-mt
 
 include makefile.common
 
-# ¥³¥ó¥Ñ¥¤¥ë»ş¤Î¥Õ¥é¥°¤ò»ØÄê
+# ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«æ™‚ã®ãƒ•ãƒ©ã‚°ã‚’æŒ‡å®š
 CC_FLAG = -c -O3          \
     -DNDEBUG              \
     -D_THREAD_SAFE        \

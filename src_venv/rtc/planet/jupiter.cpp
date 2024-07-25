@@ -9,12 +9,12 @@ using namespace rtc;
 using namespace rtc::planet;
 
 jupiter::jupiter(
-	basic_magnet_model&   mag,        // Ž¥êƒ‚ƒfƒ‹‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ðŽw’è‚·‚éB
-	basic_plasma_model&  plsm         // ƒvƒ‰ƒYƒ}ƒ‚ƒfƒ‹‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ðŽw’è‚·‚éB
+	basic_magnet_model&   mag,        // ç£å ´ãƒ¢ãƒ‡ãƒ«ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’æŒ‡å®šã™ã‚‹ã€‚
+	basic_plasma_model&  plsm         // ãƒ—ãƒ©ã‚ºãƒžãƒ¢ãƒ‡ãƒ«ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’æŒ‡å®šã™ã‚‹ã€‚
 ) : basic_planet (
-	71372.e3, // ’n‹…”¼Œa[m]
-	8.43e22,  // ’nŽ¥‹C‚Ì‰¼‘z‘o‹ÉŽqƒ‚[ƒƒ“ƒg[Am^2]i–kŒü‚«‚Å³j
-	axis_info( 90.0, 0.0 ), // Ž¥Ž²‚ÌˆÊ’u
+	71372.e3, // åœ°çƒåŠå¾„[m]
+	8.43e22,  // åœ°ç£æ°—ã®ä»®æƒ³åŒæ¥µå­ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆ[Am^2]ï¼ˆåŒ—å‘ãã§æ­£ï¼‰
+	axis_info( 90.0, 0.0 ), // ç£è»¸ã®ä½ç½®
 	mag,
 	plsm
 )
@@ -23,9 +23,9 @@ jupiter::jupiter(
 /*
 matrix jupiter::getGEI2GEO() const
 {
-	// ZŽ²‚ð’†S‚É‰ñ“]‚·‚és—ñ‚ð“n‚·B
-	// ‰ñ“]Šp‚ð‚à‚Æ‚ß‚éŽ®‚ÍAreference‚Ì’†‚ðŽQÆB
-	// reference‚Ì’†‚Å‚ÍAT1‚Æ‚µ‚Ä’è‹`‚³‚ê‚Ä‚¢‚és—ñ‚Å‚ ‚éB
+	// Zè»¸ã‚’ä¸­å¿ƒã«å›žè»¢ã™ã‚‹è¡Œåˆ—ã‚’æ¸¡ã™ã€‚
+	// å›žè»¢è§’ã‚’ã‚‚ã¨ã‚ã‚‹å¼ã¯ã€referenceã®ä¸­ã‚’å‚ç…§ã€‚
+	// referenceã®ä¸­ã§ã¯ã€T1ã¨ã—ã¦å®šç¾©ã•ã‚Œã¦ã„ã‚‹è¡Œåˆ—ã§ã‚ã‚‹ã€‚
 
 	const std::tm& t = getCosmos().getUniversalTime();
 	const double
@@ -43,9 +43,9 @@ matrix jupiter::getGEI2GEO() const
 
 matrix jupiter::getGEI2GSE() const
 {
-	// XŽ²‚ð’†S‚É epsilon ‰ñ“]‚µ‚½Œã‚ÉA
-	// ZŽ²‚ð’†S‚É lambda ‰ñ“]‚·‚éB
-	// reference‚Ì’†‚Å‚ÍAT2‚Æ‚µ‚Ä’è‹`‚³‚ê‚Ä‚¢‚és—ñ‚Å‚ ‚éB
+	// Xè»¸ã‚’ä¸­å¿ƒã« epsilon å›žè»¢ã—ãŸå¾Œã«ã€
+	// Zè»¸ã‚’ä¸­å¿ƒã« lambda å›žè»¢ã™ã‚‹ã€‚
+	// referenceã®ä¸­ã§ã¯ã€T2ã¨ã—ã¦å®šç¾©ã•ã‚Œã¦ã„ã‚‹è¡Œåˆ—ã§ã‚ã‚‹ã€‚
 	const std::tm& t = getCosmos().getUniversalTime();
 
 	const double
@@ -68,8 +68,8 @@ matrix jupiter::getGEI2GSE() const
 */
 matrix jupiter::getGSE2GSM() const
 {
-	// XŽ²‚ð’†S‚ÉApsi‚¾‚¯‰ñ“]‚·‚és—ñ‚ð•Ô‚·B
-	// psi ‚Í GSEÀ•W‚Å‚ÌŽ¥Ž²•ûŒü‚©‚ç‹‚ß‚éB
+	// Xè»¸ã‚’ä¸­å¿ƒã«ã€psiã ã‘å›žè»¢ã™ã‚‹è¡Œåˆ—ã‚’è¿”ã™ã€‚
+	// psi ã¯ GSEåº§æ¨™ã§ã®ç£è»¸æ–¹å‘ã‹ã‚‰æ±‚ã‚ã‚‹ã€‚
 	const vector re = getMagneticalAxisInGSE();
 	assert( re[2] >= 0.0 );
 
@@ -79,8 +79,8 @@ matrix jupiter::getGSE2GSM() const
 
 matrix jupiter::getGSM2SM () const
 {
-	// YŽ²‚ð’†S‚ÉA-mu‚¾‚¯‰ñ“]‚·‚és—ñ‚ð•Ô‚·B
-	// mu ‚Í GSEÀ•WŒn‚Å‚ÌŽ¥Ž²•ûŒü‚©‚ç‹‚ß‚éB
+	// Yè»¸ã‚’ä¸­å¿ƒã«ã€-muã ã‘å›žè»¢ã™ã‚‹è¡Œåˆ—ã‚’è¿”ã™ã€‚
+	// mu ã¯ GSEåº§æ¨™ç³»ã§ã®ç£è»¸æ–¹å‘ã‹ã‚‰æ±‚ã‚ã‚‹ã€‚
 	const vector re = getMagneticalAxisInGSE();
 	assert( re[2] >= 0.0 );
 

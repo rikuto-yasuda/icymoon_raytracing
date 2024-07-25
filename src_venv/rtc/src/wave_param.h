@@ -1,4 +1,4 @@
-// wave_param.h: wave_parameter ƒNƒ‰ƒX‚ÌƒCƒ“ƒ^[ƒtƒFƒCƒX
+// wave_param.h: wave_parameter ã‚¯ãƒ©ã‚¹ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ã‚¤ã‚¹
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -12,12 +12,12 @@
 namespace rtc { // -----------------------------------------------------
 
 	// wave_parameter --------------------------------------------------
-	// ŒvZ‚·‚é”g“®‚Ì“Á«‚ğŠÇ—‚·‚éƒNƒ‰ƒXB
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Ìˆø”‚ÉA”g“®‚Ìƒpƒ‰ƒ[ƒ^‚ğw’è‚µ‚Ä¶¬‚·‚éB
+	// è¨ˆç®—ã™ã‚‹æ³¢å‹•ã®ç‰¹æ€§ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã®å¼•æ•°ã«ã€æ³¢å‹•ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’æŒ‡å®šã—ã¦ç”Ÿæˆã™ã‚‹ã€‚
 	class wave_parameter  
 	{
 	public:
-		// ’è”
+		// å®šæ•°
 		enum wave_mode{
 			LO_MODE = +1,
 			RX_MODE = -1
@@ -26,8 +26,8 @@ namespace rtc { // -----------------------------------------------------
 	public:
 		wave_parameter(){};
 		wave_parameter(
-			enum wave_mode mode, // ”g“®‚Ìƒ‚[ƒhBLO_MODE‚©RX_MODE‚ğw’è‚·‚éB
-			double         freq, // ”g“®‚Ìü”g”[Hz]‚ğw’è‚·‚éB
+			enum wave_mode mode, // æ³¢å‹•ã®ãƒ¢ãƒ¼ãƒ‰ã€‚LO_MODEã‹RX_MODEã‚’æŒ‡å®šã™ã‚‹ã€‚
+			double         freq, // æ³¢å‹•ã®å‘¨æ³¢æ•°[Hz]ã‚’æŒ‡å®šã™ã‚‹ã€‚
 			double         precision,
 			double         lstep,
 			double         t_max,
@@ -38,17 +38,17 @@ namespace rtc { // -----------------------------------------------------
 		virtual ~wave_parameter();
 
 	public:
-		//’l‚ÌQÆ
-		int       LO_or_RX()      const; // LOƒ‚[ƒh‚È‚ç‚Î+1ARXƒ‚[ƒh‚È‚ç-1‚ğ•Ô‚·B
-		wave_mode getMode()       const; // enum wave_mode’l‚ğ•Ô‚·B
-		double    getStepLength() const; // ˆêƒXƒeƒbƒv‚Åi‚Ş‹——£‚Ì–Ql’l–‚ğ•Ô‚·B
-		double    getFreq()       const; // ü”g”‚ğ•Ô‚·B
-		double    getPrecision()  const; // ¸“x‚ğ•Ô‚·B
+		//å€¤ã®å‚ç…§
+		int       LO_or_RX()      const; // LOãƒ¢ãƒ¼ãƒ‰ãªã‚‰ã°+1ã€RXãƒ¢ãƒ¼ãƒ‰ãªã‚‰-1ã‚’è¿”ã™ã€‚
+		wave_mode getMode()       const; // enum wave_modeå€¤ã‚’è¿”ã™ã€‚
+		double    getStepLength() const; // ä¸€ã‚¹ãƒ†ãƒƒãƒ—ã§é€²ã‚€è·é›¢ã®ï¼Šå‚è€ƒå€¤ï¼Šã‚’è¿”ã™ã€‚
+		double    getFreq()       const; // å‘¨æ³¢æ•°ã‚’è¿”ã™ã€‚
+		double    getPrecision()  const; // ç²¾åº¦ã‚’è¿”ã™ã€‚
 		
-		// ŠÔ¸“x‚Ì”ÍˆÍ‚ğ•Ô‚·B
+		// æ™‚é–“ç²¾åº¦ã®ç¯„å›²ã‚’è¿”ã™ã€‚
 		const std::pair<double,double>& getTimeStep() const;
 
-		// ’l‚Ìİ’è
+		// å€¤ã®è¨­å®š
 		void setPrecision( const double prec );
 		void setMode( wave_mode mode );
 		void setStepLength( const double lstep );

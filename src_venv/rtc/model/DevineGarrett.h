@@ -8,8 +8,8 @@
 namespace rtc { namespace model { namespace plasma {
 	/***********************************
 	class DevineGarrett
-	¡¡¤³¤Î¥â¥Ç¥ë¤Ï¡¢Devine and Garrett¤Ë¤è¤ë
-	ÌÚÀ±ÅÅ»ÒÌ©ÅÙÊ¬ÉÛ¤òºÆ¸½¤·¤¿¥â¥Ç¥ë¤Ç¤¢¤ë¡£
+	ã€€ã“ã®ãƒ¢ãƒ‡ãƒ«ã¯ã€Devine and Garrettã«ã‚ˆã‚‹
+	æœ¨æ˜Ÿé›»å­å¯†åº¦åˆ†å¸ƒã‚’å†ç¾ã—ãŸãƒ¢ãƒ‡ãƒ«ã§ã‚ã‚‹ã€‚
 	 ***********************************/
 
 	class DevineGarrett : public rtc::basic_plasma_model 

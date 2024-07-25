@@ -7,8 +7,8 @@
 
 // -------------------------------------------------------------------
 // raytrace::raytrace()
-// ŠÂ‹«’l‚É]‚Á‚Ä‰Šú’l‚ğì¬‚µAoperator()‚É§Œä‚ğ“n‚µ‚Ä
-// ƒgƒŒ[ƒX‚ğÀs‚·‚éBrtc::ray‚ÍƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Å¶¬‚·‚éB
+// ç’°å¢ƒå€¤ã«å¾“ã£ã¦åˆæœŸå€¤ã‚’ä½œæˆã—ã€operator()ã«åˆ¶å¾¡ã‚’æ¸¡ã—ã¦
+// ãƒˆãƒ¬ãƒ¼ã‚¹ã‚’å®Ÿè¡Œã™ã‚‹ã€‚rtc::rayã¯ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã§ç”Ÿæˆã™ã‚‹ã€‚
 //
 raytrace::raytrace(
 	const testing_env*   env,
@@ -19,27 +19,27 @@ raytrace::raytrace(
 	m_progress( 0.0 ),
     m_state("init")
 {
-	// Œõ‚ğ\’z‚·‚é‚½‚ß‚ÉArtc::cosmos::createRay()‚ğŒÄ‚Ño‚µ
-	// ‰F’ˆ‚ÉŒõ‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ¶¬‚³‚¹‚éB
-	// ¶¬‚·‚éŒõ‚Ìƒpƒ‰ƒ[ƒ^‚ÍA‚·‚×‚Äˆø”‚Åw’è‚·‚éB
+	// å…‰ã‚’æ§‹ç¯‰ã™ã‚‹ãŸã‚ã«ã€rtc::cosmos::createRay()ã‚’å‘¼ã³å‡ºã—
+	// å®‡å®™ã«å…‰ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç”Ÿæˆã•ã›ã‚‹ã€‚
+	// ç”Ÿæˆã™ã‚‹å…‰ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã¯ã€ã™ã¹ã¦å¼•æ•°ã§æŒ‡å®šã™ã‚‹ã€‚
 	rtc::ray* ray = rtc::getCosmos().createRay(
-		env->mode,                   // LO_MODE‚©RX_MODE‚ğw’è‚·‚éB
-		(2*rtc::cnst::pi)*env->freq, // ”g“®‚ÌŠpü”g”‚ğ[Hz]‚Åw’è‚·‚éB
-		env->precision,              // ”g“®step‘OŒã‚Å‚Ì‹–—e—¦‚ğw’è‚·‚éBÈ—ª‰ÂB
-		env->step_length,            // 1step–ˆ‚Éi‚ß‚éÅ‘å’·‚ğ[m]‚Åw’è‚·‚éBÈ—ª‰ÂB
-		env->time_range.max,         // 1step–ˆ‚Éi‚ß‚éŠÔ‚ÌÅ‘å’l‚ğw’è‚·‚éBÈ—ª‰ÂB
-		env->time_range.min          // 1step–ˆ‚Éi‚ß‚éŠÔ‚ÌÅ¬’l‚ğw’è‚·‚éBÈ—ª‰ÂB
+		env->mode,                   // LO_MODEã‹RX_MODEã‚’æŒ‡å®šã™ã‚‹ã€‚
+		(2*rtc::cnst::pi)*env->freq, // æ³¢å‹•ã®è§’å‘¨æ³¢æ•°ã‚’[Hz]ã§æŒ‡å®šã™ã‚‹ã€‚
+		env->precision,              // æ³¢å‹•stepå‰å¾Œã§ã®è¨±å®¹ç‡ã‚’æŒ‡å®šã™ã‚‹ã€‚çœç•¥å¯ã€‚
+		env->step_length,            // 1stepæ¯ã«é€²ã‚ã‚‹æœ€å¤§é•·ã‚’[m]ã§æŒ‡å®šã™ã‚‹ã€‚çœç•¥å¯ã€‚
+		env->time_range.max,         // 1stepæ¯ã«é€²ã‚ã‚‹æ™‚é–“ã®æœ€å¤§å€¤ã‚’æŒ‡å®šã™ã‚‹ã€‚çœç•¥å¯ã€‚
+		env->time_range.min          // 1stepæ¯ã«é€²ã‚ã‚‹æ™‚é–“ã®æœ€å°å€¤ã‚’æŒ‡å®šã™ã‚‹ã€‚çœç•¥å¯ã€‚
 	);
 	m_ray = ray;
 	
-	// ƒŒƒCƒpƒX‚ÌŒÂ”‚ğŠm•Û
+	/// ãƒ¬ã‚¤ãƒ‘ã‚¹ã®å€‹æ•°ã‚’ç¢ºä¿
 	m_raypath.reserve( env->ray_segment );
-///////////////////////////////////////////////////////step•Šm”F—p
+////////////////////////////////////////////////////////stepå¹…ç¢ºèªç”¨
 	m_rayvariation.reserve( env->ray_segment );
 	
 	if( env->is_verbose )
 	{
-		// ƒ‰ƒEƒ“ƒhŠp‚Ì•ûŒü‚ğo—Í
+		// ãƒ©ã‚¦ãƒ³ãƒ‰è§’ã®æ–¹å‘ã‚’å‡ºåŠ›
 		m_output << "## round : " << rtc::rad2deg(round) << " ##\n";
 	}
 }
@@ -47,40 +47,40 @@ raytrace::raytrace(
 
 // -------------------------------------------------------------------
 // raytrace::~raytrace 
-// raytraceƒNƒ‰ƒX‚ÌƒfƒXƒgƒ‰ƒNƒ^B
-// ¶¬‚³‚ê‚½ ray ‚Ö‚Ìƒ|ƒCƒ“ƒ^‚ğÁ‹‚·‚éB
+// raytraceã‚¯ãƒ©ã‚¹ã®ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã€‚
+// ç”Ÿæˆã•ã‚ŒãŸ ray ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã‚’æ¶ˆå»ã™ã‚‹ã€‚
 //
 raytrace::~raytrace()
 {
-	// ÅŒã‚ÉAì¬‚µ‚½Œõ‚ÍÁ‹‚·‚éB
+	/// æœ€å¾Œã«ã€ä½œæˆã—ãŸå…‰ã¯æ¶ˆå»ã™ã‚‹ã€‚
 	rtc::getCosmos().eraseRay( m_ray );
 }
 
 
 // -------------------------------------------------------------------
 // raytrace::operator ()()
-// ‰Šú‰»‚µ‚½Œã‚ÉƒƒCƒ“ƒ‹[ƒv‚ğŒÄ‚Ño‚·B
-// I—¹Œã‚ÉƒoƒbƒNƒgƒŒ[ƒX‚Ìƒ`ƒFƒbƒN‚ğ‚µA
-// •K—v‚È‚ç‚Î‰Šú‰»‚ğs‚Á‚½Œã‚ÉƒoƒbƒNƒgƒŒ[ƒX‚·‚éB
+// åˆæœŸåŒ–ã—ãŸå¾Œã«ãƒ¡ã‚¤ãƒ³ãƒ«ãƒ¼ãƒ—ã‚’å‘¼ã³å‡ºã™ã€‚
+// çµ‚äº†å¾Œã«ãƒãƒƒã‚¯ãƒˆãƒ¬ãƒ¼ã‚¹ã®ãƒã‚§ãƒƒã‚¯ã‚’ã—ã€
+// å¿…è¦ãªã‚‰ã°åˆæœŸåŒ–ã‚’è¡Œã£ãŸå¾Œã«ãƒãƒƒã‚¯ãƒˆãƒ¬ãƒ¼ã‚¹ã™ã‚‹ã€‚
 //
 void raytrace::operator ()()
 {
-	// initialize()‚Í—áŠOƒGƒ‰[‚ğ“Š‚°‚é‰Â”\«‚ª‚ ‚éB
-	// mainloop()“à•”‚à—áŠO‚ğ“Š‚°‚é‰Â”\«‚ª‚ ‚é‚©‚çA
-	// ‚±‚±‚©‚ç catch •¶‚ğ’è‹`‚·‚éB
+	// initialize()ã¯ä¾‹å¤–ã‚¨ãƒ©ãƒ¼ã‚’æŠ•ã’ã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹ã€‚
+	// mainloop()å†…éƒ¨ã‚‚ä¾‹å¤–ã‚’æŠ•ã’ã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹ã‹ã‚‰ã€
+	// ã“ã“ã‹ã‚‰ catch æ–‡ã‚’å®šç¾©ã™ã‚‹ã€‚
 	try
 	{
-		// ¶¬‚µ‚½Œõ‚ÌˆÊ’uƒxƒNƒgƒ‹A”g”ƒxƒNƒgƒ‹‚ğ‰Šú‰»‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢B
-		// ‰Šú‚ÌƒxƒNƒgƒ‹ƒyƒA‚ÍAˆÊ’u‚ÆŒü‚«‚ğw’è‚µ‚Ä
-		// rtc::ray::initialize()‚ğŒÄ‚Ño‚·‚±‚Æ‚Å
-		// ŠÈ’P‚É‰Šú‰»‚·‚é‚±‚Æ‚ª‚Å‚«‚éB
+		// ç”Ÿæˆã—ãŸå…‰ã®ä½ç½®ãƒ™ã‚¯ãƒˆãƒ«ã€æ³¢æ•°ãƒ™ã‚¯ãƒˆãƒ«ã‚’åˆæœŸåŒ–ã—ãªã‘ã‚Œã°ãªã‚‰ãªã„ã€‚
+		// åˆæœŸã®ãƒ™ã‚¯ãƒˆãƒ«ãƒšã‚¢ã¯ã€ä½ç½®ã¨å‘ãã‚’æŒ‡å®šã—ã¦
+		// rtc::ray::initialize()ã‚’å‘¼ã³å‡ºã™ã“ã¨ã§
+		// ç°¡å˜ã«åˆæœŸåŒ–ã™ã‚‹ã“ã¨ãŒã§ãã‚‹ã€‚
 		//
-		// initialize()‚Ì‚Uˆø””Å‚Å‚ÍA’¼ŒğÀ•WŒn‚Å
-		// ”­¶ˆÊ’u‚Æ”g”ƒxƒNƒgƒ‹‚ÌŒü‚«‚ğw’è‚·‚éBinitialize()‚Í
-		// ŠÂ‹«ƒ‚ƒfƒ‹‚©‚ç“KØ‚È’l‚É•ÏŠ·‚µAƒxƒNƒgƒ‹ƒyƒA‚ğ‚©‚¦‚·B
+		// initialize()ã®ï¼–å¼•æ•°ç‰ˆã§ã¯ã€ç›´äº¤åº§æ¨™ç³»ã§
+		// ç™ºç”Ÿä½ç½®ã¨æ³¢æ•°ãƒ™ã‚¯ãƒˆãƒ«ã®å‘ãã‚’æŒ‡å®šã™ã‚‹ã€‚initialize()ã¯
+		// ç’°å¢ƒãƒ¢ãƒ‡ãƒ«ã‹ã‚‰é©åˆ‡ãªå€¤ã«å¤‰æ›ã—ã€ãƒ™ã‚¯ãƒˆãƒ«ãƒšã‚¢ã‚’ã‹ãˆã™ã€‚
 		//
-		// ‚Rˆø””Å‚Å‚ÍAƒsƒbƒ`Šp‚Æƒ‰ƒEƒ“ƒhŠp‚ğw’è‚·‚é‚±‚Æ‚Å
-		// ¥—Íü‚É‘Î‚·‚é”CˆÓ‚ÌŠp“x‚ğ‚Â‚¯‚é‚±‚Æ‚ª‚Å‚«‚éB
+		// ï¼“å¼•æ•°ç‰ˆã§ã¯ã€ãƒ”ãƒƒãƒè§’ã¨ãƒ©ã‚¦ãƒ³ãƒ‰è§’ã‚’æŒ‡å®šã™ã‚‹ã“ã¨ã§
+		// ç£åŠ›ç·šã«å¯¾ã™ã‚‹ä»»æ„ã®è§’åº¦ã‚’ã¤ã‘ã‚‹ã“ã¨ãŒã§ãã‚‹ã€‚
 		m_ray->initialize(
 			m_env->source_x,
 			m_env->source_y,
@@ -91,7 +91,7 @@ void raytrace::operator ()()
 		m_state = "run";
 		mainloop();
 		
-		// ƒoƒbƒNƒgƒŒ[ƒX ----------------------------
+		// ãƒãƒƒã‚¯ãƒˆãƒ¬ãƒ¼ã‚¹ ----------------------------
 		if( m_env->is_back_trace )
 		{
 			m_state = "back";
@@ -102,11 +102,11 @@ void raytrace::operator ()()
 			}
 
 			//
-			// raytrace_proc()‚ÌI“_ˆÊ’u‚©‚çArkƒxƒNƒgƒ‹‚ğ‹t•ûŒü‚ÉŒü‚¯‚Ä
-			// “¯‚¶ŠÂ‹«‚Å‹t•ûŒü‚ÉƒgƒŒ[ƒX‚·‚éB
+			// raytrace_proc()ã®çµ‚ç‚¹ä½ç½®ã‹ã‚‰ã€rkãƒ™ã‚¯ãƒˆãƒ«ã‚’é€†æ–¹å‘ã«å‘ã‘ã¦
+			// åŒã˜ç’°å¢ƒã§é€†æ–¹å‘ã«ãƒˆãƒ¬ãƒ¼ã‚¹ã™ã‚‹ã€‚
 			//
-			// •K‚¸ makeInitialVector() ‚ğŒÄ‚Ño‚µ‚Ä‰Šú‰»‚·‚é‚±‚ÆB
-			// ‚»‚¤‚µ‚È‚©‚Á‚½ê‡‚ÌƒgƒŒ[ƒXŒ‹‰Ê‚Í–¢’è‹`‚Æ‚È‚éB
+			// å¿…ãš makeInitialVector() ã‚’å‘¼ã³å‡ºã—ã¦åˆæœŸåŒ–ã™ã‚‹ã“ã¨ã€‚
+			// ãã†ã—ãªã‹ã£ãŸå ´åˆã®ãƒˆãƒ¬ãƒ¼ã‚¹çµæœã¯æœªå®šç¾©ã¨ãªã‚‹ã€‚
 			//
 			const rtc::vector_pair rk = m_raypath.back().second;
 			m_ray->initialize(
@@ -120,11 +120,11 @@ void raytrace::operator ()()
 		m_state = "comp.";
 	}
 	
-	// ƒGƒ‰[‚ÍÀs‚Ìˆ—ƒGƒ‰[‚Ì‘¼‚ÉA
-	// ŒõÁ¸‚È‚Ç‚Ì——R‚Å‚±‚êˆÈãƒgƒŒ[ƒX‚Å‚«‚È‚¢‚É
-	// “Š‚°‚Ä‚­‚é‚±‚Æ‚ª‚ ‚éB
-	// Šî–{“I‚ÉƒGƒ‰[ƒƒbƒZ[ƒW‚ğ•\¦‚µ‚ÄI—¹‚·‚é‚©
-	// Ÿ‚ÌŒõü‚Éˆ—‚ğˆÚ‚¹‚Î‚æ‚¢B
+	// ã‚¨ãƒ©ãƒ¼ã¯å®Ÿè¡Œæ™‚ã®å‡¦ç†ã‚¨ãƒ©ãƒ¼ã®ä»–ã«ã€
+	// å…‰æ¶ˆå¤±ãªã©ã®ç†ç”±ã§ã“ã‚Œä»¥ä¸Šãƒˆãƒ¬ãƒ¼ã‚¹ã§ããªã„æ™‚ã«
+	// æŠ•ã’ã¦ãã‚‹ã“ã¨ãŒã‚ã‚‹ã€‚
+	// åŸºæœ¬çš„ã«ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã—ã¦çµ‚äº†ã™ã‚‹ã‹
+	// æ¬¡ã®å…‰ç·šã«å‡¦ç†ã‚’ç§»ã›ã°ã‚ˆã„ã€‚
 	catch ( std::exception& e )
 	{
 		if( m_env->is_verbose ) {
@@ -140,38 +140,38 @@ void raytrace::operator ()()
 }
 // -------------------------------------------------------------------
 // raytrace::mainloop()
-// w’è‚³‚ê‚½ŠÂ‹«AŒõüA‰ŠúˆÊ’u‚©‚çƒgƒŒ[ƒX‚ğÀs‚·‚éB
-// ŠÂ‹«’l‚Éw’è‚³‚ê‚½I“_‚É‚½‚Ç‚è’…‚¢‚½‚Æ‚«A§Œä‚ğ•Ô‚·B
-// Šî–{“I‚Éƒ[ƒLƒ“ƒOƒXƒŒƒbƒh‚Å“®ì‚³‚¹‚é‚Ì‚ÅA—¯ˆÓ‚·‚é‚±‚ÆB
+// æŒ‡å®šã•ã‚ŒãŸç’°å¢ƒã€å…‰ç·šã€åˆæœŸä½ç½®ã‹ã‚‰ãƒˆãƒ¬ãƒ¼ã‚¹ã‚’å®Ÿè¡Œã™ã‚‹ã€‚
+// ç’°å¢ƒå€¤ã«æŒ‡å®šã•ã‚ŒãŸçµ‚ç‚¹ã«ãŸã©ã‚Šç€ã„ãŸã¨ãã€åˆ¶å¾¡ã‚’è¿”ã™ã€‚
+// åŸºæœ¬çš„ã«ãƒ¯ãƒ¼ã‚­ãƒ³ã‚°ã‚¹ãƒ¬ãƒƒãƒ‰ã§å‹•ä½œã•ã›ã‚‹ã®ã§ã€ç•™æ„ã™ã‚‹ã“ã¨ã€‚
 //
 void raytrace::mainloop()
 {
-	// Œõ‚ÌˆÊ’u‚ğƒvƒƒbƒg‚·‚é‹——£ŠÔŠuB
+	// å…‰ã®ä½ç½®ã‚’ãƒ—ãƒ­ãƒƒãƒˆã™ã‚‹è·é›¢é–“éš”ã€‚
 	const double ray_segment
 		= m_env->ray_segment != 0.0 ?
 		m_env->ray_length / m_env->ray_segment : -1.0;
 
-	// Às‚µ‚½“_‚Ü‚Å‚ÌƒŒƒCƒpƒX‚Ì’·‚³‚ğŠi”[‚·‚éB
+	// å®Ÿè¡Œã—ãŸç‚¹ã¾ã§ã®ãƒ¬ã‚¤ãƒ‘ã‚¹ã®é•·ã•ã‚’æ ¼ç´ã™ã‚‹ã€‚
 	double ray_length      = 0.0;
 
-	// ”g“®”­¶‚©‚ç‚ÌŒo‰ßŠÔ[s]‚ğŠi”[‚·‚éB
+	// æ³¢å‹•ç™ºç”Ÿã‹ã‚‰ã®çµŒéæ™‚é–“[s]ã‚’æ ¼ç´ã™ã‚‹ã€‚
 	double t = 0.0;
 
-	// rtc::ray::take_a_step()‚ğŒÄ‚Ño‚·‚±‚Æ‚Å
-	// 1step‚¸‚Âi‚Ü‚¹‚é‚±‚Æ‚ª‚Å‚«‚éB
-	// take_a_step()‚ÍAƒXƒeƒbƒvŠÔ‚ÌŒo‰ßŠÔ‚ğ•Ô‚·B
-	// ”g“®‚ÌŒ»İˆÊ’u‚ÍAray::getR()‚Ì–ß‚è’l‚©‚ç“¾‚ç‚ê‚éB
-	// ray::getDeltaR()‚©‚ç‘OŒã‚Ì·•ªƒxƒNƒgƒ‹‚ª“¾‚ç‚ê‚é‚Ì‚ÅA
-	// ‚»‚ê‚ğ‘«‚µ‚ ‚í‚¹AŒõ˜H’·‚ª m_env->ray_length ‚ğ’´‚¦‚½‚Æ‚«‚ÉI—¹‚·‚éB
-	// ‚Ü‚½AŒõ˜H’·‚ª m_env->ray_length/m_env->ray_segment (== ray_segment)
-	// ‚É’B‚·‚é–ˆ‚ÉƒŒƒ|[ƒg•\¦‚ğs‚¤B
+	// rtc::ray::take_a_step()ã‚’å‘¼ã³å‡ºã™ã“ã¨ã§
+	// 1stepãšã¤é€²ã¾ã›ã‚‹ã“ã¨ãŒã§ãã‚‹ã€‚
+	// take_a_step()ã¯ã€ã‚¹ãƒ†ãƒƒãƒ—é–“ã®çµŒéæ™‚é–“ã‚’è¿”ã™ã€‚
+	// æ³¢å‹•ã®ç¾åœ¨ä½ç½®ã¯ã€ray::getR()ã®æˆ»ã‚Šå€¤ã‹ã‚‰å¾—ã‚‰ã‚Œã‚‹ã€‚
+	// ray::getDeltaR()ã‹ã‚‰å‰å¾Œã®å·®åˆ†ãƒ™ã‚¯ãƒˆãƒ«ãŒå¾—ã‚‰ã‚Œã‚‹ã®ã§ã€
+	// ãã‚Œã‚’è¶³ã—ã‚ã‚ã›ã€å…‰è·¯é•·ãŒ m_env->ray_length ã‚’è¶…ãˆãŸã¨ãã«çµ‚äº†ã™ã‚‹ã€‚
+	// ã¾ãŸã€å…‰è·¯é•·ãŒ m_env->ray_length/m_env->ray_segment (== ray_segment)
+	// ã«é”ã™ã‚‹æ¯ã«ãƒ¬ãƒãƒ¼ãƒˆè¡¨ç¤ºã‚’è¡Œã†ã€‚
 	
-	// rtc::ray::take_a_step()‚Í—áŠO‚ğ“Š‚°‚Ä‚­‚é‚±‚Æ‚ª‚ ‚éB
-	// ‚±‚ê‚ğ•ß‚Ü‚¦‚È‚¢‚Æu•s³‚Èˆ—‚ª”­¶v‚·‚é‚Ì‚ÅA
-	// try{} catch(...)‚ÅŠmÀ‚É•ß‚Ü‚¦AƒGƒ‰[ˆ—‚ğs‚¤B
-	// ‚»‚Ìˆ—‚Í operator () ‚É‹Lq‚µ‚Ä‚¢‚é‚Ì‚ÅQÆ‚Ì‚±‚ÆB
+	// rtc::ray::take_a_step()ã¯ä¾‹å¤–ã‚’æŠ•ã’ã¦ãã‚‹ã“ã¨ãŒã‚ã‚‹ã€‚
+	// ã“ã‚Œã‚’æ•ã¾ãˆãªã„ã¨ã€Œä¸æ­£ãªå‡¦ç†ãŒç™ºç”Ÿã€ã™ã‚‹ã®ã§ã€
+	// try{} catch(...)ã§ç¢ºå®Ÿã«æ•ã¾ãˆã€ã‚¨ãƒ©ãƒ¼å‡¦ç†ã‚’è¡Œã†ã€‚
+	// ãã®å‡¦ç†ã¯ operator () ã«è¨˜è¿°ã—ã¦ã„ã‚‹ã®ã§å‚ç…§ã®ã“ã¨ã€‚
 	
-	// ‰‚ß‚ÉŠJn’n“_‚ğ•\¦‚·‚éB
+	// åˆã‚ã«é–‹å§‹åœ°ç‚¹ã‚’è¡¨ç¤ºã™ã‚‹ã€‚
 	if( m_env->is_plot_startptr )
 	{
 		report_progress( .0 );
@@ -179,7 +179,7 @@ void raytrace::mainloop()
 			0.0,
 			rtc::vector_pair( m_ray->getR(), m_ray->getK() )
 		));
-////////////////////////////////////////////////////////////////stepŠÔŠuŠm”F—p
+////////////////////////////////////////////////////////////////stepé–“éš”ç¢ºèªç”¨
 		print_variation(raypath_element(
 			0.0,
 			rtc::vector_pair( m_ray->getR(), m_ray->getK() )
@@ -195,28 +195,28 @@ void raytrace::mainloop()
 			try
 			{
 				
-				const double dt = m_ray->take_a_step(); // ”g“®‚ğ1stepi‚ß‚éB
+				const double dt = m_ray->take_a_step(); // æ³¢å‹•ã‚’1stepé€²ã‚ã‚‹ã€‚
 				t += dt;
 				
 				const double dr = rtc::norm_2( m_ray->getDeltaR() );
 				ray_length += dr;
 
-				// ˆÈ‰ºAŒõ‚ªi‚ñ‚¾‹——£‚©‚çI—¹“_‚ğ“±oB
+				// ä»¥ä¸‹ã€å…‰ãŒé€²ã‚“ã è·é›¢ã‹ã‚‰çµ‚äº†ç‚¹ã‚’å°å‡ºã€‚
 				if( ray_length < m_env->ray_length )
 				{
 					
-					// ƒvƒƒOƒŒƒXEƒo[‚ğ•\¦
+					// ãƒ—ãƒ­ã‚°ãƒ¬ã‚¹ãƒ»ãƒãƒ¼ã‚’è¡¨ç¤º
 					report_progress( std::max(
 						ray_length / m_env->ray_length,
 						static_cast<double>(loop) / m_env->step_count
 					));
 					
-					// Œ‹‰Ê‚ğ‚½‚ß‚é
+					// çµæœã‚’ãŸã‚ã‚‹
 					m_raypath.push_back(raypath_element(
 						t,
 						rtc::vector_pair( m_ray->getR(), m_ray->getK() )
 					));
-		//////////////////////////////////////////////////////////////////////stepŠÔŠuŠm”F—p
+		//////////////////////////////////////////////////////////////////////stepé–“éš”ç¢ºèªç”¨
 					m_rayvariation.push_back(raypath_element(
 						dt,
 						rtc::vector_pair( m_ray->getDeltaR(), m_ray->getDeltaK() )
@@ -225,7 +225,7 @@ void raytrace::mainloop()
 				}
 				else /*( ray_length >= m_env->ray_length )*/
 				{
-					//ÅI“_‚Íray_length‚¿‚å‚¤‚Ç‚Éû‚ß‚éB
+					//æœ€çµ‚ç‚¹ã¯ray_lengthã¡ã‚‡ã†ã©ã«åã‚ã‚‹ã€‚
 					rtc::vector r = m_ray->getR()-m_ray->getDeltaR();
 					rtc::vector k = m_ray->getK()-m_ray->getDeltaK();
 					
@@ -238,7 +238,7 @@ void raytrace::mainloop()
 						t - dt*(1.0-factor),
 						rtc::vector_pair( r, k )
 					));
-		///////////////////////////////////////////////////////////////////////stepŠÔŠuŠm”F—p
+		///////////////////////////////////////////////////////////////////////stepé–“éš”ç¢ºèªç”¨
 					m_rayvariation.push_back(raypath_element(
 						dt * factor,
 						rtc::vector_pair( factor * m_ray->getDeltaR(), factor * m_ray->getDeltaK() )
@@ -254,7 +254,7 @@ void raytrace::mainloop()
 			}
 		}
 
-	// m_output‚É®—‚µ‚Äo—Í
+	// m_outputã«æ•´ç†ã—ã¦å‡ºåŠ›
 	const double n = m_raypath.size();
 	if( n < m_env->ray_segment )
 	{
@@ -262,7 +262,7 @@ void raytrace::mainloop()
 		for( i = 0; i < n; ++i )
 		{
 			print_location( m_raypath[i] );
-/////////////////////////////////////////////////////////stepŠÔŠuŠm”F—p
+////////////////////////////////////////////////////////stepé–“éš”ç¢ºèªç”¨
 			print_variation( m_rayvariation[i] );
 		}
 		for( ; i < m_env->ray_segment; ++i )
@@ -283,7 +283,7 @@ void raytrace::mainloop()
 		);
 	}
 	
-	// I—¹’n“_‚ğŠmÀ‚É•\¦‚³‚¹‚éB
+	// çµ‚äº†åœ°ç‚¹ã‚’ç¢ºå®Ÿã«è¡¨ç¤ºã•ã›ã‚‹ã€‚
 	report_progress( 1.0 );
 	print_location( m_raypath.back() );
 	print_variation( m_rayvariation.back() );
@@ -292,11 +292,11 @@ void raytrace::mainloop()
 
 // -------------------------------------------------------------------
 // raytrace::report_progress()
-// ƒgƒŒ[ƒX’†‚ÌƒvƒƒOƒŒƒXEƒo[‚ğ•\¦‚·‚é
+// ãƒˆãƒ¬ãƒ¼ã‚¹ä¸­ã®ãƒ—ãƒ­ã‚°ãƒ¬ã‚¹ãƒ»ãƒãƒ¼ã‚’è¡¨ç¤ºã™ã‚‹
 //
 void raytrace::report_progress( const double percent )
 {
-	//i’»ó‹µ‚ğ•ñ
+	//é€²æ—çŠ¶æ³ã‚’å ±å‘Š
 	m_progress = percent;
 
 	if( !m_env->is_parallel && 0 == (static_cast<int>(100*percent) % 3) )
@@ -313,14 +313,14 @@ void raytrace::report_progress( const double percent )
 
 // -------------------------------------------------------------------
 // raytrace::print_location()
-// ”g“®‚ÌˆÊ’uA”g”ƒxƒNƒgƒ‹A‚¨‚æ‚Ñ”g“®‚ª¶‚Ü‚ê‚Ä‚©‚ç‚ÌŒo‰ßŠÔ‚ğo—Í‚·‚éB
+// æ³¢å‹•ã®ä½ç½®ã€æ³¢æ•°ãƒ™ã‚¯ãƒˆãƒ«ã€ãŠã‚ˆã³æ³¢å‹•ãŒç”Ÿã¾ã‚Œã¦ã‹ã‚‰ã®çµŒéæ™‚é–“ã‚’å‡ºåŠ›ã™ã‚‹ã€‚
 //
 void raytrace::print_location( const raypath_element& ptr )
 {
 	const double Re = rtc::getCosmos().getPlanet().getRadius();
 	const double t  = ptr.first;
-	const rtc::vector r = ptr.second.first  / Re;// ˆÊ’uƒxƒNƒgƒ‹
-	const rtc::vector k = ptr.second.second / Re;// ”g”ƒxƒNƒgƒ‹
+	const rtc::vector r = ptr.second.first  / Re;// ä½ç½®ãƒ™ã‚¯ãƒˆãƒ«
+	const rtc::vector k = ptr.second.second / Re;//æ³¢æ•°ãƒ™ã‚¯ãƒˆãƒ«
 
 	m_output
 		<< t << " "
@@ -330,14 +330,14 @@ void raytrace::print_location( const raypath_element& ptr )
 
 // -------------------------------------------------------------------
 // raytrace::print_variation()
-// ”g“®‚ÌˆÊ’uA”g”ƒxƒNƒgƒ‹A‚¨‚æ‚Ñ”g“®‚ª¶‚Ü‚ê‚Ä‚©‚ç‚ÌŒo‰ßŠÔ‚ğo—Í‚·‚éB
+// æ³¢å‹•ã®ä½ç½®ã€æ³¢æ•°ãƒ™ã‚¯ãƒˆãƒ«ã€ãŠã‚ˆã³æ³¢å‹•ãŒç”Ÿã¾ã‚Œã¦ã‹ã‚‰ã®çµŒéæ™‚é–“ã‚’å‡ºåŠ›ã™ã‚‹ã€‚
 //
 void raytrace::print_variation( const raypath_element& ptr )
 {
 	const double Re = rtc::getCosmos().getPlanet().getRadius();
 	const double dt  = ptr.first;
-	const rtc::vector dr = ptr.second.first  / Re;// ˆÊ’uƒxƒNƒgƒ‹
-	const rtc::vector dk = ptr.second.second / Re;// ”g”ƒxƒNƒgƒ‹
+	const rtc::vector dr = ptr.second.first  / Re;// ä½ç½®ãƒ™ã‚¯ãƒˆãƒ«
+	const rtc::vector dk = ptr.second.second / Re;// æ³¢æ•°ãƒ™ã‚¯ãƒˆãƒ«
 
 	m_output
 		<< dt << " "

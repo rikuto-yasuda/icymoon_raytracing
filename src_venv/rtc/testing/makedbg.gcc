@@ -13,7 +13,7 @@ STDLIB     = pthread boost_thread
 
 PCH = $(STDHEADER)$(PCH_EXP)
 
-# ����ѥ�����Υե饰�����
+# コンパイル時のフラグを指定
 CC_FLAG = -c -g           \
     $(INCLUDE_OPT:%=-I%)  \
     -D_DEBUG              \

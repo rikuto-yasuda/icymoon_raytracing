@@ -1,4 +1,4 @@
-// tracer.cpp: tracer �N���X�̃C���v�������e�[�V����
+// tracer.cpp: tracer クラスのインプリメンテーション
 //
 //////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
@@ -7,7 +7,7 @@
 using namespace rtc;
 
 //////////////////////////////////////////////////////////////////////
-// �\�z/����
+// 構築/消滅
 //////////////////////////////////////////////////////////////////////
 ray::ray( const wave_parameter& wparam )
  : m_dt_before(0.0),
@@ -56,9 +56,9 @@ ray::intermediate& ray::intermediate::operator =(
 bool ray::intermediate::operator ==(
 	const ray::intermediate& r
 ) const {
-	// �������̂��߁A&& �ł͂Ȃ�'&'���g���B
-	// �S�� bool �� �P�ł� false ������΂����󂾂���
-	// ����ł����E�E�E�͂�
+	// 高速化のため、&& ではなく'&'を使う。
+	// 全部 bool で １つでも false があればいい訳だから
+	// これでいい・・・はず
 	assert( B.size() == r.B.size() );
 	return (
 		( B(0) == r.B(0) )&
@@ -87,7 +87,7 @@ bool ray::intermediate::operator ==(
 	);
 }
 
-// �r���ŗ��p����v�Z�l�̍X�V //////////////////////////////////////////
+// 途中で利用する計算値の更新 //////////////////////////////////////////
 
 void ray::update_intermediate(
 	ray::intermediate& i,
@@ -108,7 +108,7 @@ void ray::update_intermediate(
 
 	const double theta = std::acos(
 		inner_prod( i.B/norm_2(i.B), k/norm_2(k) )
-	); // theta = ����Ɛ����p
+	); // theta = 磁場と成す角
 	i.s      =  std::sin(theta)              ;
 	i.c      =  std::cos(theta)              ;
 	i.s2     =  i.s*i.s                      ;
@@ -131,7 +131,7 @@ void ray::update_intermediate(
 	i.denominator = denominator_G(i,r)       ;
 }
 
-// �����̏�ԃ`�F�b�N //////////////////////////////////////////////////
+// 光線の状態チェック //////////////////////////////////////////////////
 void ray::checkState(
 	const ray::intermediate& i,
 	const vector_pair& drk,
@@ -139,12 +139,12 @@ void ray::checkState(
 	const vector& k
 ) const {
 
-	// ���������ĂȂ����ǂ����`�F�b�N����B
+	// 光が消えてないかどうかチェックする。
 	if( i.numerator >= i.denominator )
 		throw std::runtime_error(log("the ray was evanesced."));
 
 
-	// �s����NaN�l�͗�O�G���[�𓊂���B
+	// 不正なNaN値は例外エラーを投げる。
 	const bool isNaN_r = 
 		(isnan(r[0]) != 0) |
 		(isnan(r[1]) != 0) |
@@ -165,8 +165,8 @@ void ray::checkState(
 			log("k vector reached an invalid value.")
 	);
 
-	// ���ܗ��� 0 < n <= 1 �ɂ��邱�Ƃ��m�F����B
-	// ���Ȃ݂ɂ��͈̔͂���E�����烂�[�h�ϊ����N����炵���B
+	// 屈折率が 0 < n <= 1 にあることを確認する。
+	// ちなみにこの範囲を逸脱したらモード変換が起こるらしい。
 	const double n = cnst::c * norm_2(k)/( 2*cnst::pi*getWaveParam().getFreq() );
 	
 	if( n <= 0.0 || 1.0 < n )
@@ -174,7 +174,7 @@ void ray::checkState(
 			log("core::ray : The refractive index reached outside the range.")
 	);
 	
-	//�����V�~�����[�V�����̏ꍇ�ȉ����p cf)tracer.inl
+	//�����V�~�����[�V�����̏ꍇ�ȉ����p cf)tracer.inl
 
 	if( ray::checkReflection(r,drk) == 1 )
 		throw std::range_error(
@@ -183,7 +183,7 @@ void ray::checkState(
 
 }
 
-// �����̔��˂̗L�����`�F�b�N //////////////////////////////////////////////////
+// �����̔��˂̗L�����`�F�b�N //////////////////////////////////////////////////
 int ray::checkReflection (
 	const vector&        r,
 	const vector_pair& drk	
@@ -203,13 +203,13 @@ int ray::checkReflection (
 		}
 }
 
-// �g���x�N�g���̏����l ////////////////////////////////////////////////
+// 波数ベクトルの初期値 ////////////////////////////////////////////////
 ray* ray::initialize(
 	const vector& r,
 	const vector& k
 ) {
-	// r(x,y,z)����k(x,y,z)�����������Ă���
-	// �g���x�N�g���𐶐����ĕԂ��B
+	// r(x,y,z)からk(x,y,z)方向を向いている
+	// 波数ベクトルを生成して返す。
 	intermediate i;
 	update_intermediate(i,r,k);
 	const vector k_new = k
@@ -218,14 +218,14 @@ ray* ray::initialize(
 		/( cnst::c * norm_2(k) )
 	;
 
-	// initialize�� m_im �����������Ȃ���΂Ȃ�Ȃ��B
+	// initializeで m_im も初期化しなければならない。
 	update_intermediate(m_im,r,k_new);
 	checkState(m_im,m_drk,r,k_new);
 	
-	// initialize�ŁAm_dt_before�����������Ȃ���΂Ȃ�Ȃ��B
+	// initializeで、m_dt_beforeも初期化しなければならない。
 	m_dt_before = getWaveParam().getTimeStep().second;
 
-	// k�x�N�g���̐�Βl�́A�֐�G��ό`���邱�Ƃŏo�����Ƃ��ł���B
+	// kベクトルの絶対値は、関数Gを変形することで出すことができる。
 	m_rk = vector_pair( r, k_new );
 	
 	return this;
@@ -250,19 +250,19 @@ ray* ray::initialize(
 	const vector& r,
 	double pitch, double round
 ) {
-	// r(rx,ry,rz)�ɂ����鎥��B�ɂ��āA���C���[�����g�x�N�g����N�Ƃ����
-	// �x�N�g��B��(N x B)�����Ƃ���pitch�p��]���A����B������round������]����
-	// ������g���x�N�g���Ƃ��Đ������A�����x�N�g���y�A��Ԃ��B
+	// r(rx,ry,rz)における磁場Bについて、磁気モーメントベクトルをNとすると
+	// ベクトルBを(N x B)を軸としてpitch角回転し、次にBを軸にroundだけ回転した
+	// 方向を波数ベクトルとして生成し、初期ベクトルペアを返す。
 	vector
 		m = getCosmos().getPlanet().getMagnet().getMagneticMoment(),
 		B = getCosmos().getMagnetField(r);
 
-	// ���ꂪ�Ȃ��Ƃ܂����̂Ń`�F�b�N�B
+	// 磁場がないとまずいのでチェック。
 	double norm_m = norm_2(m), norm_B = norm_2(B);
 
 	if( norm_m == 0.0 )
 	{
-		// ���ꃂ�[�����g�́A�Ƃ肠����Z�������ɐL�т���̂��g���B
+		// 磁場モーメントは、とりあえずZ軸方向に伸びるものを使う。
 		log("libraytrace: ray<>::initialize: "
 			"magnetic moment not exists, instead we use vector(0,0,1).");
 		m(2) = 1.0;
@@ -270,17 +270,17 @@ ray* ray::initialize(
 	}
 	if( norm_B == 0.0 )
 	{
-		// ����́A�Ƃ肠����-m�������B
+		// 磁場は、とりあえず-mをつかう。
 		B = -m;
 		norm_B = norm_2(B);
 	}
 
-    // ��]�ŗ��p���邽�߂ɁA�P�ʃx�N�g��������B
+    // 回転で利用するために、単位ベクトル化する。
     m /= norm_m;
     B /= norm_B;
 
-	// ���i�̉�]�B���̉�]�́AN�~B�����Ƃ��āApitch[rad]������]����B
-	// outer_prod()�̓e���\���ςȂ̂Ŏg���Ȃ������肷��B
+	// 第一段の回転。この回転は、N×Bを軸として、pitch[rad]だけ回転する。
+	// outer_prod()はテンソル積なので使えなかったりする。
 	vector n = boost::numeric::ublas::zero_vector<double>(3);
 	n(0) = m(1)*B(2)-m(2)*B(1),
 	n(1) = m(2)*B(0)-m(0)*B(2),
@@ -288,10 +288,10 @@ ray* ray::initialize(
 
 	vector vk = rotation( B, n, pitch );
 	
-	// ��Q�i�̉�]�B���̉�]�́AB�����Ƃ���round[rad]������]����B
+	// 第２段の回転。この回転は、Bを軸としてround[rad]だけ回転する。
 	vk = rotation( vk, B, round );
 
-	// ��]�������ʂ��A�g���x�N�g���̕����ł���B
+	// 回転した結果が、波数ベクトルの方向である。
 	return initialize(r,vk);
 }
 
@@ -306,7 +306,7 @@ ray* ray::initialize(
 	return initialize( r, pitch, round );
 }
 
-// 1step�̎��ԗʂ��v�Z /////////////////////////////////////////////////
+// 1stepの時間量を計算 /////////////////////////////////////////////////
 double ray::calc_dt(
 	const vector_pair&      rk,
 	const vector_pair&     drk,
@@ -314,7 +314,7 @@ double ray::calc_dt(
 ) const {
 	assert( m_dt_before > 0.0 );
 
-	// �O��x�N�g�����̋��e�͈�
+	// 前後ベクトル長の許容範囲
 	const double precision = m_wave.getPrecision();
 
 	// step.first == max, step.second == min;
@@ -322,9 +322,9 @@ double ray::calc_dt(
 	double        dt = m_dt_before;
 	const  double abs_drdt = norm_2(drk.first);
 
-	// dt = m_dt_before ���̑O��x�N�g�����r���A
-	// ���e�͈͓��Ȃ�A���e�͈͂��肬��܂�dt���̂΂�
-	// ���e�͈͊O�Ȃ�A���e�͈͂܂�dt��������B
+	// dt = m_dt_before 時の前後ベクトルを比較し、
+	// 許容範囲内なら、許容範囲ぎりぎりまでdtをのばし
+	// 許容範囲外なら、許容範囲までdtをけずる。
 	vector
 		r = rk.first  + dt*drk.first,
 		k = rk.second + dt*drk.second;
@@ -342,10 +342,10 @@ double ray::calc_dt(
 	   dt < step.first                                    &&
 	   i.numerator < i.denominator
 	){
-		// �덷�͈͓��ł���A����
-		// �Q�{�̎��Ԃɂ��Ă��A���Ԑ������������������ł���
-		// �덷�͈͓��ł����Ă��A���ԂƋ��������ɂ�����̂ł����
-		// ����ȏ㎞�Ԃ𑝂₷���Ƃ͂ł��Ȃ��B
+		// 誤差範囲内であり、かつ
+		// ２倍の時間にしても、時間制限内＆距離制限内である
+		// 誤差範囲内であっても、時間と距離制限にかかるのであれば
+		// これ以上時間を増やすことはできない。
 		do
 		{
 			out_i = i;
@@ -362,7 +362,7 @@ double ray::calc_dt(
 		} while (
 			1.0 - precision < ratio && ratio < 1.0 + precision &&
 			abs_drdt*dt < m_wave.getStepLength()               && 
-			dt < step.first  /* ���ԁA�������͈͓��ł���*/     &&
+			dt < step.first /* 時間、距離が範囲内である*/      &&
 			i.numerator < i.denominator
 		);
 
@@ -371,8 +371,8 @@ double ray::calc_dt(
 		{ log("ray::calc_dt : out of dt range, over."); }
 #endif//RTC_RAYTRACE_RAY_LOGS_OUT_OF_TIME_RANGE
 
-		// dt �������𒴂����Ƃ���ŋA���Ă���̂�
-		// dt/2�ɂ��Đ������ɖ߂��B
+		// dt が制限を超えたところで帰ってくるので
+		// dt/2にして制限内に戻す。
 		dt *= 0.5;
 	}
 
@@ -380,18 +380,18 @@ double ray::calc_dt(
 	{
 		assert( dt >= step.second );
 
-		// ���������𒴂��Ă���\�������邩��
-		// ���������𖞂������܂Ŏ��Ԃ����炷�B
+		// 距離制限を超えている可能性があるから
+		// 距離制限を満たす所まで時間を減らす。
 		while(
 			dt          > step.second           &&
 			abs_drdt*dt > m_wave.getStepLength()
 		){  dt *= 0.5; };
 
-		// �덷�͈͊O�ł���A����
-		// 1/2�{�̎��Ԃɂ��Ă��A���Ԑ������ł���B
-		// �덷�͈͓��ł����Ă��A���Ԑ����ɂ�����̂ł����
-		// ����ȏ㎞�Ԃ����炷���Ƃ͂ł��Ȃ��B
-		// ���Ԃ����炷���\�b�h�Ȃ̂ŁA���������ɂ����邱�Ƃ͂��蓾�Ȃ��B
+		// 誤差範囲外であり、かつ
+		// 1/2倍の時間にしても、時間制限内である。
+		// 誤差範囲内であっても、時間制限にかかるのであれば
+		// これ以上時間を減らすことはできない。
+		// 時間を減らすメソッドなので、距離制限にかかることはあり得ない。
 		out_i = i;
 		do
 		{
@@ -419,7 +419,7 @@ double ray::calc_dt(
 				);
 #endif//RTC_RAYTRACE_ENABLE_EXCEPTION_WHEN_TIMESTEP_UNDERFLOW
 				
-				// ���Ԑ�������O�ꂽ�̂ŁA2�{�ɂ��ĕԂ��B
+				// 時間制限から外れたので、2倍にして返す。
 				dt *= 2.0;
 				break;
 			}
@@ -429,8 +429,8 @@ double ray::calc_dt(
 			ratio < 1.0 - precision || 1.0 + precision < ratio
 		);
 
-		// dt �����[�g�����ɓ��������A���Ԑ�������O�ꂽ�Ƃ���ŋA���Ă���
-		// dt �� 0.5�{�ɂ���ƁA���[�g��������O���\��������B
+		// dt がレート制限に入ったか、時間制限から外れたところで帰ってくる
+		// dt を 0.5倍にすると、レート制限から外れる可能性がある。
 	}
 
 	assert( dt == std::min( step.first, std::max( step.second, dt ) ) );
@@ -438,7 +438,7 @@ double ray::calc_dt(
 }
 
 
-// ���߂������ ////////////////////////////////////////////////////////
+// 求める微分式 ////////////////////////////////////////////////////////
 double ray::calc_dGdw(
 	const ray::intermediate& i,
 	const vector&            r,
@@ -449,10 +449,10 @@ double ray::calc_dGdw(
 	const double first_term = -2*i.k2*(cnst::c*cnst::c)/(i.w2*i.w);
 
 	const double
-		// numerator_G()��w�Ŕ����������ʒl
+		// numerator_G()をwで微分した結果値
 		dnG_dw  = clearNaN( -4.0*(i.X2 - 2.0*i.X4)/i.w ),
 
-		// denominator_G()��w�Ŕ����������ʒl
+		// denominator_G()をwで微分した結果値
 		ddG_dw  = clearNaN(
 		          4*(i.X2/i.w)
 		        + 2*(i.Y2/i.w)*i.s2
@@ -482,7 +482,7 @@ vector ray::calc_dGdr(
 	const int    ox   = m_wave.LO_or_RX();
 	const vector dndx = c.getDerivativeDensity(r);
 
-	// �x�N�g�������Ȃ̂ŁA�e�������ɔ����������ʂ��i�[����B
+	// ベクトル微分なので、各成分毎に微分した結果を格納する。
 	for( int n=0; n<3; ++n )
 	{
 		const double
@@ -567,14 +567,14 @@ vector ray::calc_dGdk(
 }
 
 // =====================================================================
-double ray::numerator_G(        // �֐�G�̑�Q���̕��q�̒l��Ԃ��B
+double ray::numerator_G(        // 関数Gの第２項の分子の値を返す。
 	const ray::intermediate& i,
 	const vector&            r
 ) const {
 	return clearNaN( 2 * i.X2 * i.iX2 );
 }
 
-double ray::denominator_G(      // �֐�G�̑�Q���̕���̒l��Ԃ��B
+double ray::denominator_G(      // 関数Gの第２項の分母の値を返す。
 	const ray::intermediate& i,
 	const vector&            r
 ) const {

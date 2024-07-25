@@ -1,4 +1,4 @@
-// basic_plasma_model.cpp: basic_plasma_model クラスのインプリメンテーション
+// basic_plasma_model.cpp: basic_plasma_model 繧ｯ繝ｩ繧ｹ縺ｮ繧､繝ｳ繝励Μ繝｡繝ｳ繝�繝ｼ繧ｷ繝ｧ繝ｳ
 //
 //////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"

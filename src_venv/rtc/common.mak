@@ -1,4 +1,4 @@
-# ƒvƒŠƒRƒ“ƒpƒCƒ‹ƒwƒbƒ_‚ðŽw’è
+# ãƒ—ãƒªã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ãƒ˜ãƒƒãƒ€ã‚’æŒ‡å®š
 STDHEADER=StdAfx.h
 LIBNAME  = libraytrace
 PCH      = $(LIBNAME).pch
@@ -15,7 +15,7 @@ SRC = \
 	model_nsumei_earth.cpp \
 	model_aon_earth.cpp    \
 
-#.oƒtƒ@ƒCƒ‹‚ð’u‚­êŠ
+#.oãƒ•ã‚¡ã‚¤ãƒ«ã‚’ç½®ãå ´æ‰€
 OBJ_PATH = object
 VPATH    = $(OBJ_PATH) lib
 

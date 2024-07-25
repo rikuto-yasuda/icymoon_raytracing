@@ -17,8 +17,8 @@ double plasma::nsumei_earth::getDensity( const vector& point ) const
 {
 	const double ILAT = getILAT(point);
 
-	// ’PˆÊ‚ğ‡‚í‚¹‚È‚¯‚ê‚Î‚È‚ç‚È‚¢B
-	// ‚±‚Ì®‚Å‚ÍAR ‚Í ’n‹…”¼Œa’PˆÊANe ‚Í[ƒR/cc]‚Æ‚È‚Á‚Ä‚¢‚éB
+	// å˜ä½ã‚’åˆã‚ã›ãªã‘ã‚Œã°ãªã‚‰ãªã„ã€‚
+	// ã“ã®å¼ã§ã¯ã€R ã¯ åœ°çƒåŠå¾„å˜ä½ã€Ne ã¯[ã‚³/cc]ã¨ãªã£ã¦ã„ã‚‹ã€‚
 	const double R = norm_2(point) / getCosmos().getPlanet().getRadius();
 
 	if( 1.4 < R && R < 5.0 &&
@@ -47,7 +47,7 @@ double plasma::nsumei_earth::getDensity( const vector& point ) const
 }
 double plasma::nsumei_earth::getILAT( const vector& point ) const
 {
-	// ƒ†[ƒNƒŠƒbƒh‹óŠÔ point ‚©‚çA•s•Ï¥‹CˆÜ“x(ILAT)‚ğ‹‚ßA•Ô‚·B
+	// ãƒ¦ãƒ¼ã‚¯ãƒªãƒƒãƒ‰ç©ºé–“ point ã‹ã‚‰ã€ä¸å¤‰ç£æ°—ç·¯åº¦(ILAT)ã‚’æ±‚ã‚ã€è¿”ã™ã€‚
 	const vector fp = convertToPolar(
 		getCosmos().getPlanet().getFootPrint(
 			point,
@@ -58,10 +58,10 @@ double plasma::nsumei_earth::getILAT( const vector& point ) const
 	const double ilat = std::fabs( rad2deg( fp(1) )-90.0 );
 
 	// --fix me--
-	// ilat ‚ª 90.0000000001“™‚Ì”’l‚É‚È‚Á‚Ä‚¢‚é‚±‚Æ‚ª‚ ‚éB
-	// ‚±‚ê‚É‚æ‚é‰e‹¿‚ğ”ğ‚¯‚é‚½‚ßA90.0ˆÈã‚Ìê‡‚Í
-	// ‚·‚×‚Ä 89.9999999999999 ‚É‚µ‚Ä•Ô‚·B
-	// FPU‚É‚æ‚Á‚Ä‚ÍA³í‚É“®ì‚µ‚È‚­‚È‚é‹°‚ê‚à‚ ‚é‚Ì‚Å’ˆÓ‚·‚é‚±‚ÆB
+	// ilat ãŒ 90.0000000001ç­‰ã®æ•°å€¤ã«ãªã£ã¦ã„ã‚‹ã“ã¨ãŒã‚ã‚‹ã€‚
+	// ã“ã‚Œã«ã‚ˆã‚‹å½±éŸ¿ã‚’é¿ã‘ã‚‹ãŸã‚ã€90.0ä»¥ä¸Šã®å ´åˆã¯
+	// ã™ã¹ã¦ 89.9999999999999 ã«ã—ã¦è¿”ã™ã€‚
+	// FPUã«ã‚ˆã£ã¦ã¯ã€æ­£å¸¸ã«å‹•ä½œã—ãªããªã‚‹æã‚Œã‚‚ã‚ã‚‹ã®ã§æ³¨æ„ã™ã‚‹ã“ã¨ã€‚
 	return std::min( ilat, 89.9999999999999 );
 }
 

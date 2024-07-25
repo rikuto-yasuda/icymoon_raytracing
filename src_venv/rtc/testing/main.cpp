@@ -18,12 +18,12 @@ namespace std
 
 // -------------------------------------------------------------------
 // getMagnetModel()
-// ¥êƒ‚ƒfƒ‹‚Å—˜—p‰Â”\‚ÈƒCƒ“ƒXƒ^ƒ“ƒX‚ğ‚±‚±‚ÅÀ‘Ì‰»‚µA
-// ŠÂ‹«’l‚É]‚Á‚ÄA‚µ‚©‚é‚×‚«ƒ‚ƒfƒ‹‚Ö‚ÌQÆ‚ğ•Ô‚·B
+// ç£å ´ãƒ¢ãƒ‡ãƒ«ã§åˆ©ç”¨å¯èƒ½ãªã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ã“ã“ã§å®Ÿä½“åŒ–ã—ã€
+// ç’°å¢ƒå€¤ã«å¾“ã£ã¦ã€ã—ã‹ã‚‹ã¹ããƒ¢ãƒ‡ãƒ«ã¸ã®å‚ç…§ã‚’è¿”ã™ã€‚
 //
 rtc::basic_magnet_model &getMagnetModel(const testing_env *env)
 {
-	// ¥êƒ‚ƒfƒ‹‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Í‚±‚±‚ÅÀ‘Ì‰»‚·‚é
+	// ç£å ´ãƒ¢ãƒ‡ãƒ«ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã¯ã“ã“ã§å®Ÿä½“åŒ–ã™ã‚‹
 	static rtc::model::magnet::null_magnet null;
 	static rtc::model::magnet::test_null_magnet test_null;
 	static rtc::model::magnet::simple simple;
@@ -70,12 +70,12 @@ rtc::basic_magnet_model &getMagnetModel(const testing_env *env)
 
 // -------------------------------------------------------------------
 // getPlasmaModel()
-// ƒvƒ‰ƒYƒ}ƒ‚ƒfƒ‹‚Å—˜—p‰Â”\‚ÈƒCƒ“ƒXƒ^ƒ“ƒX‚ğ‚±‚±‚ÅÀ‘Ì‰»‚µA
-// ŠÂ‹«’l‚É]‚Á‚ÄA‚µ‚©‚é‚×‚«ƒ‚ƒfƒ‹‚Ö‚ÌQÆ‚ğ•Ô‚·B
+// ãƒ—ãƒ©ã‚ºãƒãƒ¢ãƒ‡ãƒ«ã§åˆ©ç”¨å¯èƒ½ãªã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ã“ã“ã§å®Ÿä½“åŒ–ã—ã€
+// ç’°å¢ƒå€¤ã«å¾“ã£ã¦ã€ã—ã‹ã‚‹ã¹ããƒ¢ãƒ‡ãƒ«ã¸ã®å‚ç…§ã‚’è¿”ã™ã€‚
 //
 rtc::basic_plasma_model &getPlasmaModel(const testing_env *env)
 {
-	// ƒvƒ‰ƒYƒ}ƒ‚ƒfƒ‹‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Í‚±‚±‚ÅÀ‘Ì‰»‚·‚é
+	// ãƒ—ãƒ©ã‚ºãƒãƒ¢ãƒ‡ãƒ«ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã¯ã“ã“ã§å®Ÿä½“åŒ–ã™ã‚‹
 	static rtc::model::plasma::null_plasma null;
 	static rtc::model::plasma::test_null_plasma test_null;
 	static rtc::model::plasma::simple simple;
@@ -132,7 +132,7 @@ rtc::basic_plasma_model &getPlasmaModel(const testing_env *env)
 
 // -------------------------------------------------------------------
 // getPlanet()
-// w’è‚µ‚½˜f¯‚Ö‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğì¬‚µA•Ô‚·B
+// æŒ‡å®šã—ãŸæƒ‘æ˜Ÿã¸ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ä½œæˆã—ã€è¿”ã™ã€‚
 rtc::basic_planet &getPlanet(
 	const testing_env *env,
 	rtc::basic_magnet_model &m,
@@ -164,7 +164,7 @@ rtc::basic_planet &getPlanet(
 
 // -------------------------------------------------------------------
 // RX_cutoff()
-// w’è‚³‚ê‚½ˆÊ’u‚ÌRXƒJƒbƒgƒIƒtü”g”‚ğAŠpü”g”‚Å•Ô‚·B
+// æŒ‡å®šã•ã‚ŒãŸä½ç½®ã®RXã‚«ãƒƒãƒˆã‚ªãƒ•å‘¨æ³¢æ•°ã‚’ã€è§’å‘¨æ³¢æ•°ã§è¿”ã™ã€‚
 //
 double RX_cutoff(const rtc::vector &r)
 {
@@ -176,7 +176,7 @@ double RX_cutoff(const rtc::vector &r)
 
 // -------------------------------------------------------------------
 // LO_cutoff()
-// w’è‚³‚ê‚½ˆÊ’u‚ÌLOƒJƒbƒgƒIƒtü”g”‚ğAŠpü”g”‚Å•Ô‚·B
+// æŒ‡å®šã•ã‚ŒãŸä½ç½®ã®LOã‚«ãƒƒãƒˆã‚ªãƒ•å‘¨æ³¢æ•°ã‚’ã€è§’å‘¨æ³¢æ•°ã§è¿”ã™ã€‚
 //
 double LO_cutoff(const rtc::vector &r)
 {
@@ -207,17 +207,17 @@ public:
 		boost::xtime xt;
 		boost::xtime_get(&xt, boost::TIME_UTC_);
 
-		// m_rays ‚Ìó‹µ‚ğƒŒƒ|[ƒg‚µ‘±‚¯‚éB
+		// m_rays ã®çŠ¶æ³ã‚’ãƒ¬ãƒãƒ¼ãƒˆã—ç¶šã‘ã‚‹ã€‚
 		int n = 0;
 		rays_list::const_iterator it = m_rays.begin();
 
 		while (!m_isExit)
 		{
-			// ¡‚©‚ç1•bŒã‚Ì‚ğ‹L˜^
+			// ä»Šã‹ã‚‰1ç§’å¾Œã®æ™‚åˆ»ã‚’è¨˜éŒ²
 			boost::xtime_get(&xt, boost::TIME_UTC_);
 			xt.sec += 1;
 
-			// ƒXƒŒƒbƒhˆê——‚ğ•\¦
+			// ã‚¹ãƒ¬ãƒƒãƒ‰ä¸€è¦§ã‚’è¡¨ç¤º
 			if (0 == n % 60)
 			{
 				std::clog << head;
@@ -243,7 +243,7 @@ public:
 				}
 			}
 
-			// ‘SƒXƒŒƒbƒh‚Ìi’»ó‹µ‚ğ•ñ‚µA‰üs
+			// å…¨ã‚¹ãƒ¬ãƒƒãƒ‰ã®é€²æ—çŠ¶æ³ã‚’å ±å‘Šã—ã€æ”¹è¡Œ
 			double progress_all = 0.0;
 			for (rays_list::const_iterator i = m_rays.begin(); i != m_rays.end(); ++i)
 			{
@@ -255,7 +255,7 @@ public:
 					  << 100 * progress_all << "%"
 					  << std::endl;
 
-			// ‚µ‚Î‚ç‚­‘Ò‚Á‚ÄŸ‚ÖB
+			// ã—ã°ã‚‰ãå¾…ã£ã¦æ¬¡ã¸ã€‚
 			boost::thread::sleep(xt);
 		}
 	};
@@ -272,13 +272,13 @@ private:
 
 // -------------------------------------------------------------------
 // raytrace_start()
-// ŠÂ‹«’l‚É]‚Á‚Ä‰Šú’l‚ğì¬‚µAraytrace()‚É§Œä‚ğ“n‚µ‚ÄƒgƒŒ[ƒX‚ğÀs‚·‚éB
-// ‚±‚ÌŠÖ”‚ğŒÄ‚Ño‚·‚Ü‚Å‚É‰F’ˆŠÂ‹«‚ÍŠ®”õ‚·‚é‚±‚ÆB
+// ç’°å¢ƒå€¤ã«å¾“ã£ã¦åˆæœŸå€¤ã‚’ä½œæˆã—ã€raytrace()ã«åˆ¶å¾¡ã‚’æ¸¡ã—ã¦ãƒˆãƒ¬ãƒ¼ã‚¹ã‚’å®Ÿè¡Œã™ã‚‹ã€‚
+// ã“ã®é–¢æ•°ã‚’å‘¼ã³å‡ºã™ã¾ã§ã«å®‡å®™ç’°å¢ƒã¯å®Œå‚™ã™ã‚‹ã“ã¨ã€‚
 //
 int raytrace_start(testing_env *env)
 {
-	// ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“ˆø”‚ª‹ÉÀ•WŒn‚Åw’è‚³‚ê‚Ä‚¢‚éê‡‚Í
-	// ‚ ‚ç‚©‚¶‚ß‚»‚ê‚ğ’¼ŒğÀ•W‚É•ÏŠ·‚µ‚Ä‚¨‚©‚È‚¯‚ê‚Î‚È‚ç‚È‚¢B
+	// ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å¼•æ•°ãŒæ¥µåº§æ¨™ç³»ã§æŒ‡å®šã•ã‚Œã¦ã„ã‚‹å ´åˆã¯
+	// ã‚ã‚‰ã‹ã˜ã‚ãã‚Œã‚’ç›´äº¤åº§æ¨™ã«å¤‰æ›ã—ã¦ãŠã‹ãªã‘ã‚Œã°ãªã‚‰ãªã„ã€‚
 	rtc::vector source = boost::numeric::ublas::zero_vector<double>(3);
 	if (env->source_coord == testing_env::source_coord_polar)
 	{
@@ -310,8 +310,8 @@ int raytrace_start(testing_env *env)
 		source[2] = (env->source_z *= Re);
 	}
 
-	// ‚à‚µ env->freq == 0.0 ‚È‚çA‰ŠúˆÊ’u‚Å‚Ì
-	// ƒJƒbƒgƒIƒtü”g”‚Ì 1.05”{’l‚ğg—p‚·‚é
+	// ã‚‚ã— env->freq == 0.0 ãªã‚‰ã€åˆæœŸä½ç½®ã§ã®
+	// ã‚«ãƒƒãƒˆã‚ªãƒ•å‘¨æ³¢æ•°ã® 1.05å€å€¤ã‚’ä½¿ç”¨ã™ã‚‹
 	if (env->freq == 0.0)
 	{
 		double fc = 0;
@@ -336,15 +336,15 @@ int raytrace_start(testing_env *env)
 		}
 	}
 
-	// •À—ñ‰»‚µ‚È‚¢ê‡
+	// ä¸¦åˆ—åŒ–ã—ãªã„å ´åˆ
 	if (!env->is_parallel)
 	{
-		// ‚±‚±‚Å‚Í‰ŠúˆÊ’u‚Æƒsƒbƒ`Šp‚ğŒÅ’è‚µA
-		// ¥—Íüü‚è‚É‚R‚U‚O“x‰ñ“]‚³‚¹‚½”g“®‚ğ¶¬‚·‚éB
+		// ã“ã“ã§ã¯åˆæœŸä½ç½®ã¨ãƒ”ãƒƒãƒè§’ã‚’å›ºå®šã—ã€
+		// ç£åŠ›ç·šå‘¨ã‚Šã«ï¼“ï¼–ï¼åº¦å›è»¢ã•ã›ãŸæ³¢å‹•ã‚’ç”Ÿæˆã™ã‚‹ã€‚
 		for (int round = 0; round < env->round_div; ++round)
 		{
-			// raytraceƒNƒ‰ƒX‚ğ\’z‚µAoperator ()‚ğŒÄ‚Ño‚µ‚Äƒ‹[ƒvˆ—‚ğs‚¤B
-			// Œõ‚ªI’…“_‚É“’B‚µ‚½‚Æ‚«Aoperator ()‚©‚ç§Œä‚ª•Ô‚éB
+			// raytraceã‚¯ãƒ©ã‚¹ã‚’æ§‹ç¯‰ã—ã€operator ()ã‚’å‘¼ã³å‡ºã—ã¦ãƒ«ãƒ¼ãƒ—å‡¦ç†ã‚’è¡Œã†ã€‚
+			// å…‰ãŒçµ‚ç€ç‚¹ã«åˆ°é”ã—ãŸã¨ãã€operator ()ã‹ã‚‰åˆ¶å¾¡ãŒè¿”ã‚‹ã€‚
 			raytrace rtrc(env, (2 * rtc::cnst::pi / env->round_div) * round);
 			rtrc();
 
@@ -352,12 +352,12 @@ int raytrace_start(testing_env *env)
 		}
 	}
 
-	// •À—ñ‰»‚·‚éê‡
+	// ä¸¦åˆ—åŒ–ã™ã‚‹å ´åˆ
 	else
 	{
 		watch::rays_list rays;
 
-		// Œõ‚Ì”‚¾‚¯ƒXƒŒƒbƒh‚ğ\’z
+		// å…‰ã®æ•°ã ã‘ã‚¹ãƒ¬ãƒƒãƒ‰ã‚’æ§‹ç¯‰
 		boost::thread_group threads;
 
 		for (int round = 0; round < env->round_div; ++round)
@@ -367,17 +367,17 @@ int raytrace_start(testing_env *env)
 			threads.create_thread(boost::ref(*r));
 		}
 
-		// Œo‰ßó‘Ô‚ğƒŒƒ|[ƒg‚µ‚Â‚ÂA
+		// çµŒéçŠ¶æ…‹ã‚’ãƒ¬ãƒãƒ¼ãƒˆã—ã¤ã¤ã€
 		watch w(rays);
 		boost::thread w_thread(boost::ref(w));
 
-		// ‘SƒgƒŒ[ƒX‚ªI—¹‚·‚é‚Ü‚Å‘Ò‚ÂB
+		// å…¨ãƒˆãƒ¬ãƒ¼ã‚¹ãŒçµ‚äº†ã™ã‚‹ã¾ã§å¾…ã¤ã€‚
 		threads.join_all();
 
 		w.exit();
 		w_thread.join();
 
-		// Œ‹‰Ê‚ğ‡‚Éo—Í
+		// çµæœã‚’é †ã«å‡ºåŠ›
 		watch::rays_list::iterator it;
 		for (it = rays.begin(); it != rays.end(); ++it)
 		{
@@ -391,23 +391,23 @@ int raytrace_start(testing_env *env)
 
 // -------------------------------------------------------------------
 // main()
-// ‘‚­‚Ü‚Å‚à‚È‚¢B
+// æ›¸ãã¾ã§ã‚‚ãªã„ã€‚
 //
 int main(int argc, char *argv[])
 {
-	// ŠJn‚ğ•\¦
+	// é–‹å§‹æ™‚åˆ»ã‚’è¡¨ç¤º
 	const std::time_t start_at = std::time(NULL);
 	std::cerr << "testing start at : "
 			  << std::ctime(&start_at)
 			  << std::endl;
 
-	// ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“ˆø”‚ğ‰ğÍ‚·‚éB
+	// ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å¼•æ•°ã‚’è§£æã™ã‚‹ã€‚
 	testing_env *env = parseCmdline(argc, argv);
 
 	if (env->is_verbose)
 	{
-		// ƒvƒƒbƒg‚·‚éğŒ‚ÌÚ×‚ğo—Í‚·‚éB
-		// ‘®ƒtƒH[ƒ}ƒbƒg‚Í POSIX”Åprintf
+		// ãƒ—ãƒ­ãƒƒãƒˆã™ã‚‹æ¡ä»¶ã®è©³ç´°ã‚’å‡ºåŠ›ã™ã‚‹ã€‚
+		// æ›¸å¼ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã¯ POSIXç‰ˆprintf
 		std::cout << boost::format(
 						 "# %1% = ( %2%, %3%, %4% )"
 						 "\n"
@@ -476,7 +476,7 @@ int main(int argc, char *argv[])
 	try
 	{
 
-		// ‰F’ˆ‚ğ\’z‚·‚éB
+		// å®‡å®™ã‚’æ§‹ç¯‰ã™ã‚‹ã€‚
 		rtc::cosmos cosmo(
 			env->date_time.year,
 			env->date_time.month,
@@ -484,31 +484,30 @@ int main(int argc, char *argv[])
 			env->date_time.hour,
 			env->date_time.minute,
 			env->date_time.sec
-			// ‰F’ˆ‚Ì‚ğw’è
+			// å®‡å®™ã®æ™‚åˆ»ã‚’æŒ‡å®š
 		);
-
-		// ƒ‚ƒfƒ‹‚ğ\’z‚·‚éB
+		// ãƒ¢ãƒ‡ãƒ«ã‚’æ§‹ç¯‰ã™ã‚‹ã€‚
 		rtc::basic_magnet_model &m = getMagnetModel(env);
 		rtc::basic_plasma_model &p = getPlasmaModel(env);
 
-		// ˜f¯‚ğ\’z‚·‚éB
+		// æƒ‘æ˜Ÿã‚’æ§‹ç¯‰ã™ã‚‹ã€‚
 		rtc::basic_planet &e = getPlanet(
 			env,
-			m, // ¥êƒ‚ƒfƒ‹‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğw’èB
-			p  // ƒvƒ‰ƒYƒ}ƒ‚ƒfƒ‹‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğw’èB
+			m, // ç£å ´ãƒ¢ãƒ‡ãƒ«ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’æŒ‡å®šã€‚
+			p  // ãƒ—ãƒ©ã‚ºãƒãƒ¢ãƒ‡ãƒ«ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’æŒ‡å®šã€‚
 		);
 
-		// ƒvƒ‰ƒYƒ}EƒLƒƒƒrƒeƒB‚ğ‚Â‚­‚èAƒvƒ‰ƒYƒ}ƒ‚ƒfƒ‹‚ÉƒZƒbƒg‚·‚éB
+		// ãƒ—ãƒ©ã‚ºãƒãƒ»ã‚­ãƒ£ãƒ“ãƒ†ã‚£ã‚’ã¤ãã‚Šã€ãƒ—ãƒ©ã‚ºãƒãƒ¢ãƒ‡ãƒ«ã«ã‚»ãƒƒãƒˆã™ã‚‹ã€‚
 		std::list<rtc::cavity>::const_iterator it;
 		for (it = env->cavity.begin(); it != env->cavity.end(); ++it)
 		{
 			e.getPlasma().addCavity(*it);
 		}
 
-		// Š®¬‚µ‚½’n‹…‚ğ‰F’ˆ‚É“o˜^B
+		// å®Œæˆã—ãŸåœ°çƒã‚’å®‡å®™ã«ç™»éŒ²ã€‚
 		cosmo.registerPlanet(e);
 
-		// ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“‚ÌŒ‹‰Ê‚©‚çAÀs‚·‚é“à—e‚ğŒˆ’èB
+		// ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ã®çµæœã‹ã‚‰ã€å®Ÿè¡Œã™ã‚‹å†…å®¹ã‚’æ±ºå®šã€‚
 		switch (env->exec_mode)
 		{
 		case testing_env::plot_raypath:
@@ -558,7 +557,7 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	// I‚í‚Á‚½‚ğ•\¦
+	// çµ‚ã‚ã£ãŸæ™‚åˆ»ã‚’è¡¨ç¤º
 	const std::time_t end_at = std::time(NULL);
 	std::cerr
 		<< "testing is normal end at : "

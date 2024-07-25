@@ -7,14 +7,14 @@ import pandas as pd
 
 
 # In[]
-object_name = "ganymede"  # europa/ganymde/callisto
+object_name = "europa"  # europa/ganymde/callisto
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 1  # ..th flyby
-highest_plasma = "5.5e2"  # 単位は(/cc) 2e2/4e2/16e2
-plasma_scaleheight = "0.25e2"  # 単位は(km) 1.5e2/3e2/6e2
+time_of_flybies = 12  # ..th flyby
+highest_plasma = "20.139_368.385"  # 単位は(/cc) 2e2/4e2/16e2
+plasma_scaleheight = "138.606_2.610"  # 単位は(km) 1.5e2/3e2/6e2
 
-raytrace_lowest_altitude = -800  # レイトレーシングの下端の初期高度(km) 100の倍数で
-raytrace_highest_altitude = 1600  # レイトレーシング上端の初期高度(km) 500の倍数+100で
+raytrace_lowest_altitude = -600  # レイトレーシングの下端の初期高度(km) 100の倍数で
+raytrace_highest_altitude = 3100  # レイトレーシング上端の初期高度(km) 500の倍数+100で
 
 information_list = [
     "year",
@@ -423,6 +423,8 @@ def Calc_highest(l):
                     if higher_x > lower_x:
                         # 低高度のレイパスの方がより遠くで上端を超えている　→ より高高度のレイパスが包絡線を形成することはないので計算の必要はない
                         highest_altitude = higher_altitude
+                else:
+                    highest_altitude = higher_altitude
 
             else:
                 # もし低高度側のレイパスの終着点のz座標が計算空間の上端より低い場合
@@ -494,8 +496,8 @@ def Replace_csv(lowest_list, highest_list):
 
 def main():
 
-    Raytrace_result_makefolder()  # レイトレーシングの結果を格納するフォルダを生成
-    MoveFile()  # レイトレーシングの結果を移動
+    # Raytrace_result_makefolder()  # レイトレーシングの結果を格納するフォルダを生成
+    # MoveFile()  # レイトレーシングの結果を移動
 
     with Pool(processes=3) as pool:
         lowest_altitude_list = list(pool.map(Calc_lowest, kinds_freq))

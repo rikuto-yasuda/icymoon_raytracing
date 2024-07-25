@@ -21,18 +21,18 @@ namespace rtc { namespace model { namespace magnet {
 		int create( basic_planet& mother );
 		
 	private:
-		// ŒvZ‚Ég—p‚·‚é€‚ğŒvZ‚µA‚ ‚é‚¢‚Í•Û‚µ•Ô‚·B
-		// IAGA‚É‚æ‚éƒKƒEƒXŒW”‚Ìƒf[ƒ^•Û
+		// è¨ˆç®—æ™‚ã«ä½¿ç”¨ã™ã‚‹é …ã‚’è¨ˆç®—ã—ã€ã‚ã‚‹ã„ã¯ä¿æŒã—è¿”ã™ã€‚
+		// IAGAã«ã‚ˆã‚‹ã‚¬ã‚¦ã‚¹ä¿‚æ•°ã®ãƒ‡ãƒ¼ã‚¿ä¿æŒ
 		class coefficient
 		{
 		public:
-			// ƒKƒEƒXŒW”ƒf[ƒ^‚Ì•Û
+			// ï¿½Kï¿½Eï¿½Xï¿½Wï¿½ï¿½ï¿½fï¿½[ï¿½^ï¿½Ì•Ûï¿½
 			struct coefficient_element {
 				coefficient_element()
 				: g(0.0), G(0.0),
 				  h(0.0), H(0.0)
 				{};
-				double g, h; // ƒf[ƒ^‚Ì¶‚Ì’l
+				double g, h; // ãƒ‡ãƒ¼ã‚¿ã®ç”Ÿã®å€¤
 				double G, H; // (g|h) * ( em * (n-m)! / (n+m)! )
 			};
 			typedef boost::multi_array< coefficient_element, 2 > coeff_array_t;
@@ -40,39 +40,39 @@ namespace rtc { namespace model { namespace magnet {
 		public:
 			coefficient( const int n_max );
 			
-			// cosmos‚Ìƒf[ƒ^‚ğ—p‚¢‚ÄA
-			//Œ³ƒf[ƒ^‚©‚ç“ú•â³‚ğs‚Á‚½Œ‹‰Ê‚ğ•Ô‚·B
+			// cosmosã®æ™‚åˆ»ãƒ‡ãƒ¼ã‚¿ã‚’ç”¨ã„ã¦ã€
+			//å…ƒãƒ‡ãƒ¼ã‚¿ã‹ã‚‰æ—¥æ™‚è£œæ­£ã‚’è¡Œã£ãŸçµæœã‚’è¿”ã™ã€‚
 			double g( int n, int m ) const;
 			double h( int n, int m ) const;
 
-			// ŒW”‚É•K—v‚Èƒtƒ@ƒNƒ^[‚ğ‚ ‚ç‚©‚¶‚ßŠ|‚¯‡‚í‚¹‚½”’l‚ğ•Ô‚·B
-			// ¥ê‚ÌŒvZ‚É‚Í’Êí‚±‚¿‚ç‚ğg‚¤B
+			// ä¿‚æ•°ã«å¿…è¦ãªãƒ•ã‚¡ã‚¯ã‚¿ãƒ¼ã‚’ã‚ã‚‰ã‹ã˜ã‚æ›ã‘åˆã‚ã›ãŸæ•°å€¤ã‚’è¿”ã™ã€‚
+			// ç£å ´ã®è¨ˆç®—æ™‚ã«ã¯é€šå¸¸ã“ã¡ã‚‰ã‚’ä½¿ã†ã€‚
 			double G( int n, int m ) const;
 			double H( int n, int m ) const;
 
-			// •Û‚µ‚Ä‚¢‚éƒf[ƒ^‚ÌÅ‘åŸ”N+1‚ğ•Ô‚·B
+			// ä¿æŒã—ã¦ã„ã‚‹ãƒ‡ãƒ¼ã‚¿ã®æœ€å¤§æ¬¡æ•°N+1ã‚’è¿”ã™ã€‚
 			int getDimensionEnd() const
 			{ return m_elements.shape()[0] + m_elements.index_bases()[0]; }
 			
 		private:
-			// ƒKƒEƒXŒW”ƒf[ƒ^‚ğ“Ç‚İo‚·BƒRƒ“ƒXƒgƒ‰ƒNƒ^‚©‚ç‚Ì‚İŒÄ‚Ño‚³‚ê‚éB
+			// ã‚¬ã‚¦ã‚¹ä¿‚æ•°ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã¿å‡ºã™ã€‚ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‹ã‚‰ã®ã¿å‘¼ã³å‡ºã•ã‚Œã‚‹ã€‚
 			void load();
 
-			// “ñŸŒ³”z—ñB
-			// m_elements[n][m]‚ÅƒAƒNƒZƒX‚·‚é–‚ª‚Å‚«‚éB
-			// ƒAƒNƒZƒX”ÍˆÍ‚ÍAn = [1,4], m = [0,4]B
+			// äºŒæ¬¡å…ƒé…åˆ—ã€‚
+			// m_elements[n][m]ã§ã‚¢ã‚¯ã‚»ã‚¹ã™ã‚‹äº‹ãŒã§ãã‚‹ã€‚
+			// ã‚¢ã‚¯ã‚»ã‚¹ç¯„å›²ã¯ã€n = [1,4], m = [0,4]ã€‚
 			coeff_array_t m_elements;
 			
 		} m_coefficients;
 		
 
-		// SM‚ÆGeodeticŒn‚Ì•ÏŠ·s—ñ
+		// SMã¨Geodeticç³»ã®å¤‰æ›è¡Œåˆ—
 		matrix
 			m_sm2geo,
 			m_geo2sm;
 		
 
-	protected: // ŠO•”‚Ö‚ÌƒCƒ“ƒ^[ƒtƒFƒCƒX
+	protected: // å¤–éƒ¨ã¸ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ã‚¤ã‚¹
 
 		vector getField( const vector& pos ) const;
 

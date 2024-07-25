@@ -13,10 +13,10 @@ import sys
 
 args = sys.argv
 ## プロットしたいフライバイを指定
-object_name = "ganymede"  # ganydeme/europa/callisto`
+object_name = "europa"  # ganydeme/europa/callisto`
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 1  # ..th flyby
-plot_kinds = "egress"  # ingress/egress/noise_floor/manulal
+time_of_flybies = 12  # ..th flyby
+plot_kinds = "noise_floor"  # ingress/egress/noise_floor/manulal
 
 
 ## 詳細設定
@@ -341,6 +341,51 @@ if (
         plot_first_time = 0  # 05:30
         plot_last_time = 5400  # 07:00
 
+
+if (
+    (object_name == "europa")
+    and (spacecraft_name == "galileo")
+    and (time_of_flybies == 12)
+):
+    # プロットしたい電波データのパスを指定
+    radio_data_name = (
+        "Survey_Electric_1997-12-16T10-00_1997-12-16T13-00.d2s"  # C30 flyby
+    )
+
+    # 読み込んだデータの開始日時(実際の観測時刻の切り下げ値を代入)
+    start_day = 16  # 電波データの開始日
+    start_hour = 10  # 電波データの開始時刻
+    start_min = 0  # 電波データの開始分
+
+    # 電波データの時刻ラベルを作成（列番号と時刻の対応を示すもの）/
+    plot_time_step_sec = [6300, 6600, 6900, 7200, 7500, 7800, 8100, 8400, 8700]
+    plot_time_step_label = [
+        "11:45",
+        "11:50",
+        "11:55",
+        "12:00",
+        "12:05",
+        "12:10",
+        "12;15",
+        "12:20",
+        "12;25",
+    ]
+
+    if plot_kinds == "ingress":
+        plot_first_time = 6600
+        plot_last_time = 7500
+
+    elif plot_kinds == "egress":
+        plot_first_time = 7500
+        plot_last_time = 8400
+
+    elif plot_kinds == "full":
+        plot_first_time = 6300
+        plot_last_time = 8700
+
+    elif plot_kinds == "noise_floor":
+        plot_first_time = 7440
+        plot_last_time = 7680
 
 # 電波強度のデータを取得（一列目は時刻データになってる）
 # 初めの数行は読み取らないよう設定・時刻データを読み取って時刻をプロットするためここがずれても影響はないが、データがない行を読むと怒られるのでその時はd2sファイルを確認

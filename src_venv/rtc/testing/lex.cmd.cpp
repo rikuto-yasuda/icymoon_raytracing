@@ -950,13 +950,13 @@ char *cmdtext;
 #line 1 "cmdline.l"
 /*********************************************************************
 
-	ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“‰ğÍê—p lex - ‚½‚¾‚µflexê—pB
-	ƒRƒ“ƒpƒCƒ‹‚·‚é‚Æ‚«‚Í -Pcmd ‚·‚é‚×‚µB
-
-	cmdlex()‚ÍƒRƒ}ƒ“ƒhƒ‰ƒCƒ“‚ÉƒGƒ‰[‚ª‚ ‚Á‚½‚ç0ˆÈŠO‚Ì’l‚ğ•Ô‚·B
+	ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³è§£æå°‚ç”¨ lex - ãŸã ã—flexå°‚ç”¨ã€‚
+	ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã™ã‚‹ã¨ãã¯ -Pcmd ã™ã‚‹ã¹ã—ã€‚
+	
+	cmdlex()ã¯ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ã«ã‚¨ãƒ©ãƒ¼ãŒã‚ã£ãŸã‚‰0ä»¥å¤–ã®å€¤ã‚’è¿”ã™ã€‚
 
 **********************************************************************/
-/*’è‹`•”*/
+/*å®šç¾©éƒ¨*/
 #line 15 "cmdline.l"
 // for VC ///////////////////////////////////////
 #ifdef _MSC_VER
@@ -973,11 +973,11 @@ using namespace rtc;
 int cmdinput_local(char *buf, int max_size);
 
 ////////////////////////////////////////////////
-//‚±‚±‚Åg‚¤•Ï”B
+//ã“ã“ã§ä½¿ã†å¤‰æ•°ã€‚
 static char *pszInput;
 static testing_env g_env;
 
-/*ˆÈ‰º‚ÉƒRƒ}ƒ“ƒhƒ‰ƒCƒ“ˆ—‚ğ‹LqB*/
+/*ä»¥ä¸‹ã«ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å‡¦ç†ã‚’è¨˜è¿°ã€‚*/
 #line 1011 "lex.cmd.cpp"
 
 #define INITIAL 0
@@ -1454,7 +1454,7 @@ YY_DECL
 				const std::string str(cmdtext);
 				if (g_env.source_coord != testing_env::source_coord_none)
 				{
-					/* •¡”‚Ìƒ‚[ƒh‚ªw’è‚³‚ê‚Ä‚¢‚é */
+					/* è¤‡æ•°ã®ãƒ¢ãƒ¼ãƒ‰ãŒæŒ‡å®šã•ã‚Œã¦ã„ã‚‹ */
 					g_env.source_coord = testing_env::source_coord_error;
 				}
 				else if (str == "euclid")
@@ -1510,7 +1510,7 @@ YY_DECL
 			{
 				std::string str;
 
-				// ‘å•¶š‚É•ÏŠ·
+				// å¤§æ–‡å­—ã«å¤‰æ›
 				{
 					std::string tmp(cmdtext);
 					std::string::iterator it;
@@ -1674,22 +1674,22 @@ YY_DECL
 				const std::string str(cmdtext);
 				if (g_env.exec_mode != testing_env::plot_none)
 				{
-					/* •¡”‚Ìƒ‚[ƒh‚ªw’è‚³‚ê‚Ä‚¢‚é */
+					/* è¤‡æ•°ã®ãƒ¢ãƒ¼ãƒ‰ãŒæŒ‡å®šã•ã‚Œã¦ã„ã‚‹ */
 					g_env.exec_mode = testing_env::plot_error;
 				}
 				if (str == "plasma")
 				{
-					/* ƒvƒ‰ƒYƒ}ƒ‚ƒfƒ‹‚ğƒvƒƒbƒg‚·‚éB*/
+					/* ãƒ—ãƒ©ã‚ºãƒãƒ¢ãƒ‡ãƒ«ã‚’ãƒ—ãƒ­ãƒƒãƒˆã™ã‚‹ã€‚*/
 					g_env.exec_mode = testing_env::plot_plasma;
 				}
 				else if (str == "magnet")
 				{
-					/* ¥êƒ‚ƒfƒ‹‚ğƒvƒƒbƒg‚·‚éB*/
+					/* ç£å ´ãƒ¢ãƒ‡ãƒ«ã‚’ãƒ—ãƒ­ãƒƒãƒˆã™ã‚‹ã€‚*/
 					g_env.exec_mode = testing_env::plot_magnet;
 				}
 				else if (str == "magnet-trace")
 				{
-					/* ¥êƒ‚ƒfƒ‹‚ğƒgƒŒ[ƒX‚·‚éB*/
+					/* ç£å ´ãƒ¢ãƒ‡ãƒ«ã‚’ãƒˆãƒ¬ãƒ¼ã‚¹ã™ã‚‹ã€‚*/
 					g_env.exec_mode = testing_env::trace_magnet;
 				}
 				else if (str == "magnet-surface")
@@ -1698,7 +1698,7 @@ YY_DECL
 				}
 				else
 				{
-					/* ƒŒƒCƒgƒŒ[ƒX‚ğs‚¤ */
+					/* ãƒ¬ã‚¤ãƒˆãƒ¬ãƒ¼ã‚¹ã‚’è¡Œã† */
 					g_env.exec_mode = testing_env::plot_raypath;
 				}
 				BEGIN 0;
@@ -1712,7 +1712,7 @@ YY_DECL
 
 				if (g_env.plasma_model != testing_env::model_null)
 				{
-					/* •¡”‚Ìƒ‚[ƒh‚ªw’è‚³‚ê‚Ä‚¢‚é */
+					/* è¤‡æ•°ã®ãƒ¢ãƒ¼ãƒ‰ãŒæŒ‡å®šã•ã‚Œã¦ã„ã‚‹ */
 					g_env.plasma_model = testing_env::model_error;
 				}
 				else if (str == "test_null")
@@ -1770,7 +1770,7 @@ YY_DECL
 
 				if (g_env.magnet_model != testing_env::model_null)
 				{
-					/* •¡”‚Ìƒ‚[ƒh‚ªw’è‚³‚ê‚Ä‚¢‚é */
+					/* è¤‡æ•°ã®ãƒ¢ãƒ¼ãƒ‰ãŒæŒ‡å®šã•ã‚Œã¦ã„ã‚‹ */
 					g_env.magnet_model = testing_env::model_error;
 				}
 				else if (str == "simple")
@@ -2868,11 +2868,11 @@ int cmdinput_local(char *buf, int max_size)
 	return n;
 }
 
-/*ˆÈ‰º‚Éƒ†[ƒU[’è‹`ŠÖ”‚ğ‹LqB*/
+/*ä»¥ä¸‹ã«ãƒ¦ãƒ¼ã‚¶ãƒ¼å®šç¾©é–¢æ•°ã‚’è¨˜è¿°ã€‚*/
 
 testing_env *parseCmdline(int argc, char *argv[])
 {
-	// g_env ‚ğ‰Šú‰»B
+	// g_env ã‚’åˆæœŸåŒ–ã€‚
 	g_env.source_x =
 		g_env.source_y =
 			g_env.source_z = 0.0;
@@ -2919,7 +2919,7 @@ testing_env *parseCmdline(int argc, char *argv[])
 
 void printHelp()
 {
-	// ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“‚Ìg‚¢•û‚ğ•\¦B
+	// ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ã®ä½¿ã„æ–¹ã‚’è¡¨ç¤ºã€‚
 	std::clog << "libraytrace testing."
 				 "\n"
 				 "This program has been written in C++, STLport and boost."

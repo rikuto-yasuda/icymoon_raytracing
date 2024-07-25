@@ -47,7 +47,7 @@ private:
 	std::vector< raypath_element > m_rayvariation;
 
 private:
-	//危険なコピーコンストラクタを封印
+	//蜊ｱ髯ｺ縺ｪ繧ｳ繝斐�ｼ繧ｳ繝ｳ繧ｹ繝医Λ繧ｯ繧ｿ繧貞ｰ∝魂
 	raytrace( const raytrace& );
 };
 

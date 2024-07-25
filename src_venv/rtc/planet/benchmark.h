@@ -7,16 +7,16 @@
 
 namespace rtc { namespace planet {
 	
-	// ’n‹…‚ğ•\‚·˜f¯ƒNƒ‰ƒX
+	// åœ°çƒã‚’è¡¨ã™æƒ‘æ˜Ÿã‚¯ãƒ©ã‚¹
 	class benchmark : public basic_planet
 	{
 	public:
 		benchmark(
-			basic_magnet_model&   mag,        // ¥êƒ‚ƒfƒ‹‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğw’è‚·‚éB
-			basic_plasma_model&  plsm         // ƒvƒ‰ƒYƒ}ƒ‚ƒfƒ‹‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğw’è‚·‚éB
+			basic_magnet_model&   mag,        // ç£å ´ãƒ¢ãƒ‡ãƒ«ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’æŒ‡å®šã™ã‚‹ã€‚
+			basic_plasma_model&  plsm         // ãƒ—ãƒ©ã‚ºãƒãƒ¢ãƒ‡ãƒ«ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’æŒ‡å®šã™ã‚‹ã€‚
 		);
 
-		// ‰ñ“]s—ñ --------------------------------------------------
+		// ï¿½ï¿½]ï¿½sï¿½ï¿½ --------------------------------------------------
 		//virtual matrix getGEI2GEO() const;
 		//virtual matrix getGEI2GSE() const;
 		virtual matrix getGSE2GSM() const;

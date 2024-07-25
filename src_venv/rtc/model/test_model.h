@@ -14,8 +14,8 @@ namespace rtc
 		{
 
 			// test_null model -----------------------------------------
-			// test_nullƒ‚ƒfƒ‹‚Å‚ÍA¥ê‚Í‘¶İ‚µ‚È‚¢B
-			// í‚É 0 ‚ğ•Ô‚·B
+			// test_nullãƒ¢ãƒ‡ãƒ«ã§ã¯ã€ç£å ´ã¯å­˜åœ¨ã—ãªã„ã€‚
+			// å¸¸ã« 0 ã‚’è¿”ã™ã€‚
 			class test_null_magnet : public basic_magnet_model
 			{
 			protected:
@@ -25,7 +25,7 @@ namespace rtc
 				matrix getDerivativeB(const vector &pos) const;
 			};
 
-			// test_simpte model --------------------------------------////////—ûK—piz²•ûŒü‚Éˆê’è‚Ì¥ê‚ğì‚éj
+			// test_simpte model --------------------------------------////////ç·´ç¿’ç”¨ï¼ˆzè»¸æ–¹å‘ã«ä¸€å®šã®ç£å ´ã‚’ä½œã‚‹ï¼‰
 
 			class test_simple : public basic_magnet_model
 			{
@@ -49,8 +49,8 @@ namespace rtc
 		{
 
 			// test_null model -----------------------------------------
-			// test_nullƒ‚ƒfƒ‹‚Å‚ÍAƒvƒ‰ƒYƒ}‚Í‘¶İ‚µ‚È‚¢B
-			// í‚É 0 ‚ğ•Ô‚·B
+			// test_nullãƒ¢ãƒ‡ãƒ«ã§ã¯ã€ãƒ—ãƒ©ã‚ºãƒã¯å­˜åœ¨ã—ãªã„ã€‚
+			// å¸¸ã« 0 ã‚’è¿”ã™ã€‚
 			class test_null_plasma : public basic_plasma_model
 			{
 			protected:
@@ -65,7 +65,7 @@ namespace rtc
 			};
 
 			// europa_plume model ---------------------------------------
-			// Europa‚ÌÃ…ˆ³•½tƒvƒ‰ƒYƒ}‚Æƒvƒ‹[ƒ€ƒ‚ƒfƒ‹‚ğ‘g‚İ‡‚í‚¹‚½ƒ‚ƒfƒ‹B
+			// Europaã®é™æ°´åœ§å¹³è¡¡ãƒ—ãƒ©ã‚ºãƒã¨ãƒ—ãƒ«ãƒ¼ãƒ ãƒ¢ãƒ‡ãƒ«ã‚’çµ„ã¿åˆã‚ã›ãŸãƒ¢ãƒ‡ãƒ«ã€‚
 			class europa_plume : public basic_plasma_model
 			{
 			protected:
@@ -73,7 +73,7 @@ namespace rtc
 			};
 
 			// europa_nonplume model ---------------------------------------
-			// Europa‚ÌÃ…ˆ³•½tƒvƒ‰ƒYƒ}‚Ì‚İ‚Ìƒ‚ƒfƒ‹B
+			// Europaã®é™æ°´åœ§å¹³è¡¡ãƒ—ãƒ©ã‚ºãƒã®ã¿ã®ãƒ¢ãƒ‡ãƒ«ã€‚
 			class europa_nonplume : public basic_plasma_model
 			{
 			protected:
@@ -81,7 +81,7 @@ namespace rtc
 			};
 
 			// ganymede_nonplume model ---------------------------------------
-			// Ganymede‚ÌÃ…ˆ³•½tƒvƒ‰ƒYƒ}‚Ì‚İ‚Ìƒ‚ƒfƒ‹B
+			// Ganymedeã®é™æ°´åœ§å¹³è¡¡ãƒ—ãƒ©ã‚ºãƒã®ã¿ã®ãƒ¢ãƒ‡ãƒ«ã€‚
 			class ganymede_nonplume : public basic_plasma_model
 			{
 			protected:
@@ -89,7 +89,7 @@ namespace rtc
 			};
 
 			// callisto_nonplume model ---------------------------------------
-			// Callisto‚ÌÃ…ˆ³•½tƒvƒ‰ƒYƒ}‚Ì‚İ‚Ìƒ‚ƒfƒ‹B
+			// Callistoã®é™æ°´åœ§å¹³è¡¡ãƒ—ãƒ©ã‚ºãƒã®ã¿ã®ãƒ¢ãƒ‡ãƒ«ã€‚
 			class callisto_nonplume : public basic_plasma_model
 			{
 			protected:

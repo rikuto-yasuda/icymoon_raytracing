@@ -1,4 +1,4 @@
-// basic_magnetic_model.cpp: basic_magnetic_model ƒNƒ‰ƒX‚ÌƒCƒ“ƒvƒŠƒƒ“ƒe[ƒVƒ‡ƒ“
+// basic_magnetic_model.cpp: basic_magnetic_model ã‚¯ãƒ©ã‚¹ã®ã‚¤ãƒ³ãƒ—ãƒªãƒ¡ãƒ³ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³
 //
 //////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
@@ -52,7 +52,7 @@ vector magnet::simple::getFootPrint(
 
 	const basic_planet& mother = getMother();
 
-	// trace_factor‚Í–³‹
+	// trace_factorã¯ç„¡è¦–
 	const double r = mother.getRadius();
 	vector ptr = convertToPolar(sp);
 
@@ -77,7 +77,7 @@ vector magnet::simple::getEquatorPrint(
 
 	const double s = std::sin(ptr[1]);
 	ptr[0] = ptr[0] /( s*s ); // r_eq
-	ptr[1] = cnst::pi/2;      // 90‹
+	ptr[1] = cnst::pi/2;      // 90Â°
 
 	return convertToCartesian(ptr);
 }

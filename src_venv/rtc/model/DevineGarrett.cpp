@@ -10,7 +10,7 @@ using namespace model::plasma;
 
 int DevineGarrett::create( basic_planet& mother )
 {
-	// ²óÅ¾¹ÔÎó¤ò¤¢¤é¤«¤¸¤á¼èÆÀ¤·¤Æ¤ª¤¯¡£
+	// å›è»¢è¡Œåˆ—ã‚’ã‚ã‚‰ã‹ã˜ã‚å–å¾—ã—ã¦ãŠãã€‚
 	m_sm2geo = boost::numeric::ublas::prod(
 		mother.getGEI2GEO(),
 		makeMatrixInverse( mother.getGEI2GSE() )
@@ -29,10 +29,10 @@ int DevineGarrett::create( basic_planet& mother )
 
 double DevineGarrett::getDensity( const vector& point ) const
 {
-	// Devine and Garret¤Î·×»»¼°¤Ë¤è¤ëÌ©ÅÙÊ¬ÉÛ¥â¥Ç¥ë¤òÊÖ¤¹¡£
-	// °Ê²¼¤Î¥³¡¼¥É¤Ç¤Ï¾ï¤ËÅÅ»Ò¤ÎÌ©ÅÙÊ¬ÉÛ¥â¥Ç¥ë( gk == 1.0 )¤òÊÖ¤¹¤Î¤Ç¡¢
-	// Â¾¤Î¸¶»Ò¤â¹ÍÎ¸¤·¤¿Ì©ÅÙ¤ò¹Í¤¨¤ë¾ì¹ç¤Ï¡¢´Ø¿ô¤«¤éÃÍ¤òÊÖ¤¹½ê¤Ç
-	// Å¬ÀÚ¤Ê¥Õ¥¡¥¯¥¿¡¼¤ò³İ¤±¹ç¤ï¤»¤ë¤È¤è¤¤¡£
+	// Devine and Garretã®è¨ˆç®—å¼ã«ã‚ˆã‚‹å¯†åº¦åˆ†å¸ƒãƒ¢ãƒ‡ãƒ«ã‚’è¿”ã™ã€‚
+	// ä»¥ä¸‹ã®ã‚³ãƒ¼ãƒ‰ã§ã¯å¸¸ã«é›»å­ã®å¯†åº¦åˆ†å¸ƒãƒ¢ãƒ‡ãƒ«( gk == 1.0 )ã‚’è¿”ã™ã®ã§ã€
+	// ä»–ã®åŸå­ã‚‚è€ƒæ…®ã—ãŸå¯†åº¦ã‚’è€ƒãˆã‚‹å ´åˆã¯ã€é–¢æ•°ã‹ã‚‰å€¤ã‚’è¿”ã™æ‰€ã§
+	// é©åˆ‡ãªãƒ•ã‚¡ã‚¯ã‚¿ãƒ¼ã‚’æ›ã‘åˆã‚ã›ã‚‹ã¨ã‚ˆã„ã€‚
 	
 	const vector ptr = convertToPolar(rotation_prod(m_sm2geo,point));
 	const double
@@ -40,17 +40,17 @@ double DevineGarrett::getDensity( const vector& point ) const
 		tan_p = 0.122784560902905, // == std::tan(deg2rad(7.0)), 7.0 == alpha
 		l0    = deg2rad(21.),
 		radii = ptr[0]/Rj,
-		lat   = deg2rad(90.0-rad2deg(ptr[1])), //°ŞÅÙ
-		lng   = -ptr[2];                       //À¾·Ğ
+		lat   = deg2rad(90.0-rad2deg(ptr[1])), //ç·¯åº¦
+		lng   = -ptr[2];                       //è¥¿çµŒ
 	assert( 0.0 <= radii );
 
 	double n  = 0.0;
 
 	// fix me //
-	// °Ê²¼¡¢¤Ò¤¿¤¹¤éÄ¹¤¤ if else Ê¸¤¬Â³¤¯¡£
-	// ¤³¤Î¤¿¤á¡ÊÆÃ¤Ëradii¤¬Âç¤­¤ÊÃÍ¤Î»ş¡ËÈó¾ï¤ËÄãÂ®¤Ç¤¢¤ë¡£
-	// ¹âÂ®²½¤Î¤¿¤á¤ËÊÌ¤Î¥¢¥ë¥´¥ê¥º¥à¤ò¹Í¤¨¤¿Êı¤¬¤è¤¤¡£
-	// static_cast<int>(radii * 10)¤Ç¤â¤·¤Æ¡¢¥Æ¡¼¥Ö¥ë¤«¤é·¸¿ô¤ò½¦¤¦¤È¤«¡£
+	// ä»¥ä¸‹ã€ã²ãŸã™ã‚‰é•·ã„ if else æ–‡ãŒç¶šãã€‚
+	// ã“ã®ãŸã‚ï¼ˆç‰¹ã«radiiãŒå¤§ããªå€¤ã®æ™‚ï¼‰éå¸¸ã«ä½é€Ÿã§ã‚ã‚‹ã€‚
+	// é«˜é€ŸåŒ–ã®ãŸã‚ã«åˆ¥ã®ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ã‚’è€ƒãˆãŸæ–¹ãŒã‚ˆã„ã€‚
+	// static_cast<int>(radii * 10)ã§ã‚‚ã—ã¦ã€ãƒ†ãƒ¼ãƒ–ãƒ«ã‹ã‚‰ä¿‚æ•°ã‚’æ‹¾ã†ã¨ã‹ã€‚
 	
 	// radii < 1.0 ------------------------------/
 	if( radii < 1.0 )
@@ -279,7 +279,7 @@ double DevineGarrett::getDensity( const vector& point ) const
 
 		const double
 			// fix me //
-			// 10.77¤Ï¼§¼´¤Î·¹¼Ğ³Ñ¡£ËÜÍè¤Ï¼§¾ì¥â¥Ç¥ë¤«¤é¼èÆÀ¤¹¤Ù¤­¡£
+			//  10.77ã¯ç£è»¸ã®å‚¾æ–œè§’ã€‚æœ¬æ¥ã¯ç£å ´ãƒ¢ãƒ‡ãƒ«ã‹ã‚‰å–å¾—ã™ã¹ãã€‚
 			tan_p = std::tan(deg2rad(10.77)),
 			r0 = 20.0,
 		//	h  = 1.0,

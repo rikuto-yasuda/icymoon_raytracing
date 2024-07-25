@@ -9,8 +9,8 @@ namespace rtc { namespace model { namespace plasma {
 
 	/********************************************
 	class sato_earth
-	�@���̃��f���́A��������(2000�N����,PPARC)�ɂ����
-	�ϑ����ꂽ�d�q���x���f�������ɍ쐬���Ă��܂��B
+	　このモデルは、佐藤さん(2000年卒業,PPARC)によって
+	観測された電子密度モデルを元に作成しています。
 
 	*********************************************/
 	class sato_earth : public basic_plasma_model
@@ -24,22 +24,22 @@ namespace rtc { namespace model { namespace plasma {
 	public:
 		struct SATO_PARAM
 		{
-			// ���̃p�����[�^�́A����(2000)�ɂ�����
-			//�d�q���x�̓��o��
+			// このパラメータは、佐藤(2000)における
+			//電子密度の導出式
 			//
 			//   Ne = N0 * exp( -(z-z0)/(H0 + beta*z) );
 			//
-			// �ŗ��p�������̂ł���B
-			// ���̍\���̂̃����o�ϐ����́A�㎮�̕ϐ����Ɉ�v����B
-			// z �͒n�ォ��̋����ł���B
+			// で利用されるものである。
+			// この構造体のメンバ変数名は、上式の変数名に一致する。
+			// z は地上からの距離である。
 			//
-			// ���̕������� getDensity()�ɃC���v�������g����Ă���B
+			// この方程式は getDensity()にインプリメントされている。
 
 			double
-				MLT,  // ���C���[�J������[h]
-				iLAT, // �s�ώ��C�ܓx  [deg]
-				N0,   // �d�q���x�  [��/cm*3]
-				z0,   // ���x�      [km]
+				MLT,  // 磁気ローカル時刻[h]
+				iLAT, // 不変磁気緯度  [deg]
+				N0,   // 電子密度基数  [個/cm*3]
+				z0,   // 高度基数      [km]
 				H0,
 				beta;
 		};
@@ -70,12 +70,12 @@ namespace rtc { namespace model { namespace plasma {
 		parameter getBaseParam( int index ) const;
 
 	private:
-		// �p�����[�^�̊�ƂȂ�ϐ��Z�b�g.
-		//9(MLT) x 40(iLAT)�̊�b�p�����[�^���i�[�����B
-		//MLT,iLAT�Ɣz��C���f�b�N�X�̑Ή��́AgetTriBaseParamIndices()���Q�ƁB
+		// パラメータの基となる変数セット.
+		//9(MLT) x 40(iLAT)の基礎パラメータが格納される。
+		//MLT,iLATと配列インデックスの対応は、getTriBaseParamIndices()を参照。
 		const static SATO_PARAM m_baseParam[];
 		
-		// �L���r�e�B�𐶐�����␳�I�u�W�F�N�g
+		// キャビティを生成する補正オブジェクト
 		cavity m_cavity;
 	};
 

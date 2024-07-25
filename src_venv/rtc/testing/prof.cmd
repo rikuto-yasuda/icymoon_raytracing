@@ -1,5 +1,5 @@
 @echo off
-rem ƒvƒƒtƒ@ƒCƒŠƒ“ƒO‚ğŠJn‚·‚éŠÖ”‚ğAtesting.map‚©‚çƒRƒsƒy‚·‚éB
+rem ãƒ—ãƒ­ãƒ•ã‚¡ã‚¤ãƒªãƒ³ã‚°ã‚’é–‹å§‹ã™ã‚‹é–¢æ•°ã‚’ã€testing.mapã‹ã‚‰ã‚³ãƒ”ãƒšã™ã‚‹ã€‚
 rem prep /om /ft /sf _main  Release\testing.exe
     prep /om /ft /sf ?getFootPrint@basic_magnet_model@rtc@@QBE?AV?$vector@NV?$unbounded_array@N@ublas@numeric@boost@@@ublas@numeric@boost@@ABV3456@NN@Z Release\testing.exe
 if errorlevel 1 goto done

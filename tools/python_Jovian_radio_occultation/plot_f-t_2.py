@@ -13,12 +13,12 @@ import sys
 # あらかじめ ../result_sgepss2021/~/~ に必要なレイトレーシング結果とパラメータセットを入れること
 args = sys.argv
 
-object_name = "ganymede"  # ganydeme/europa/calisto``
+object_name = "europa"  # ganydeme/europa/calisto``
 
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 1  # ..th flyby
-highest_plasma = "3.5e2"  # 単位は(/cc) 2e2/4e2/16e22
-plasma_scaleheight = "0.25e2"  # 単位は(km) 1.5e2/3e2/6e2
+time_of_flybies = 12  # ..th flyby
+highest_plasma = "20.139_368.385"  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = "138.606_2.610"  # 単位は(km) 1.5e2/3e2/6e2
 
 # object_name = args[1]  # ganydeme/europa/calisto``
 # time_of_flybies = int(args[2])  # ..th flyby
@@ -93,6 +93,9 @@ if object_name == "europa" and time_of_flybies == 12:
         "12:20",
         "12:25",
     ]
+
+    exclave_exception = np.array([[4.298, 2.385], [1, 1], [0, 0]])
+    ingress_egress_time_window = 600
 
 if object_name == "callisto" and time_of_flybies == 30:
     # C30 flyby

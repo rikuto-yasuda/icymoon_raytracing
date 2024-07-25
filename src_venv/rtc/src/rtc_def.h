@@ -6,24 +6,24 @@
 #define RTC_RAYTRACE_DEF_H
 
 namespace rtc { namespace cnst {// -------------------------------------
-	// ƒ‰ƒCƒuƒ‰ƒŠ‚ª“à•”‚Å—˜—p‚µ‚Ä‚¢‚é’è”B/////////////////////
+	// ãƒ©ã‚¤ãƒ–ãƒ©ãƒªãŒå†…éƒ¨ã§åˆ©ç”¨ã—ã¦ã„ã‚‹å®šæ•°ã€‚/////////////////////
 	enum plot_style {
 		plot_xy,
 		plot_xz,
 		plot_yz,
-	}; // Šeƒ‚ƒfƒ‹‚Ìƒvƒƒbƒg‚ğA‚Ç‚Ì²‚É‰ˆ‚Á‚Äs‚¤‚©w’è‚·‚éB
+	}; // å„ãƒ¢ãƒ‡ãƒ«ã®ãƒ—ãƒ­ãƒƒãƒˆã‚’ã€ã©ã®è»¸ã«æ²¿ã£ã¦è¡Œã†ã‹æŒ‡å®šã™ã‚‹ã€‚
 
-	// •¨—’è” ////////////////////////////////////////////////
-	const static double pi = 3.1415926535897932; // ‰~ü—¦
-	const static double c  = 2.99792458e8;       // Œõ‘¬“x[m/s]
-	const static double e  = 1.60217759e-19;     // “d‹C‘f—Ê
-	const static double e0 = 8.85418782e-12;     // —U“d—¦
-	const static double u0 = 4*pi*1e-7;          // “§¥—¦
-	const static double me = 9.1093922e-31;      // “dq‚Ì¿—Ê[kg]
-	const static double mp = 1.6726217e-27;      // —zq‚Ì¿—Ê[kg]
-	const static double k  = 1.3806505e-23;      // ƒ{ƒ‹ƒcƒ}ƒ“’è”
+	// ç‰©ç†å®šæ•° ////////////////////////////////////////////////
+	const static double pi = 3.1415926535897932; // å††å‘¨ç‡
+	const static double c  = 2.99792458e8;       // å…‰é€Ÿåº¦[m/s]
+	const static double e  = 1.60217759e-19;     // é›»æ°—ç´ é‡
+	const static double e0 = 8.85418782e-12;     // èª˜é›»ç‡
+	const static double u0 = 4*pi*1e-7;          // é€ç£ç‡
+	const static double me = 9.1093922e-31;      // é›»å­ã®è³ªé‡[kg]
+	const static double mp = 1.6726217e-27;      // é™½å­ã®è³ªé‡[kg]
+	const static double k  = 1.3806505e-23;      // ãƒœãƒ«ãƒ„ãƒãƒ³å®šæ•°
 
-	const static double Rj = 71372.e3;           // –Ø¯”¼Œa[m]
+	const static double Rj = 71372.e3;           // æœ¨æ˜ŸåŠå¾„[m]
 
 }}// namespace rtc::cnst; ----------------------------------------------
 

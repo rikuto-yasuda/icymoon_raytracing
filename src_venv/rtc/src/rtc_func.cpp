@@ -6,10 +6,10 @@
 #include "rtc_func.h"
 
 
-// —Bˆê‚ÌƒOƒ[ƒoƒ‹•Ï”
+// å”¯ä¸€ã®ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°
 namespace rtc {
-	// ‚±‚Ì•Ï”‚ğextern‚µ‚Ä‚Í‚È‚ç‚È‚¢B
-	// •K‚¸Artc::getUniv()‚ğg‚Á‚Ä’l‚ğæ“¾‚·‚é‚±‚ÆB
+	// ã“ã®å¤‰æ•°ã‚’externã—ã¦ã¯ãªã‚‰ãªã„ã€‚
+	// å¿…ãšã€rtc::getUniv()ã‚’ä½¿ã£ã¦å€¤ã‚’å–å¾—ã™ã‚‹ã“ã¨ã€‚
 	cosmos* g_cosmo = NULL;
 };
 
@@ -37,10 +37,10 @@ double rtc::mlt2rad( const double mlt )
 double rtc::rad2mlt( const double rad )
 { return 12*( rad/cnst::pi - 1 ); }
 
-// À•W•ÏŠ·Œn ----------------------------------------------------------
+// åº§æ¨™å¤‰æ›ç³» ----------------------------------------------------------
 rtc::vector rtc::convertToPolar( const rtc::vector& cartesian )
 {
-	// ƒ†[ƒNƒŠƒbƒh‹óŠÔ‚©‚ç‹ÉÀ•W‚Ö‚Ì•ÏŠ·B
+	// ãƒ¦ãƒ¼ã‚¯ãƒªãƒƒãƒ‰ç©ºé–“ã‹ã‚‰æ¥µåº§æ¨™ã¸ã®å¤‰æ›
 	rtc::vector polar = boost::numeric::ublas::zero_vector<double>(3);// (r,theta,fai)
 
 	const double dr = cartesian(0)*cartesian(0) + cartesian(1)*cartesian(1);
@@ -54,7 +54,7 @@ rtc::vector rtc::convertToPolar( const rtc::vector& cartesian )
 
 rtc::vector rtc::convertToCartesian( const rtc::vector& polar )
 {
-	// ‹ÉÀ•W‚©‚çƒ†[ƒNƒŠƒbƒh‹óŠÔ‚Ö‚Ì•ÏŠ·
+	// æ¥µåº§æ¨™ã‹ã‚‰ãƒ¦ãƒ¼ã‚¯ãƒªãƒƒãƒ‰ç©ºé–“ã¸ã®å¤‰æ›
 	rtc::vector e = boost::numeric::ublas::zero_vector<double>(3);// (x,y,z);
 
 	e(0) = polar(0) * std::sin( polar(1) ) * std::cos( polar(2) );
@@ -90,22 +90,22 @@ rtc::vector rtc::rotation(
 	const rtc::vector& axis,
 	const double       angle
 ){
-	// ‚ ‚éƒxƒNƒgƒ‹ v ‚ğ”CˆÓ‚Ì²‚Å‰ñ“]‚·‚é‚½‚ß‚ÉƒNƒH[ƒ^ƒjƒIƒ“(‚SŸŒ³”)‚ğ—˜—p‚·‚éB
-	// ƒNƒH[ƒ^ƒjƒIƒ“ v(0,x,y,z) ‚ğ (nx,ny,nz)ƒxƒNƒgƒ‹‚ğ²‚Æ‚µ‚Ä theta‚¾‚¯‰ñ“]‚·‚é‚É‚ÍA
+	// ã‚ã‚‹ãƒ™ã‚¯ãƒˆãƒ« v ã‚’ä»»æ„ã®è»¸ã§å›è»¢ã™ã‚‹ãŸã‚ã«ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³(ï¼”æ¬¡å…ƒæ•°)ã‚’åˆ©ç”¨ã™ã‚‹ã€‚
+	// ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ v(0,x,y,z) ã‚’ (nx,ny,nz)ãƒ™ã‚¯ãƒˆãƒ«ã‚’è»¸ã¨ã—ã¦ thetaã ã‘å›è»¢ã™ã‚‹ã«ã¯ã€
 	// q = w + ai + bj + ck,
 	//   w = cos(theta/2);
 	//   a = nx * sin(theta/2);
 	//   b = ny * sin(theta/2);
 	//   c = nz * sin(theta/2);
-	//‚ÌA‰ñ“]quaternion(q)‚Æ‚»‚Ì‹¤–ğ‚Èquaternion(qc)‚ª•K—vB
-	// ‹¤–ğ‚Èquaternion‚ÍA(w, -a, -b, -c)‚Å’è‹`‚³‚ê‚éB
+	//ã®ã€å›è»¢quaternion(q)ã¨ãã®å…±å½¹ãªquaternion(qc)ãŒå¿…è¦ã€‚
+	// å…±å½¹ãªquaternionã¯ã€(w, -a, -b, -c)ã§å®šç¾©ã•ã‚Œã‚‹ã€‚
 	//
-	// ‰ñ“]quaternion‚ª“¾‚ç‚ê‚½‚çA
+	// å›è»¢quaternionãŒå¾—ã‚‰ã‚ŒãŸã‚‰ã€
 	//  q * v * qc
-	//‚ğŒvZ‚·‚é‚±‚Æ‚ÅA‰ñ“]Œ‹‰Ê‚ª“¾‚ç‚ê‚éB
+	//ã‚’è¨ˆç®—ã™ã‚‹ã“ã¨ã§ã€å›è»¢çµæœãŒå¾—ã‚‰ã‚Œã‚‹ã€‚
 	rtc::quaternion v( 0, ptr[0], ptr[1], ptr[2] );
 
-	// ‰ñ“]B‰ñ“]²ƒxƒNƒgƒ‹‚Í’PˆÊƒxƒNƒgƒ‹‚Å‚È‚¢‚Æ‚¢‚¯‚È‚¢B
+	// å›è»¢ã€‚å›è»¢è»¸ãƒ™ã‚¯ãƒˆãƒ«ã¯å˜ä½ãƒ™ã‚¯ãƒˆãƒ«ã§ãªã„ã¨ã„ã‘ãªã„ã€‚
 	rtc::vector n = axis;
 	n /= rtc::norm_2(n); 
 
@@ -140,8 +140,8 @@ rtc::vector rtc::rotation(
 
 
 #if defined (_MSC_VER) && _MSC_VER < 1300
-// VC6‚¾‚ÆƒRƒ“ƒpƒCƒ‹‚Å‚«‚È‚¢•”•ª‚ª‚ ‚éB
-// ˆÈ‰º‚Å‚Í‚»‚ê‚ğ•â‚¤B
+// VC6ã ã¨ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã§ããªã„éƒ¨åˆ†ãŒã‚ã‚‹ã€‚
+// ä»¥ä¸‹ã§ã¯ãã‚Œã‚’è£œã†ã€‚
 #include <boost/numeric/ublas/lu.hpp>
 
 template<class M, class E>
@@ -175,7 +175,7 @@ void lu_substitute (const M &m, const boost::numeric::ublas::permutation_matrix<
     ::lu_substitute (m, mv);
 }
 
-#else // VC6ˆÈŠO
+#else // VC6ï¿½ÈŠO
 template<class M, class PMT, class PMA, class MV>
 void lu_substitute (const M &m, const boost::numeric::ublas::permutation_matrix<PMT,PMA> &pm, MV &mv) {
 	boost::numeric::ublas::lu_substitute(m,pm,mv);
@@ -230,8 +230,8 @@ rtc::matrix rtc::makeMatrixRotationZ( const double theta )
 
 rtc::matrix rtc::makeMatrixInverse( const matrix& m )
 {
-	// ‹ts—ñ‚ğ‚Â‚­‚èA•Ô‚·B
-	// ‚±‚Ì‚Ö‚ñQÆFhttp://www.page.sannet.ne.jp/d_takahashi/boost/ublas/#SEC17
+	// é€†è¡Œåˆ—ã‚’ã¤ãã‚Šã€è¿”ã™ã€‚
+	// ã“ã®ã¸ã‚“å‚ç…§ï¼šhttp://www.page.sannet.ne.jp/d_takahashi/boost/ublas/#SEC17
 	rtc::matrix
 		a = m,
 		b = boost::numeric::ublas::identity_matrix<double>(4);
@@ -250,8 +250,8 @@ rtc::vector rtc::rotation_prod(
 ){
 	assert( ptr.size() == 3 );
 
-	// ƒxƒNƒgƒ‹‚ğ‰ñ“]s—ñ‚ÉŒã‚ë‚©‚çŠ|‚¯‡‚í‚¹A
-	// OŸŒ³“I‚É‰ñ“]‚µ‚½Œ‹‰Ê‚ğ•Ô‚·B
+	// ãƒ™ã‚¯ãƒˆãƒ«ã‚’å›è»¢è¡Œåˆ—ã«å¾Œã‚ã‹ã‚‰æ›ã‘åˆã‚ã›ã€
+	// ä¸‰æ¬¡å…ƒçš„ã«å›è»¢ã—ãŸçµæœã‚’è¿”ã™ã€‚
 	vector m = boost::numeric::ublas::zero_vector<double>(4);
 	m[0] = ptr[0]; m[1] = ptr[1]; m[2] = ptr[2];
 	m[3] = 1;

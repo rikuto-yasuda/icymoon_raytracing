@@ -11,14 +11,14 @@ namespace rtc { namespace model { namespace plasma {
 		JGR, VOL.108, NO.A2, 2003
 		P.A.Nsumei et al.
 
-	Nsumei‚É‚æ‚éƒ‚ƒfƒ‹‚ÍA
-	(1.4Re < r < 5.0Re) && 70 < ILAT ‚Ì—Ìˆæ‚É‚¨‚¢‚Ä
-	ILAT‚ğ—˜—p‚µ‚½ coefficient 0.888 ‚Ì‚à‚Ì‚ª‚ ‚è
-	Šî–{“I‚É‚±‚Ìƒ‚ƒfƒ‹‚ğ—˜—p‚µ‚Ä‚¢‚éB
+	Nsumeiã«ã‚ˆã‚‹ãƒ¢ãƒ‡ãƒ«ã¯ã€
+	(1.4Re < r < 5.0Re) && 70 < ILAT ã®é ˜åŸŸã«ãŠã„ã¦
+	ILATã‚’åˆ©ç”¨ã—ãŸ coefficient 0.888 ã®ã‚‚ã®ãŒã‚ã‚Š
+	åŸºæœ¬çš„ã«ã“ã®ãƒ¢ãƒ‡ãƒ«ã‚’åˆ©ç”¨ã—ã¦ã„ã‚‹ã€‚
 
-	‚Ü‚½AILAT‚ğ—˜—p‚µ‚È‚¢‚ªA‘S—Ìˆæ‚Ìƒ‚ƒfƒ‹‚Æ‚µ‚Ä
-	coefficient 0.878 ‚Ì‚à‚Ì‚ª‘¶İ‚µAã‚Ì”ÍˆÍŠO‚É‚¨‚¢‚Ä‚Í
-	—˜—p‚µ‚È‚¢ƒ‚ƒfƒ‹‚ÌŒ‹‰Ê‚ğ•Ô‚µ‚Ä‚¢‚éB
+	ã¾ãŸã€ILATã‚’åˆ©ç”¨ã—ãªã„ãŒã€å…¨é ˜åŸŸã®ãƒ¢ãƒ‡ãƒ«ã¨ã—ã¦
+	coefficient 0.878 ã®ã‚‚ã®ãŒå­˜åœ¨ã—ã€ä¸Šã®ç¯„å›²å¤–ã«ãŠã„ã¦ã¯
+	åˆ©ç”¨ã—ãªã„ãƒ¢ãƒ‡ãƒ«ã®çµæœã‚’è¿”ã—ã¦ã„ã‚‹ã€‚
 
 	*********************************************/
 	class nsumei_earth : public basic_plasma_model
@@ -32,14 +32,14 @@ namespace rtc { namespace model { namespace plasma {
 		double getDensity( const vector& point ) const;
 
 	private:
-		// ƒpƒ‰ƒ[ƒ^
-		const double m_Kp;   // Kp ƒCƒ“ƒfƒbƒNƒX
+		// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+		const double m_Kp;   // Kp ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
 
 	private:
-		// ƒfƒtƒHƒ‹ƒg‚ÌƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Í••ˆó‚·‚é
+		// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã¯å°å°ã™ã‚‹
 		nsumei_earth();
 
-		// ILAT ‚ğæ“¾B
+		// ILAT ã‚’å–å¾—ã€‚
 		double getILAT( const vector& point ) const;
 	};
 }}}

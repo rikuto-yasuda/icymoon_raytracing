@@ -6,7 +6,7 @@
 #define RTC_LIBRAYTRACE_RTC_FUNC_H
 
 namespace rtc {
-	// グローバルなシステムへのアクセス
+	// 繧ｰ繝ｭ繝ｼ繝舌Ν縺ｪ繧ｷ繧ｹ繝�繝縺ｸ縺ｮ繧｢繧ｯ繧ｻ繧ｹ
 	extern cosmos* g_cosmo;
 	cosmos&   getCosmos();
 
@@ -38,7 +38,7 @@ namespace rtc {
 	matrix makeMatrixRotationZ( const double theta );
 	matrix makeMatrixInverse( const matrix& m );
 
-	// 非数値のチェック関数 /////////////////////
+	// 髱樊焚蛟､縺ｮ繝√ぉ繝�繧ｯ髢｢謨ｰ /////////////////////
 #ifdef _MSC_VER
 	int isnan( double x );
 #endif

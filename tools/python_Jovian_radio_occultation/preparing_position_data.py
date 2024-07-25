@@ -9,9 +9,9 @@ import math
 
 # %%
 
-object_name = "callisto"  # europa/ganymde/callisto
+object_name = "europa"  # europa/ganymde/callisto
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 9  # ..th flyby
+time_of_flybies = 12  # ..th flyby
 information_list = [
     "year",
     "month",
@@ -103,7 +103,9 @@ def Detectable_time_position_fre_long_list(cdf_file):
     """
     # 位置座標がxyzの３つ分あるのでその分をまとめる
     n = int(times.shape[0] / 3)  # 受かってるものの全パターンの数
-    position = x[idx].reshape(n, 3)  # 受かってるものの全座標のリスト完成([x,y,z],[x,y,z]...)
+    position = x[idx].reshape(
+        n, 3
+    )  # 受かってるものの全座標のリスト完成([x,y,z],[x,y,z]...)
 
     # 受かってるものの時間のリスト作成([year,month,day,hour,mim,sec,..,..,..],[year,month,day,hour,mim,sec,..,..,..]..)
     TIME = np.array(cdflib.cdfepoch.breakdown(times.reshape(n, 3)[:, 0]))
@@ -265,8 +267,12 @@ def Check_time_validity_csv(time, spacecraft_csv_data, moon_csv_data):
 
 
 def Check_time_range_validity(time, csv_data):
-    first_str = str(csv_data["UTC calendar date"][0])  # 位置データにおける初めの時刻の文字列
-    last_str = str(csv_data["UTC calendar date"][-1:])  # 位置データにおける最後の時刻の文字列
+    first_str = str(
+        csv_data["UTC calendar date"][0]
+    )  # 位置データにおける初めの時刻の文字列
+    last_str = str(
+        csv_data["UTC calendar date"][-1:]
+    )  # 位置データにおける最後の時刻の文字列
 
     # 位置データにおける初めの時刻の文字列から時刻データを抽出　フライバイリストの情報と一致しているか確認
     if (
@@ -857,8 +863,12 @@ def Spacecraft_ephemeris_calc(spacecraft_ephemeris_data, moon_ephemeris_data, ti
         res[i][3] = radio_source_position[i][3].copy()  # 電波源データの周波数　MHz
         # 電波源データの磁力線(根本)の経度  orイオの場合は(-1000)
         res[i][4] = radio_source_position[i][4].copy()
-        res[i][5] = radio_source_position[i][5].copy()  # 電波源データの南北（北:1 南:-1)
-        res[i][8] = radio_source_position[i][9].copy()  # 電波源の実際の経度 atan(y/x)を度数表記に変換
+        res[i][5] = radio_source_position[i][
+            5
+        ].copy()  # 電波源データの南北（北:1 南:-1)
+        res[i][8] = radio_source_position[i][
+            9
+        ].copy()  # 電波源の実際の経度 atan(y/x)を度数表記に変換
         res[i][9] = radio_source_position[i][10].copy()  # 探査機の経度
         res[i][10] = radio_source_position[i][11].copy()  # 電波源のたいぷ
 
@@ -931,12 +941,16 @@ def main():
         selected_cdf_file
     )  # cdfを整理→電波源データに
 
-    Check_time_validity_cdf(time, detectable_list)  # cdfの時刻の頭と尻がcsv一致してるかを確認
+    Check_time_validity_cdf(
+        time, detectable_list
+    )  # cdfの時刻の頭と尻がcsv一致してるかを確認
     Save_detectable_data(detectable_list)
 
     # 探査機の位置データとフライバイリストから持ってきた時刻データを出力
     spacecraft_epemeris, time = Pick_up_spacecraft_csv()
-    moon_epemeris, time = Pick_up_moon_csv()  # 月の位置データとフライバイリストから持ってきた時刻データを出力
+    moon_epemeris, time = (
+        Pick_up_moon_csv()
+    )  # 月の位置データとフライバイリストから持ってきた時刻データを出力
 
     # 探査機の位置データの時間・月の位置データの時間・フライバイリストで指定している時刻データが一致するか確認
     Check_time_validity_csv(time, spacecraft_epemeris, moon_epemeris)

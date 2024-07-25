@@ -6,7 +6,7 @@
 using namespace rtc;
 
 //////////////////////////////////////////////////////////////////////
-// \’z/Á–Å
+// æ§‹ç¯‰/æ¶ˆæ»…
 //////////////////////////////////////////////////////////////////////
 
 cosmos::cosmos(
@@ -15,14 +15,14 @@ cosmos::cosmos(
 	const int mday,
 	const int hour,
 	const int min,
-	const int sec // ‰F’ˆ‚Ì‚ğ UT ‚Åw’è‚·‚éB
+	const int sec  // å®‡å®™ã®æ™‚åˆ»ã‚’ UT ã§æŒ‡å®šã™ã‚‹ã€‚
 	) : m_planet(NULL)
 {
-	// ŠÂ‹«•Ï”‚Ìƒ`ƒFƒbƒN
+	// ç’°å¢ƒå¤‰æ•°ã®ãƒã‚§ãƒƒã‚¯
 #if defined _OPENMP && defined RTC_RAYTRACE_ENABLE_LOG
 	if (NULL == std::getenv("OMP_NUM_THREADS"))
 	{
-		// ‚¹‚Á‚©‚­‚ÌOpenMP‚ªŠˆ—p‚³‚ê‚Ä‚È‚¢
+		// ã›ã£ã‹ãã®OpenMPãŒæ´»ç”¨ã•ã‚Œã¦ãªã„
 		std::clog << "warning : cosmos::cosmos :\n"
 					 "OMP_NUM_THREADS not defined, OpenMP is not used.\n"
 					 "Please setenv OMP_NUM_THREADS."
@@ -30,7 +30,7 @@ cosmos::cosmos(
 	}
 #endif
 
-	// ‚ğì¬‚µ“o˜^
+	// æ™‚åˆ»ã‚’ä½œæˆã—ç™»éŒ²
 	{
 		std::tm t;
 		memset(&t, 0, sizeof(t));
@@ -44,7 +44,7 @@ cosmos::cosmos(
 		setUniversalTime(t);
 	}
 
-	// ƒOƒ[ƒoƒ‹‚É“o˜^
+	// ã‚°ãƒ­ãƒ¼ãƒãƒ«ã«ç™»éŒ²
 	if (g_cosmo)
 	{
 		throw std::runtime_error(
@@ -64,7 +64,7 @@ cosmos::~cosmos()
 	}
 #endif
 
-	// Œõ‚Ì”jŠü
+	// å…‰ã®ç ´æ£„
 	rays_t::iterator it;
 	for (it = m_rays.begin(); it != m_rays.end(); ++it)
 	{
@@ -75,7 +75,7 @@ cosmos::~cosmos()
 	g_cosmo = NULL;
 }
 
-// Œõü‚Ì¶¬ //////////////////////////////////////////////////////////
+// å…‰ç·šã®ç”Ÿæˆ //////////////////////////////////////////////////////////
 ray *cosmos::createRay(const wave_parameter &wparam)
 {
 	ray *r = new ray(wparam);
@@ -87,12 +87,12 @@ ray *cosmos::createRay(const wave_parameter &wparam)
 }
 
 ray *cosmos::createRay(
-	wave_parameter::wave_mode mode,			   // ”g“®‚Ìƒ‚[ƒhBLO_MODE‚©RX_MODE‚ğw’è‚·‚éB
-	double freq,							   // ”g“®‚Ìü”g”[Hz]‚ğw’è‚·‚éB
-	double prec /* = 3.74e-4 */,			   // step‘OŒã‚Ì”ä‚Ì‹–—e—¦‚ğw’è‚·‚éB
-	double lstep /* = cnst::c */,			   // Œõü‚ª1step‚Åi‚ŞÅ‘å’·‚ğw’è
-	const double timeStep_max /* = 1e0     */, // 1step‚Åi‚ŞŠÔ‚ÌÅ‘å’l‚ğw’è
-	const double timeStep_min /* = 1e-54   */  // 1step‚Åi‚ŞŠÔ‚ÌÅ¬’l‚ğw’è
+	wave_parameter::wave_mode mode,   // æ³¢å‹•ã®ãƒ¢ãƒ¼ãƒ‰ã€‚LO_MODEã‹RX_MODEã‚’æŒ‡å®šã™ã‚‹ã€‚
+	double                    freq,   // æ³¢å‹•ã®å‘¨æ³¢æ•°[Hz]ã‚’æŒ‡å®šã™ã‚‹ã€‚
+	double              prec  /* = 3.74e-4 */, // stepå‰å¾Œã®æ¯”ã®è¨±å®¹ç‡ã‚’æŒ‡å®šã™ã‚‹ã€‚
+	double              lstep /* = cnst::c */, // å…‰ç·šãŒ1stepã§é€²ã‚€æœ€å¤§é•·ã‚’æŒ‡å®š
+	const double timeStep_max /* = 1e0     */, // 1stepã§é€²ã‚€æ™‚é–“ã®æœ€å¤§å€¤ã‚’æŒ‡å®š
+	const double timeStep_min /* = 1e-54   */  // 1stepã§é€²ã‚€æ™‚é–“ã®æœ€å°å€¤ã‚’æŒ‡å®š
 )
 {
 	return createRay(wave_parameter(
@@ -120,7 +120,7 @@ void cosmos::eraseRay(ray *pray)
 			"cosmos::eraseRay : ray object not created with cosmos::createRay() tried to be erased.");
 }
 
-// ˜f¯Œn‚Ì“o˜^ --------------------------------------------------------
+// æƒ‘æ˜Ÿç³»ã®ç™»éŒ² --------------------------------------------------------
 bool cosmos::registerPlanet(basic_planet &planet)
 {
 	const bool result = (m_planet == NULL);
@@ -133,16 +133,17 @@ bool cosmos::registerPlanet(basic_planet &planet)
 	return result;
 }
 
-// •¨—“I‚È”’l‚Ö‚Ì–â‚¢‡‚í‚¹ ------------------------------------------
+// ç‰©ç†çš„ãªæ•°å€¤ã¸ã®å•ã„åˆã‚ã› ------------------------------------------
 vector cosmos::getMagnetField(const vector &r) const
 {
 	return m_planet->getMagnet()(r);
 }
 
 // getDerivativeB() -----------------------------
-// ”h¶‚³‚ê‚½‚Å‚ ‚ë‚¤ getField()‚ğŒÄ‚Ño‚µA
-// 0.5[m]‚¾‚¯‘OŒã‚ÉˆÚ“®‚µ‚Ä¥ê‚Ì·‚ğ‚à‚Æ‚ßA
-// ¥êŒù”z‚ğ“±o‚·‚éB
+// æ´¾ç”Ÿã•ã‚ŒãŸã§ã‚ã‚ã† getField()ã‚’å‘¼ã³å‡ºã—ã€
+// 0.5[m]ã ã‘å‰å¾Œã«ç§»å‹•ã—ã¦ç£å ´ã®å·®ã‚’ã‚‚ã¨ã‚ã€
+// ç£å ´å‹¾é…ã‚’å°å‡ºã™ã‚‹ã€‚
+
 matrix cosmos::getDerivativeB(const vector &r) const
 {
 	matrix dbdr(3, 3);
@@ -184,16 +185,16 @@ double cosmos::getPlasmaDensity(const vector &r) const
 	return m_planet->getPlasma()(r);
 }
 
-double cosmos::getHight(const vector &r) const //////”½Ë—p‹@”\@•W‚‚ğ“ü—ÍiŒÅ‘ÌEƒvƒ‰ƒYƒ}‹«ŠE–Ê‚©‚ç‚Ì‹——£‚ğ“±oj@’PˆÊ‚Ím
+double cosmos::getHight(const vector &r) const ///////åå°„ç”¨æ©Ÿèƒ½ã€€æ¨™é«˜ã‚’å…¥åŠ›ï¼ˆå›ºä½“ãƒ»ãƒ—ãƒ©ã‚ºãƒå¢ƒç•Œé¢ã‹ã‚‰ã®è·é›¢ã‚’å°å‡ºï¼‰ã€€å˜ä½ã¯m  
 {
-	///	double h = r(2);  ///z=0‚Ì•½–Ê
-	double h = std::sqrt((pow(r(0), 2.0)) + (pow(r(1), 2.0)) + (pow(r(2) + 2.4103e6, 2.0))) - 2.4103e6; // ƒJƒŠƒXƒg•\–ÊiŠ®‘S‹…j
-	/// double h = std::sqrt((pow(r(0), 2.0)) + (pow(r(1), 2.0)) + (pow(r(2) + 1.5608e6, 2.0))) - 1.5608e6; // ƒGƒEƒƒp•\–ÊiŠ®‘S‹…j
-	///  double h = std::sqrt((pow(r(0), 2.0)) + (pow(r(1), 2.0)) + (pow(r(2) + 2.6341e6, 2.0))) - 2.6341e6; // ƒKƒjƒƒf•\–ÊiŠ®‘S‹…j
+	///	double h = r(2);  ///z=0ï¿½Ì•ï¿½ï¿½ï¿½
+	double h = std::sqrt((pow(r(0), 2.0)) + (pow(r(1), 2.0)) + (pow(r(2) + 2.4103e6, 2.0))) - 2.4103e6; /// ã‚«ãƒªã‚¹ãƒˆè¡¨é¢ï¼ˆå®Œå…¨çƒï¼‰
+	/// double h = std::sqrt((pow(r(0), 2.0)) + (pow(r(1), 2.0)) + (pow(r(2) + 1.5608e6, 2.0))) - 1.5608e6; // ã‚¨ã‚¦ãƒ­ãƒ‘è¡¨é¢ï¼ˆå®Œå…¨çƒï¼‰
+	///  double h = std::sqrt((pow(r(0), 2.0)) + (pow(r(1), 2.0)) + (pow(r(2) + 2.6341e6, 2.0))) - 2.6341e6; // ã‚¬ãƒ‹ãƒ¡ãƒ‡è¡¨é¢ï¼ˆå®Œå…¨çƒï¼‰
 	return h;
 }
 
-// ƒ‚ƒfƒ‹‚©‚çŒvZ‚µ‚ÄŒ‹‰Ê‚ğ•Ô‚·–â‚¢‡‚í‚¹ //////////////////////////////
+// ãƒ¢ãƒ‡ãƒ«ã‹ã‚‰è¨ˆç®—ã—ã¦çµæœã‚’è¿”ã™å•ã„åˆã‚ã› //////////////////////////////
 double cosmos::getSquaredPlasmaFreq(const vector &r) const
 {
 	return getPlasmaDensity(r) * (cnst::e * cnst::e) / (cnst::e0 * cnst::me);

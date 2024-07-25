@@ -1,17 +1,19 @@
 # %%
 #######################
-# plot_density_ne_europa.py
-# ---------------------
-# This routine reads the density
-#  file and plot the map in
-# the XY and XZ plane
-#
+# (Source code)plot_density_ne_europa.py
+# This routine reads the density file and plot the map in the XY and XZ plane
 # C. Baskevitch
 # UVSQ-LATMOS
 # claire.baskevitch@latmos.ipsl.fr
 # November 2020
-# R.Yasuda
-# Trying to fit claire model with some unspecific function
+#######################
+# (develop) notebook_plot_density5.py 2024/05/03
+# Add routines..
+# 1. to plot the model density along the X, Y, Z axis
+# 2. to fit the density profile with a spherical symmetric function (a0 + a1 * np.exp(-1 * (r / a2) ** a3)) using 1~4 Re
+# 3. to plot the fitted density in the XY, XZ, YZ plane
+# 4. to plot the difference between the model density and the fitted density in the XY, XZ, YZ plane
+# 5. downgrade the fitting method from spherical symmetric function to diffusion equlibrium function n(r) = a0 + a1 * np.exp(-1 * (r / a2))
 #######################
 
 from netCDF4 import Dataset
@@ -663,98 +665,12 @@ def cartesian_to_spherical2(x, y):
     return r, phi
 
 
-"""
-def added_spherical_function(a, r, theta, phi):
-    cos_phi = np.cos(phi)
-    sin_phi = np.sin(phi)
-    cos_theta = np.cos(theta)
-
-    total = a[0] * lpmv(0, 1, cos_theta) / (r * r)
-    +a[1] * cos_phi * lpmv(1, 1, cos_theta) / (r * r)
-    +a[2] * sin_phi * lpmv(1, 1, cos_theta) / (r * r)
-    +a[3] * lpmv(0, 2, cos_theta) / (r * r * r)
-    +a[4] * cos_phi * lpmv(1, 2, cos_theta) / (r * r * r)
-    +a[5] * sin_phi * lpmv(1, 2, cos_theta) / (r * r * r)
-    +a[6] * np.cos(2 * phi) * lpmv(2, 2, cos_theta) / (r * r * r)
-    +a[7] * np.sin(2 * phi) * lpmv(2, 2, cos_theta) / (r * r * r)
-    +a[8] * lpmv(0, 3, cos_theta) / (r * r * r * r)
-    +a[9] * cos_phi * lpmv(1, 3, cos_theta) / (r * r * r * r)
-    +a[10] * sin_phi * lpmv(1, 3, cos_theta) / (r * r * r * r)
-    +a[11] * np.cos(2 * phi) * lpmv(2, 3, cos_theta) / (r * r * r * r)
-    +a[12] * np.sin(2 * phi) * lpmv(2, 3, cos_theta) / (r * r * r * r)
-    +a[13] * np.cos(3 * phi) * lpmv(3, 3, cos_theta) / (r * r * r * r)
-    +a[14] * np.sin(3 * phi) * lpmv(3, 3, cos_theta) / (r * r * r * r)
-
-    return total
-
-
-def added_spherical_function2(a, r1, theta, phi):
+def spherical_symmetric_function(r1, a0, a1, a2):
 
     r = r1 - 1
-    total = a[0] + a[1] * np.exp(-1 * (r / a[2]) ** a[3])
+    total = a0 + a1 * np.exp(-1 * (r / a2))
 
     return total
-"""
-
-
-def mimus_pi(arr, threshold):
-    result = np.empty(0)
-    for element in arr:
-        if element > threshold:
-            result = np.append(result, element - np.pi)
-        else:
-            result = np.append(result, element)
-    return result
-
-
-def added_gaussinan_diffusion_function(X, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10):
-    r, theta, phi = X
-
-    r_array = r - 1
-    nx = np.cos(theta)
-    ny = np.sin(theta)
-    n0x = np.cos(a3)
-    n0y = np.sin(a3)
-    theta_array = np.arcsin(
-        (nx * n0y - ny * n0x)
-        / ((np.sqrt(nx * nx + ny * ny)) * (np.sqrt(n0x * n0x + n0y * n0y)))
-    )
-    phi_array = phi - a4
-    theta_theta_array = theta_array * theta_array
-    theta_phi_array = theta_array * phi_array
-    phi_phi_array = phi_array * phi_array
-
-    determinant = a5 * a8 - a6 * a7
-
-    f = (
-        a2
-        * np.exp(
-            (
-                a8 * theta_theta_array
-                + (-1 * (a6 + a7) * theta_phi_array)
-                + a5 * phi_phi_array
-            )
-            / (-2 * determinant)
-        )
-        / (np.sqrt(np.abs(determinant)))
-    )
-
-    total = a0 + ((a1 + f) * np.exp(-1 * ((r_array / a9) ** np.abs(a10))))
-    # print(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10)
-
-    return total
-
-
-"""
-def residual(a, r, theta, phi, den):
-    res = den - added_spherical_function2(a, r, theta, phi)
-    return res
-"""
-
-
-def residual(a, r, theta, phi, den):
-    res = den - added_gaussinan_diffusion_function(a, r, theta, phi)
-    return res
 
 
 def density_fitting(src_dir, typefile, rundate, diagtime):
@@ -935,66 +851,29 @@ def density_fitting(src_dir, typefile, rundate, diagtime):
     theta_fitted = theta_modeled[not_nan_indices]
     phi_fitted = phi_modeled[not_nan_indices]
 
-    fitted_pos = np.where((1 < r_fitted) & (r_fitted < 2))[0]
+    fitted_pos = np.where((1 < r_fitted) & (r_fitted < 4))[0]
     Dn_fitted = Dn_fitted[fitted_pos]
     # print(Dn_fitted)
     r_fitted = r_fitted[fitted_pos]
     theta_fitted = theta_fitted[fitted_pos]
     phi_fitted = phi_fitted[fitted_pos]
 
-    """
-    plt.scatter(
-        surface_phi,
-        surface_theta,
-        c=surface_Dn,
-        cmap="jet",
-        vmin=0,
-        vmax=1000,
-    )
-
-    plt.colorbar()
-    print(surface_phi[np.argmax(surface_Dn)], surface_theta[np.argmax(surface_Dn)])
-
-    plt.scatter(
-        surface_phi[np.argmax(surface_Dn)],
-        surface_theta[np.argmax(surface_Dn)],
-        s=30,
-        marker="*",
-        vmin=0,
-        vmax=1000,
-    )
-
-    plt.show()
-    """
-    # a0 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    #  theta_phi_array=np.array([theta-a[3],phi-a[4]])
-    #  matrix = np.array([[a[5], a[6]], [a[7], a[8]]])
-    # total = a[0] + (a[1] + (a[2] / (np.abs(np.linalg.det(matrix))**1/2)) * np.exp((-1 / 2) * theta_phi_array.T * np.linalg.inv(matrix) * theta_phi_array))* np.exp(-1 * (r / a[9]) ** a[10])
     A0_ini = (
         20,
         200,
-        800,
-        1.4404480651226226,
-        -2.5899376710612465,
-        1,
-        0,
-        0,
-        1,
         0.1,
-        1,
     )  # 初期値
     A0_bound = (
-        [10, 10, 10, 0.8, -np.pi, -100, -100, -100, -100, 0, 0],
-        [100, 400, 1000, 2, 0, 100, 100, 100, 100, 1, 10],
+        [10, 10, 0],
+        [100, 1000, 1],
     )  # 拘束条件
 
-    input_param = np.array([r_fitted, theta_fitted, phi_fitted])
     # leastsqの戻り値は、最適化したパラメータのリストと、最適化の結果
     start = time.time()  # 現在時刻（処理開始前）を取得
     print("start")
     A1, pcov = curve_fit(
-        added_gaussinan_diffusion_function,
-        input_param,
+        spherical_symmetric_function,
+        r_fitted,
         Dn_fitted,
         p0=A0_ini,
         maxfev=10000000,
@@ -1021,19 +900,11 @@ def density_fitting(src_dir, typefile, rundate, diagtime):
                 )
                 imput = np.array([r, theta, phi])
 
-                fit_dense[z, y, x] = added_gaussinan_diffusion_function(
-                    imput,
+                fit_dense[z, y, x] = spherical_symmetric_function(
+                    r,
                     A1[0],
                     A1[1],
                     A1[2],
-                    A1[3],
-                    A1[4],
-                    A1[5],
-                    A1[6],
-                    A1[7],
-                    A1[8],
-                    A1[9],
-                    A1[10],
                 )
     np.save("../Europa/fiting_dense_1", fit_dense)
 

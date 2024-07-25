@@ -60,7 +60,7 @@ void akima_interpolation<D>::establish()
 template < class D >
 const D akima_interpolation<D>::get( const D& x ) const
 {
-	// out_of_range ƒ`ƒFƒbƒN
+	//out_of_range ãƒã‚§ãƒƒã‚¯
 	if( x < m_data.begin()->x || m_data.rbegin()->x < x ) {
 		throw std::out_of_range( boost::str( boost::format(
 			"akima_interpolation::get() %1% out of range."
@@ -68,10 +68,10 @@ const D akima_interpolation<D>::get( const D& x ) const
 		).c_str() );
 	}
 	
-	// ‚ÅAx‚É‘Î‰‚·‚éy‚ğ“¾‚éB
-	// upper_bound()‚Íw’è‚µ‚½’lu‚æ‚è‘å‚«‚¢v“_‚ğA
-	// lower_bound()‚Íw’è‚µ‚½’luˆÈãv‚Ì“_‚ğ•Ô‚·B
-	// ŠÔˆá‚¦‚â‚·‚¢‚Ì‚Å‹C‚ğ‚Â‚¯‚ÄB
+	// ã§ã€xã«å¯¾å¿œã™ã‚‹yã‚’å¾—ã‚‹ã€‚
+	// upper_bound()ã¯æŒ‡å®šã—ãŸå€¤ã€Œã‚ˆã‚Šå¤§ãã„ã€ç‚¹ã‚’ã€
+	// lower_bound()ã¯æŒ‡å®šã—ãŸå€¤ã€Œä»¥ä¸Šã€ã®ç‚¹ã‚’è¿”ã™ã€‚
+	// é–“é•ãˆã‚„ã™ã„ã®ã§æ°—ã‚’ã¤ã‘ã¦ã€‚
 	typename dataset_t::const_iterator
 		ptr = std::upper_bound(
 			m_data.begin(),

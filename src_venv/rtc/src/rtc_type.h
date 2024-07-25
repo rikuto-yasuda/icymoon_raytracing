@@ -7,7 +7,7 @@
 
 namespace rtc { // -----------------------------------------------------
 
-	// libraytrace “à•”‚Åg—p‚·‚éƒx[ƒXƒNƒ‰ƒX‚Ìƒeƒ“ƒvƒŒéŒ¾B
+	// libraytrace å†…éƒ¨ã§ä½¿ç”¨ã™ã‚‹ãƒ™ãƒ¼ã‚¹ã‚¯ãƒ©ã‚¹ã®ãƒ†ãƒ³ãƒ—ãƒ¬å®£è¨€ã€‚
 	class cosmos;
 	class basic_planet;
 	class basic_magnet_model;
@@ -15,7 +15,7 @@ namespace rtc { // -----------------------------------------------------
 	class ray;
 	class wave_parameter;
 
-	// libraytrace ‚Å—˜—p‚·‚éA“Á•Ê‚ÈŒ^‚Ì’è‹`B
+	// libraytrace ã§åˆ©ç”¨ã™ã‚‹ã€ç‰¹åˆ¥ãªå‹ã®å®šç¾©ã€‚
 	typedef boost::numeric::ublas::vector<double> vector;
 	typedef boost::numeric::ublas::matrix<double> matrix;
 	typedef boost::math::quaternion<double>       quaternion;
@@ -24,8 +24,8 @@ namespace rtc { // -----------------------------------------------------
 
 	using   boost::numeric::ublas::inner_prod;
 	using   boost::numeric::ublas::outer_prod;
-	using   boost::numeric::ublas::norm_1; // ƒmƒ‹ƒ€‚Ì‡Œv‚ğ“¾‚éB‚±‚ê‚Íƒ†[ƒNƒŠƒbƒhƒmƒ‹ƒ€‚Ì“ñæ’l‚Å‚ ‚éB
-	using   boost::numeric::ublas::norm_2; // ƒxƒNƒgƒ‹‚Ìƒ†[ƒNƒŠƒbƒhƒmƒ‹ƒ€iàƒxƒNƒgƒ‹‚Ìâ‘Î’lj‚ğŒvZ‚·‚éB
+	using   boost::numeric::ublas::norm_1; // ãƒãƒ«ãƒ ã®åˆè¨ˆã‚’å¾—ã‚‹ã€‚ã“ã‚Œã¯ãƒ¦ãƒ¼ã‚¯ãƒªãƒƒãƒ‰ãƒãƒ«ãƒ ã®äºŒä¹—å€¤ã§ã‚ã‚‹ã€‚
+	using   boost::numeric::ublas::norm_2; // ãƒ™ã‚¯ãƒˆãƒ«ã®ãƒ¦ãƒ¼ã‚¯ãƒªãƒƒãƒ‰ãƒãƒ«ãƒ ï¼ˆâ‰’ãƒ™ã‚¯ãƒˆãƒ«ã®çµ¶å¯¾å€¤ï¼‰ã‚’è¨ˆç®—ã™ã‚‹ã€‚
 
 }// namespace rtc; -----------------------------------------------------
 

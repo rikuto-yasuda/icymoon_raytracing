@@ -7,9 +7,9 @@
 
 namespace rtc {
 	
-	// ƒvƒ‰ƒYƒ}ƒLƒƒƒrƒeƒB‚ğì¬‚µAİ’u‚·‚éB
-	// ’†‰›ILATã‚Ìfp/fc‚ªÅ’á’l‚ğ‚Æ‚é‚æ‚¤‚É
-	// ƒvƒ‰ƒYƒ}–§“x‚ğŒ¸­‚³‚¹‚éB
+	// ãƒ—ãƒ©ã‚ºãƒã‚­ãƒ£ãƒ“ãƒ†ã‚£ã‚’ä½œæˆã—ã€è¨­ç½®ã™ã‚‹ã€‚
+	// ä¸­å¤®ILATä¸Šã®fp/fcãŒæœ€ä½å€¤ã‚’ã¨ã‚‹ã‚ˆã†ã«
+	// ãƒ—ãƒ©ã‚ºãƒå¯†åº¦ã‚’æ¸›å°‘ã•ã›ã‚‹ã€‚
 	class cavity
 	{
 		friend class basic_plasma_model;
@@ -17,13 +17,13 @@ namespace rtc {
 	public:
 		cavity();
 		cavity(
-			double min_fpfc,    // cavity’†S‚Å‚ÌA‘å‘Ì‚Ìfp/fc’l‚ğw’è‚·‚éB
-			double ilat_center, // cavity’†S‚ğ’Ê‚éILAT‚ğw’è‚·‚éB
-			double ilat_range,  // cavity‚ÌˆÜ“x•ûŒü‚Ì”¼’l•‚ğŠp“x‚Åw’è‚·‚éB
-			double mlt_center,  // cavity’†S‚ğ’Ê‚éMLT‚ğw’è‚·‚éB
-			double mlt_range,   // cavity‚ÌLT•ûŒü‚Ì”¼’l•‚ğ‚Åw’è‚·‚éB
-			double max_height,  // cavity‚ª‰e‹¿‚ğ‹y‚Ú‚·Å‚‚“x[km]‚ğw’è‚·‚éB
-			double bottom_height// cavity’†S‚Ì‚“x[km]‚ğw’è‚·‚éB
+			double min_fpfc,    // cavityä¸­å¿ƒã§ã®ã€å¤§ä½“ã®fp/fcå€¤ã‚’æŒ‡å®šã™ã‚‹ã€‚
+			double ilat_center, // cavityä¸­å¿ƒã‚’é€šã‚‹ILATã‚’æŒ‡å®šã™ã‚‹ã€‚
+			double ilat_range,  // cavityã®ç·¯åº¦æ–¹å‘ã®åŠå€¤å¹…ã‚’è§’åº¦ã§æŒ‡å®šã™ã‚‹ã€‚
+			double mlt_center,  // cavityä¸­å¿ƒã‚’é€šã‚‹MLTã‚’æŒ‡å®šã™ã‚‹ã€‚
+			double mlt_range,   // cavityã®LTæ–¹å‘ã®åŠå€¤å¹…ã‚’æ™‚åˆ»ã§æŒ‡å®šã™ã‚‹ã€‚
+			double max_height,  // cavityãŒå½±éŸ¿ã‚’åŠã¼ã™æœ€é«˜é«˜åº¦[km]ã‚’æŒ‡å®šã™ã‚‹ã€‚
+			double bottom_height// cavityä¸­å¿ƒã®é«˜åº¦[km]ã‚’æŒ‡å®šã™ã‚‹ã€‚
 		);
 		
 		cavity& operator =( const cavity& c );
@@ -37,7 +37,7 @@ namespace rtc {
 		double getMaxHeight()                  const { return m_max_height;      }
 		double getBottomHeight()               const { return m_bottomHeight;    }
 		
-		// ˆÈ‰º“à•”“I‚Ég—p
+		// ï¿½È‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½Égï¿½p
 	private:
 		void create(
 			const basic_planet& mother

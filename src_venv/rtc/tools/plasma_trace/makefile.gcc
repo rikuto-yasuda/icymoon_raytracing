@@ -11,7 +11,7 @@ STDLIB = pthread boost_thread-mt
 include makefile.common
 PCH = $(STDHEADER).gch
 
-# ����ѥ�����Υե饰�����
+# コンパイル時のフラグを指定
 CC_FLAG = -c -O2          \
     -DNDEBUG              \
     -D_THREAD_SAFE        \

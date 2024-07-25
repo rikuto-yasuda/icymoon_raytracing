@@ -14,14 +14,14 @@ import sys
 args = sys.argv
 rng = np.random.default_rng()
 
-object_name = "ganymede"  # ganydeme/europa/calisto``
+object_name = "europa"  # ganydeme/europa/calisto``
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 1  # ..th flyby
-highest_plasma = "5.5e2"  # 単位は(/cc) 2e2/4e2/16e22 #12.5 13.5
-plasma_scaleheight = "0.25e2"  # 単位は(km) 1.5e2/3e2/6e2
+time_of_flybies = 12  # ..th flyby
+highest_plasma = "20.139_368.385"  # 単位は(/cc) 2e2/4e2/16e22 #12.5 13.5
+plasma_scaleheight = "138.606_2.610"  # 単位は(km) 1.5e2/3e2/6e2
 # highest_plasma = args[1]  # 単位は(/cc) 2e2/4e2/16e22 #12.5 13.5
 # plasma_scaleheight = args[2]  # 単位は(km) 1.5e2/3e2/6e2
-
+ignore = 1  # 1のときは既存のファイルを無視して新たに計算
 
 Radio_range_cdf = (
     "../result_for_yasudaetal2022/tracing_range_"
@@ -40,7 +40,10 @@ Radio_Range = pd.read_csv(Radio_range_cdf, header=0)
 # new [0 hour,1 min,2 sec, 3 frequency(MHz),4 電波源データの磁力線(根本)の経度  orイオの場合は(-1000),5 電波源の南北,6 座標変換した時のx(tangential point との水平方向の距離),7 座標変換した時のy(tangential pointからの高さ方向の距離),8 電波源の実際の経度,9 探査機の経度,10 電波源タイプ（A,C:1 B,D:-1)]
 # old [0 hour,1 min,2 frequency(MHz),3 電波源データの磁力線(根本)の経度  orイオの場合は(-1000),4 電波源の南北,5 座標変換した時のx(tangential point との水平方向の距離),6 座標変換した時のy(tangential pointからの高さ方向の距離),7 電波源の実際の経度]
 
-if int(float(highest_plasma) - 50) % 100 == 0:
+if ignore == 1:
+    before_highest_plasma = "ignore"
+
+elif int(float(highest_plasma) - 50) % 100 == 0:
     before_highest_plasma = str(int(int(float(highest_plasma) - 50) / 100)) + "e2"
 
 elif int(float(highest_plasma) - 50) % 100 == 50:
@@ -164,6 +167,43 @@ if object_name == "callisto":
     if time_of_flybies == 9:
         judge_start_time = np.array([13.0, 30.0])  # 5:30 前は全て受信可能判定
         judge_end_time = np.array([14.0, 0.0])  # 7:00 後は全て受信可能判定
+
+
+if object_name == "europa":
+    Freq_str = [
+        "3.984813988208770752e5",
+        "4.395893216133117676e5",
+        "4.849380254745483398e5",
+        "5.349649786949157715e5",
+        "5.901528000831604004e5",
+        "6.510338783264160156e5",
+        "7.181954979896545410e5",
+        "7.922856807708740234e5",
+        "8.740190267562866211e5",
+        "9.641842246055603027e5",
+        "1.063650846481323242e6",
+        "1.173378825187683105e6",
+        "1.294426321983337402e6",
+        "1.427961349487304688e6",
+        "1.575271964073181152e6",
+        "1.737779378890991211e6",
+        "1.917051434516906738e6",
+        "2.114817380905151367e6",
+        "2.332985162734985352e6",
+        "2.573659420013427734e6",
+        "2.839162111282348633e6",
+        "3.132054328918457031e6",
+        "3.455161809921264648e6",
+        "3.811601638793945312e6",
+        "4.204812526702880859e6",
+        "4.638587474822998047e6",
+        "5.117111206054687500e6",
+        "5.644999980926513672e6",
+    ]
+
+    if time_of_flybies == 12:
+        judge_start_time = np.array([11.0, 15.0])  # 11:55 前は全て受信可能判定
+        judge_end_time = np.array([12.0, 20.0])  # 12:20 後は全て受信可能判定
 
 
 Freq_num = []

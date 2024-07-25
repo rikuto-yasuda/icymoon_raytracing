@@ -20,7 +20,7 @@ IGRF::IGRF( const char* data_file, const int dimension )
 
 int IGRF::create( basic_planet& mother )
 {
-	// •ê“V‘Ì‚Ì¥‹ÉˆÊ’u‚ğw’è‚·‚éB
+	// æ¯å¤©ä½“ã®ç£æ¥µä½ç½®ã‚’æŒ‡å®šã™ã‚‹ã€‚
 	const double
 		lng = std::atan2( m_coefficients.h(1,1), m_coefficients.g(1,1) ),
 		lat = 0.5*cnst::pi - std::atan2(
@@ -32,7 +32,7 @@ int IGRF::create( basic_planet& mother )
 		rad2deg(lat), rad2deg(lng)
 	);
 
-	// ‰ñ“]s—ñ‚ğì¬‚·‚éB
+	// å›è»¢è¡Œåˆ—ã‚’ä½œæˆã™ã‚‹ã€‚
 	m_sm2geo = boost::numeric::ublas::prod(
 		mother.getGEI2GEO(),
 		makeMatrixInverse( mother.getGEI2GSE() )
@@ -55,9 +55,9 @@ vector IGRF::getField( const vector& pos ) const
 	const basic_planet& earth = getMother();
 	vector r = boost::numeric::ublas::zero_vector<double>(3);
 
-	// pos‚É‚Í SM’¼ŒğÀ•WŒn‚Å‚ÌˆÊ’uƒxƒNƒgƒ‹‚ª“n‚³‚ê‚é‚Ì‚Å’ˆÓ‚·‚éB
-	// IGRF‚Å‚ÍAGEO‹…À•WŒn‚É•ÏŠ·‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢B
-	// ‚Ü‚½A–ß‚è’l‚ÍSM’¼ŒğÀ•WŒn‚Å–³‚¯‚ê‚Î‚È‚ç‚È‚¢B
+	// posã«ã¯ SMç›´äº¤åº§æ¨™ç³»ã§ã®ä½ç½®ãƒ™ã‚¯ãƒˆãƒ«ãŒæ¸¡ã•ã‚Œã‚‹ã®ã§æ³¨æ„ã™ã‚‹ã€‚
+	// IGRFã§ã¯ã€GEOçƒåº§æ¨™ç³»ã«å¤‰æ›ã—ãªã‘ã‚Œã°ãªã‚‰ãªã„ã€‚
+	// ã¾ãŸã€æˆ»ã‚Šå€¤ã¯SMç›´äº¤åº§æ¨™ç³»ã§ç„¡ã‘ã‚Œã°ãªã‚‰ãªã„ã€‚
 	const vector ptr = convertToPolar(
 		rotation_prod( m_sm2geo, pos )
 	);
@@ -82,7 +82,7 @@ vector IGRF::getField( const vector& pos ) const
 	P[1][0] = c_t;
 	Q[0][0] = 0.0;
 
-	// ¥‹É‚Ì^ã‚É‚¢‚éê‡As_t == 0.0‚Æ‚È‚è‚OœZƒGƒ‰[‚ª”­¶‚·‚éB
+	// ç£æ¥µã®çœŸä¸Šã«ã„ã‚‹å ´åˆã€s_t == 0.0ã¨ãªã‚Šï¼é™¤ç®—ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã™ã‚‹ã€‚
 	if( s_t != 0.0 )
 	{
 		for( int n = 1 ;; )
@@ -104,7 +104,7 @@ vector IGRF::getField( const vector& pos ) const
 				r[1] += powerd_r * m * ( G*s_ml - H*c_ml )     * P[n][m]; //  Y
 				r[2] -= powerd_r * (n+1) * ( G*c_ml + H*s_ml ) * P[n][m]; // -Z
 				
-				// I—¹ğŒ
+				// ç£æ¥µã®çœŸä¸Šã«ã„ã‚‹å ´åˆã€s_t == 0.0ã¨ãªã‚Šï¼é™¤ç®—ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã™ã‚‹ã€‚
 				if( ++m <= n )
 				{
 					P[n][m] = (
@@ -150,15 +150,16 @@ vector IGRF::getField( const vector& pos ) const
 		}
 	}
 
-	// ’PˆÊ‚ª [nT] i‘½•ªj‚È‚Ì‚ÅA[T]‚É•ÏŠ·‚·‚éB
+	// å˜ä½ãŒ [nT] ï¼ˆå¤šåˆ†ï¼‰ãªã®ã§ã€[T]ã«å¤‰æ›ã™ã‚‹ã€‚
 	r *= 1e-9;
 
-	// Œ‹‰Ê‚ÍAX=–kAY=Œo“xAZ=’n‰º•ûŒü‚Ì¥ê‚È‚Ì‚Å
-	// ‰ñ“]‚µ‚Ä GEOÀ•WŒn‚É‚·‚éB
-	// ‚±‚Ì‰ñ“]‚ÍA‚Ü‚¸Y²’†S‚É ƒÆ-ƒÎ ‚¾‚¯‰ñ“]‚µA
-	// Ÿ‚ÉZ²’†S‚É ƒÓ ‚¾‚¯‰ñ“]‚·‚éB
+	// çµæœã¯ã€X=åŒ—ã€Y=çµŒåº¦ã€Z=åœ°ä¸‹æ–¹å‘ã®ç£å ´ãªã®ã§
+	// å›è»¢ã—ã¦ GEOåº§æ¨™ç³»ã«ã™ã‚‹ã€‚
+	// ã“ã®å›è»¢ã¯ã€ã¾ãšYè»¸ä¸­å¿ƒã« Î¸-Ï€ ã ã‘å›è»¢ã—ã€
+	// æ¬¡ã«Zè»¸ä¸­å¿ƒã« Ï† ã ã‘å›è»¢ã™ã‚‹ã€‚
 	//
-	// ‚»‚ÌŒã‚ÉSMÀ•WŒn‚É•ÏŠ·‚µA•Ô‚·B
+	// ãã®å¾Œã«SMåº§æ¨™ç³»ã«å¤‰æ›ã—ã€è¿”ã™ã€‚
+
 
 	matrix rm = boost::numeric::ublas::prod(
 		m_geo2sm,
@@ -216,13 +217,13 @@ double IGRF::coefficient::H( int n, int m ) const
 
 void IGRF::coefficient::load()
 {
-	int c = 0;// ƒJƒEƒ“ƒ^ê—p•Ï”
+	int c = 0;// ã‚«ã‚¦ãƒ³ã‚¿å°‚ç”¨å¤‰æ•°
 
-	// cosmos‚ÌUT‚©‚çA‚»‚Ì‚É‚¨‚¯‚éŒW”‚ğŒvZ‚µ‚ÄŠi”[‚·‚éB
-	// ‚»‚Ì‚½‚ßAŒ»‚Ì’¼‘O‚É‚ ‚éepoch‚ÌINDEX’l‚ğæ“¾‚·‚éB
+	// cosmosã®UTã‹ã‚‰ã€ãã®æ™‚åˆ»ã«ãŠã‘ã‚‹ä¿‚æ•°ã‚’è¨ˆç®—ã—ã¦æ ¼ç´ã™ã‚‹ã€‚
+	// ãã®ãŸã‚ã€ç¾æ™‚åˆ»ã®ç›´å‰ã«ã‚ã‚‹epochã®INDEXå€¤ã‚’å–å¾—ã™ã‚‹ã€‚
 	const std::tm& t = getCosmos().getUniversalTime();
 
-	// ƒf[ƒ^‚É‚ ‚é”N‚ğ®—
+	// ãƒ‡ãƒ¼ã‚¿ã«ã‚ã‚‹å¹´ã‚’æ•´ç†
 	std::list<double> igrf_years;
 	for( c = 0; g_igrf_coeffs_years[c]; ++c )
 	{
@@ -230,7 +231,7 @@ void IGRF::coefficient::load()
 	}
 	igrf_years.sort();
 
-	// ’¼‘O‚Ìƒf[ƒ^”N‚ğæ“¾
+	// ç›´å‰ã®ãƒ‡ãƒ¼ã‚¿å¹´ã‚’å–å¾—
 	std::list<double>::iterator data_year = std::upper_bound(
 		igrf_years.begin(),
 		igrf_years.end(),
@@ -238,7 +239,7 @@ void IGRF::coefficient::load()
 	);
 	--data_year;
 
-	// ‰[”Nƒ`ƒFƒbƒN
+	// é–å¹´ãƒã‚§ãƒƒã‚¯
 	const bool is_leap = (
 		0 == t.tm_year % 4  &&
 		( 0 != t.tm_year % 100 ||
@@ -266,7 +267,7 @@ void IGRF::coefficient::load()
 		//  G = g[n][m] * sqrt( em * (n-m)! / (n+m)! );
 		//  H = h[n][m] * sqrt( em * (n-m)! / (n+m)! );
 		//  em = ( m == 0 ? 1 : 2 )
-		// ‚Ì’l‚àŠi”[‚·‚éB
+		//  ã®å€¤ã‚‚æ ¼ç´ã™ã‚‹ã€‚
 		int i;
 		assert( n >= m );
 		const double em = ( m == 0 ? 1 : 2 );
@@ -305,7 +306,7 @@ void IGRF::coefficient::load()
 
 void IGRF::coefficient::load( const char* data_file )
 {
-	// ˆês–ÚF "g/h" "n" "m" <Šî€”N> ... "SV"\n
+	// ä¸€è¡Œç›®ï¼š "g/h" "n" "m" <åŸºæº–å¹´> ... "SV"\n
 	std::vector<double> years;
 	
 	std::string buf;
@@ -334,29 +335,29 @@ void IGRF::coefficient::load( const char* data_file )
 	data >> buf;
 	while( buf != "SV" )
 	{
-		// ”N†—ñ‚ğ“Ç‚İo‚·B
+		// å¹´å·åˆ—ã‚’èª­ã¿å‡ºã™ã€‚
 		years.push_back(
 			boost::lexical_cast<double>(buf)
 		);
 		data >> buf;
 	};
 
-	// cosmos‚ÌUT‚©‚çA‚»‚Ì‚É‚¨‚¯‚éŒW”‚ğŒvZ‚µ‚ÄŠi”[‚·‚éB
-	// ‚»‚Ì‚½‚ßAŒ»‚Ì’¼‘O‚É‚ ‚éepoch‚ÌINDEX’l‚ğæ“¾‚·‚éB
+	// cosmosã®UTã‹ã‚‰ã€ãã®æ™‚åˆ»ã«ãŠã‘ã‚‹ä¿‚æ•°ã‚’è¨ˆç®—ã—ã¦æ ¼ç´ã™ã‚‹ã€‚
+	// ãã®ãŸã‚ã€ç¾æ™‚åˆ»ã®ç›´å‰ã«ã‚ã‚‹epochã®INDEXå€¤ã‚’å–å¾—ã™ã‚‹ã€‚
 	const std::tm& t = getCosmos().getUniversalTime();
 	const unsigned epoch_index = std::distance(
 		years.begin(),
 		std::upper_bound( years.begin(), years.end(), t.tm_year )
 	) -1;
 
-	// ƒf[ƒ^”ÍˆÍŠO‚Ì‚É‚È‚¢‚©‚ğƒ`ƒFƒbƒN
+	// ãƒ‡ãƒ¼ã‚¿ç¯„å›²å¤–ã®æ™‚åˆ»ã«ãªã„ã‹ã‚’ãƒã‚§ãƒƒã‚¯
 	if( t.tm_year < years[0] ) {
 		throw std::out_of_range(
 			"IGRF: Year ( from cosmos::getUniversalTime() ) is out of range."
 		);
 	}
 	
-	// ‰[”Nƒ`ƒFƒbƒN
+	// é–å¹´ãƒã‚§ãƒƒã‚¯
 	const bool is_leap = (
 		0 == t.tm_year % 4  &&
 		( 0 != t.tm_year % 100 ||
@@ -379,19 +380,19 @@ void IGRF::coefficient::load( const char* data_file )
 				"IGRF: The coefficient data file is illegal."
 		);
 		
-		// n‚ÌŸ”
+		// nã®æ¬¡æ•°
 		int n;
 		data >> n;
 
 		if( n >= max_n )
 			break;
 		
-		// m‚ÌŸ”
+		// mã®æ¬¡æ•°
 		int m;
 		data >> m;
 		
-		// ‚±‚±‚©‚çAepoch_index‚¾‚¯Œã‚ë‚É‚ ‚é”’l‚ªAŒ»‚Ì’¼‘O‚É‚ ‚Á‚½EPOCH‚Å‚ ‚éB
-		// ‚¢‚ç‚È‚¢•ª‚ğÌ‚Ä‚ÄA‘±‚«‚ğ“Ç‚İ‚Æ‚éB
+		// ã“ã“ã‹ã‚‰ã€epoch_indexã ã‘å¾Œã‚ã«ã‚ã‚‹æ•°å€¤ãŒã€ç¾æ™‚åˆ»ã®ç›´å‰ã«ã‚ã£ãŸEPOCHã§ã‚ã‚‹ã€‚
+		// ã„ã‚‰ãªã„åˆ†ã‚’æ¨ã¦ã¦ã€ç¶šãã‚’èª­ã¿ã¨ã‚‹ã€‚
 		unsigned i;
 		double before, after;
 		for( i = 0; i < epoch_index; ++i )
@@ -400,21 +401,21 @@ void IGRF::coefficient::load( const char* data_file )
 		data >> before;
 		data >> after;
 		
-		// ‚à‚µ epoch_index+1 == years.size()‚È‚çAafter‚ÍSV’l‚Å‚ ‚éB
-		// ‚»‚¤‚Å‚È‚¯‚ê‚ÎASV = after-before;‚Å‚ ‚éB
+		// ã‚‚ã— epoch_index+1 == years.size()ãªã‚‰ã€afterã¯SVå€¤ã§ã‚ã‚‹ã€‚
+		// ãã†ã§ãªã‘ã‚Œã°ã€SV = after-before;ã§ã‚ã‚‹ã€‚
 		if( epoch_index+1 < years.size() ) {
 			after = ( after - before )
 			      / ( years[epoch_index+1] - years[epoch_index] );
 		}
 		
-		// after == SV ‚È‚Ì‚ÅAŠÔ·‚©‚ç•â³‚³‚ê‚½ŒW”‚ğ“±‚«o‚µA
-		// ƒf[ƒ^ƒ}ƒbƒv‚ÉŠi”[‚·‚éB
+		// after == SV ãªã®ã§ã€æ™‚é–“å·®ã‹ã‚‰è£œæ­£ã•ã‚ŒãŸä¿‚æ•°ã‚’å°ãå‡ºã—ã€
+		// ãƒ‡ãƒ¼ã‚¿ãƒãƒƒãƒ—ã«æ ¼ç´ã™ã‚‹ã€‚
 
-		// Ši”[‚·‚é’l‚Íƒtƒ@ƒCƒ‹‚É‹L˜^‚³‚ê‚Ä‚¢‚é”’l‚»‚Ì‚à‚Ì‚Å‚Í‚È‚­A
+		// æ ¼ç´ã™ã‚‹å€¤ã¯ãƒ•ã‚¡ã‚¤ãƒ«ã«è¨˜éŒ²ã•ã‚Œã¦ã„ã‚‹æ•°å€¤ãã®ã‚‚ã®ã§ã¯ãªãã€
 		//  G = g[n][m] * sqrt( em * (n-m)! / (n+m)! );
 		//  H = h[n][m] * sqrt( em * (n-m)! / (n+m)! );
 		//  em = ( m == 0 ? 1 : 2 )
-		// ‚Ì’l‚ğŠi”[‚·‚éB
+		// ã®å€¤ã‚’æ ¼ç´ã™ã‚‹ã€‚
 		assert( n >= m );
 		const double em = ( m == 0 ? 1 : 2 );
 		unsigned long
@@ -446,7 +447,7 @@ void IGRF::coefficient::load( const char* data_file )
 			m_elements[n][m].H = m_elements[n][m].h * factor;
 		}
 		
-		// Ÿ‚Ìs‚Ü‚Å‚Ì•ª‚ğÌ‚Ä‚é
+		// æ¬¡ã®è¡Œã¾ã§ã®åˆ†ã‚’æ¨ã¦ã‚‹
 		data.ignore( std::numeric_limits<int>::max(), '\n' );
 	};
 }

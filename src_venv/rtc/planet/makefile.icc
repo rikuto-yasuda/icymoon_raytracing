@@ -8,7 +8,7 @@ LIBRT      =
 INCLUDE_OPT=
 STDLIB     =
 
-# ����ѥ�����Υե饰�����
+# コンパイル時のフラグを指定
 CC_BASE_FLAG = -c -O3     \
     $(INCLUDE_OPT:%=-I%)  \
     -DNDEBUG              \

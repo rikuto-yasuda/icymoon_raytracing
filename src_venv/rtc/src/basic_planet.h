@@ -8,35 +8,35 @@
 namespace rtc {
 	
 	// basic_planet ------------------------------
-	// ˜f¯‚ÌŠî–{ƒNƒ‰ƒXB
-	// ˜f¯‚Í¥ê‚Æƒvƒ‰ƒYƒ}‚ÌŠeƒ‚ƒfƒ‹‚É‘Î‚µ
-	// has a ‚ÌŠÖŒW‚É‚ ‚èA‚Ç‚Ìƒ‚ƒfƒ‹‚ğg—p‚·‚é‚©‚Í
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Åw’è‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢B
+	// æƒ‘æ˜Ÿã®åŸºæœ¬ã‚¯ãƒ©ã‚¹ã€‚
+	// æƒ‘æ˜Ÿã¯ç£å ´ã¨ãƒ—ãƒ©ã‚ºãƒã®å„ãƒ¢ãƒ‡ãƒ«ã«å¯¾ã—
+	// has a ã®é–¢ä¿‚ã«ã‚ã‚Šã€ã©ã®ãƒ¢ãƒ‡ãƒ«ã‚’ä½¿ç”¨ã™ã‚‹ã‹ã¯
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã§æŒ‡å®šã—ãªã‘ã‚Œã°ãªã‚‰ãªã„ã€‚
 	//
 	class basic_planet
 	{
 		friend class cosmos;
 
 	public:
-		// ’n²A‚¨‚æ‚Ñ¥²‚Ìî•ñ‚ğŠi”[‚·‚éB
+		// åœ°è»¸ã€ãŠã‚ˆã³ç£è»¸ã®æƒ…å ±ã‚’æ ¼ç´ã™ã‚‹ã€‚
 		class axis_info
 		{
 		public:
 			axis_info(
-				const double magnet_latitude, // ¥²‚ÌˆÜ“x [deg]
-				const double magnet_longitude // ¥²‚ÌŒo“x [deg]
+				const double magnet_latitude, // ç£è»¸ã®ç·¯åº¦ [deg]
+				const double magnet_longitude // ç£è»¸ã®çµŒåº¦ [deg]
 			);
 			axis_info( const axis_info& r );
 
-			// ²‚ÌÄİ’è
-			// ¥²‚ÌˆÜ“xŒo“x‚ÍA‘o‹Éqƒ‚[ƒƒ“ƒg‚ª³‚Ì•ûŒü‚Æ‚È‚é”¼‹…‘¤‚Ì“_‚ğ‹Lq‚·‚éB
-			// —á‚¦‚ÎA’n‹…‚Ìê‡‚Í“ì”¼‹…ã‚Ì¥‹É‚ğ“n‚³‚È‚¯‚ê‚Î‚È‚ç‚È‚¢B
+			// è»¸ã®å†è¨­å®š
+			// ç£è»¸ã®ç·¯åº¦çµŒåº¦ã¯ã€åŒæ¥µå­ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆãŒæ­£ã®æ–¹å‘ã¨ãªã‚‹åŠçƒå´ã®ç‚¹ã‚’è¨˜è¿°ã™ã‚‹ã€‚
+			// ä¾‹ãˆã°ã€åœ°çƒã®å ´åˆã¯å—åŠçƒä¸Šã®ç£æ¥µã‚’æ¸¡ã•ãªã‘ã‚Œã°ãªã‚‰ãªã„ã€‚
 			void setAxis(
 				const double magnet_latitude,
-				const double magnet_longitude // ¥²‚ÌŒo“x [deg]
+				const double magnet_longitude // ï¿½ï¿½ï¿½ï¿½ï¿½ÌŒoï¿½x [deg]
 			);
 
-			// ²‚Ì–k”¼‹…‘¤‚ÌˆÊ’u‚ğAˆÜ“xEŒo“xŒn‚Å•\‚µ‚½OŸŒ³’¼ŒğÀ•W‚Å•Ô‚·B
+			// è»¸ã®åŒ—åŠçƒå´ã®ä½ç½®ã‚’ã€ç·¯åº¦ãƒ»çµŒåº¦ç³»ã§è¡¨ã—ãŸä¸‰æ¬¡å…ƒç›´äº¤åº§æ¨™ã§è¿”ã™ã€‚
 			const vector& getGeometricRotationalAxis() const
 			{ return m_rotAxis; }
 
@@ -50,13 +50,13 @@ namespace rtc {
 		};
 
 	protected:
-		// ƒRƒ“ƒXƒgƒ‰ƒNƒ^EƒfƒXƒgƒ‰ƒNƒ^
+		// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ãƒ»ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		basic_planet(
-			const double         radius,        // ‚±‚Ì˜f¯‚Ì”¼Œa‚ğw’è‚·‚éB
-			const double            VDM,        // ‚±‚Ì˜f¯‚Ì‰¼‘z¥‹Cƒ‚[ƒƒ“ƒg‚ğw’è‚·‚éB
-			const axis_info&       axis,        // ˜f¯‚Ì©“]E¥²î•ñ‚ğ“n‚·B
-			basic_magnet_model&     mag,        // ¥êƒ‚ƒfƒ‹‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğw’è‚·‚éB
-			basic_plasma_model&    plsm         // ƒvƒ‰ƒYƒ}ƒ‚ƒfƒ‹‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğw’è‚·‚éB
+			const double         radius,        // ã“ã®æƒ‘æ˜Ÿã®åŠå¾„ã‚’æŒ‡å®šã™ã‚‹ã€‚
+			const double            VDM,        // ã“ã®æƒ‘æ˜Ÿã®ä»®æƒ³ç£æ°—ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆã‚’æŒ‡å®šã™ã‚‹ã€‚
+			const axis_info&       axis,        // æƒ‘æ˜Ÿã®è‡ªè»¢ãƒ»ç£è»¸æƒ…å ±ã‚’æ¸¡ã™ã€‚
+			basic_magnet_model&     mag,        // ç£å ´ãƒ¢ãƒ‡ãƒ«ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’æŒ‡å®šã™ã‚‹ã€‚
+			basic_plasma_model&    plsm         // ãƒ—ãƒ©ã‚ºãƒãƒ¢ãƒ‡ãƒ«ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’æŒ‡å®šã™ã‚‹ã€‚
 		);
 
 	private:
@@ -68,7 +68,7 @@ namespace rtc {
 		
 	public:
 
-		// ƒ‚ƒfƒ‹‚Ö‚ÌƒAƒNƒZƒX ----------------------------------------
+		// ãƒ¢ãƒ‡ãƒ«ã¸ã®ã‚¢ã‚¯ã‚»ã‚¹ ----------------------------------------
 		basic_magnet_model& getMagnet() { return m_magnet; }
 		const basic_magnet_model& getMagnet() const { return m_magnet; }
 
@@ -76,15 +76,15 @@ namespace rtc {
 		const basic_plasma_model& getPlasma() const { return m_plasma; }
 
 
-		// À•W•ÏŠ·Œn ------------------------------------------------
-		// ‰ñ“]s—ñ --------------------------------------------------
+		// åº§æ¨™å¤‰æ›ç³» ------------------------------------------------
+		// å›è»¢è¡Œåˆ— --------------------------------------------------
 		virtual matrix getGEI2GEO() const;
 		virtual matrix getGEI2GSE() const;
 		virtual matrix getGSE2GSM() const;
 		virtual matrix getGSM2SM () const;
 
 
-		// ’n’†‚©‚Ç‚¤‚©‚Ì”»’è ----------------------------------------
+		// åœ°ä¸­ã‹ã©ã†ã‹ã®åˆ¤å®š ----------------------------------------
 		double getRadius () const
 		{ return m_radius; }
 
@@ -95,70 +95,70 @@ namespace rtc {
 		{ return norm_2(p) - m_radius; }
 
 
-		// ˜f¯¥ê
+		// ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		void setMagneticalAxis(
-			const double magnet_latitude, // ¥²‚ÌˆÜ“x [deg]
-			const double magnet_longitude // ¥²‚ÌŒo“x [deg]
+			const double magnet_latitude, // ç£è»¸ã®ç·¯åº¦ [deg]
+			const double magnet_longitude // ç£è»¸ã®çµŒåº¦ [deg]
 		);
 		double getVirtualDipoleMagnet() const
 		{ return m_vdm; }
 
 
-		// ˜f¯‚É‘Î‚·‚éˆÊ’uÀ•WŒn ------------------------------------
+		// æƒ‘æ˜Ÿã«å¯¾ã™ã‚‹ä½ç½®åº§æ¨™ç³» ------------------------------------
 		
-		// w’èˆÊ’u‚©‚ç¥—Íü‚ğƒgƒŒ[ƒX‚µAƒtƒbƒgƒvƒŠƒ“ƒgÀ•W‚ğ•Ô‚·B
-		// ‚±‚Ìƒƒ\ƒbƒh‚ÍA¥êƒ‚ƒfƒ‹‚Ì getFootPrint()‚ğŒÄ‚Ño‚µ
-		// ‚»‚ÌŒ‹‰Ê‚ğ•Ô‚·B
+		// æŒ‡å®šä½ç½®ã‹ã‚‰ç£åŠ›ç·šã‚’ãƒˆãƒ¬ãƒ¼ã‚¹ã—ã€ãƒ•ãƒƒãƒˆãƒ—ãƒªãƒ³ãƒˆåº§æ¨™ã‚’è¿”ã™ã€‚
+		// ã“ã®ãƒ¡ã‚½ãƒƒãƒ‰ã¯ã€ç£å ´ãƒ¢ãƒ‡ãƒ«ã® getFootPrint()ã‚’å‘¼ã³å‡ºã—
+		// ãã®çµæœã‚’è¿”ã™ã€‚
 		vector getFootPrint(
 			const vector& source_ptr,
 			double      trace_factor
 		) const;
 
-		// w’èˆÊ’u‚©‚ç¥—Íü‚ğƒgƒŒ[ƒX‚µA¥‹CÔ“¹–Ê(Z=0)ã‚Ì“_‚ğ•Ô‚·B
-		// ‚±‚Ìƒƒ\ƒbƒh‚ÍA¥êƒ‚ƒfƒ‹‚Ì getEquatorPrint()‚ğŒÄ‚Ño‚µ
-		// ‚»‚ÌŒ‹‰Ê‚ğ•Ô‚·B
+		// æŒ‡å®šä½ç½®ã‹ã‚‰ç£åŠ›ç·šã‚’ãƒˆãƒ¬ãƒ¼ã‚¹ã—ã€ç£æ°—èµ¤é“é¢(Z=0)ä¸Šã®ç‚¹ã‚’è¿”ã™ã€‚
+		// ã“ã®ãƒ¡ã‚½ãƒƒãƒ‰ã¯ã€ç£å ´ãƒ¢ãƒ‡ãƒ«ã® getEquatorPrint()ã‚’å‘¼ã³å‡ºã—
+		// ãã®çµæœã‚’è¿”ã™ã€‚
 		vector getEquatorPrint(
 			const vector& source_ptr,
 			double      trace_factor
 		) const;
 		
-		// getFootPrint()‚ÌŒ‹‰Ê‚©‚çAƒtƒbƒgƒvƒŠƒ“ƒgˆÜ“x(FLAT)‚ğ•Ô‚·B
-		// Œ‹‰Ê‚Æ‚µ‚ÄA•s•Ï¥‹CˆÜ“x(ILAT)‚ğ•Ô‚·B
+		// getFootPrint()ã®çµæœã‹ã‚‰ã€ãƒ•ãƒƒãƒˆãƒ—ãƒªãƒ³ãƒˆç·¯åº¦(FLAT)ã‚’è¿”ã™ã€‚
+		// çµæœã¨ã—ã¦ã€ä¸å¤‰ç£æ°—ç·¯åº¦(ILAT)ã‚’è¿”ã™ã€‚
 		double getFLAT(
 			const vector&  point,
 			double  trace_factor
 		) const;
 
-		// getEquatorPrint()‚ÌŒ‹‰Ê‚©‚çAL’l‚ğ“±o‚µA
-		// ‘o‹Éq¥ê‚ğ‰¼’è‚µ‚½ã‚Å¥‹CˆÜ“x‚ğ•Ô‚·B
-		// Œ‹‰Ê‚Æ‚µ‚ÄA•s•Ï¥‹CˆÜ“x(ILAT)‚ğ•Ô‚·B
+		// getEquatorPrint()ã®çµæœã‹ã‚‰ã€Lå€¤ã‚’å°å‡ºã—ã€
+		// åŒæ¥µå­ç£å ´ã‚’ä»®å®šã—ãŸä¸Šã§ç£æ°—ç·¯åº¦ã‚’è¿”ã™ã€‚
+		// çµæœã¨ã—ã¦ã€ä¸å¤‰ç£æ°—ç·¯åº¦(ILAT)ã‚’è¿”ã™ã€‚
 		double getEqLAT(
 			const vector&  point,
 			double  trace_factor
 		) const;
 
-		// ‘o‹Éq¥ê‚ğ‰¼’è‚µ‚½ã‚ÅA¥‹CŒo“x‚ğ 0‚©‚ç24‚Ì”’l‚É’¼‚µ‚Ä‚©‚¦‚·B
-		// Œ‹‰Ê‚Æ‚µ‚Ä¥‹Cƒ[ƒJƒ‹(MLT)‚ğ‚©‚¦‚·B
+		// åŒæ¥µå­ç£å ´ã‚’ä»®å®šã—ãŸä¸Šã§ã€ç£æ°—çµŒåº¦ã‚’ 0ã‹ã‚‰24ã®æ•°å€¤ã«ç›´ã—ã¦ã‹ãˆã™ã€‚
+		// çµæœã¨ã—ã¦ç£æ°—ãƒ­ãƒ¼ã‚«ãƒ«æ™‚åˆ»(MLT)ã‚’ã‹ãˆã™ã€‚
 		double getMLT(
 			const vector& point
 		) const;
 		
-		// ¥‹CˆÜ“xEŒo“x‚Æ‚“xî•ñ‚©‚ç¥—Íü‚ğƒgƒŒ[ƒX‚µA–Ú“I’n“_‚ÌÀ•W‚ğ•Ô‚·B
-		// ‚±‚Ìƒƒ\ƒbƒh‚Å‚ÍA“n‚³‚ê‚½ˆÜ“xEŒo“x‚ğ–‚½‚·’n•\–Ê‚ÌˆÊ’u‚©‚ç
-		// ¥êƒ‚ƒfƒ‹‚É‰ˆ‚Á‚½•ûŒü‚É¥—Íü‚ğƒgƒŒ[ƒX‚µAw’è‚Ì‚“x‚É‚½‚Ç‚è’…‚¢‚½“_‚ğ
-		// ƒ†[ƒNƒŠƒbƒh‹óŠÔÀ•WŒn‚Å•Ô‚·B
+		// ç£æ°—ç·¯åº¦ãƒ»çµŒåº¦ã¨é«˜åº¦æƒ…å ±ã‹ã‚‰ç£åŠ›ç·šã‚’ãƒˆãƒ¬ãƒ¼ã‚¹ã—ã€ç›®çš„åœ°ç‚¹ã®åº§æ¨™ã‚’è¿”ã™ã€‚
+		// ã“ã®ãƒ¡ã‚½ãƒƒãƒ‰ã§ã¯ã€æ¸¡ã•ã‚ŒãŸç·¯åº¦ãƒ»çµŒåº¦ã‚’æº€ãŸã™åœ°è¡¨é¢ã®ä½ç½®ã‹ã‚‰
+		// ç£å ´ãƒ¢ãƒ‡ãƒ«ã«æ²¿ã£ãŸæ–¹å‘ã«ç£åŠ›ç·šã‚’ãƒˆãƒ¬ãƒ¼ã‚¹ã—ã€æŒ‡å®šã®é«˜åº¦ã«ãŸã©ã‚Šç€ã„ãŸç‚¹ã‚’
+		// ãƒ¦ãƒ¼ã‚¯ãƒªãƒƒãƒ‰ç©ºé–“åº§æ¨™ç³»ã§è¿”ã™ã€‚
 		vector getLocation(
-			const double MLAT,      // MLAT’l‚ğw’è[degree] -90 <= MLAT <= 90
-			const double MLT,       // MLT’l‚ğw’è [h]        0 <= MLT  <  24
-			const double altitude,  // ˜f¯•\–Ê‚©‚ç‚Ì‚“x‚ğw’è
-			const double trace_factor = 1e3, // ¥êƒgƒŒ[ƒX‚Ì¸“x
-			std::vector<vector>* const out_trace_line = NULL// ƒgƒŒ[ƒXŒo˜H‚ğŠi”[
+			const double MLAT,      // MLATå€¤ã‚’æŒ‡å®š[degree] -90 <= MLAT <= 90
+			const double MLT,       // MLTå€¤ã‚’æŒ‡å®š [h]        0 <= MLT  <  24
+			const double altitude,  // æƒ‘æ˜Ÿè¡¨é¢ã‹ã‚‰ã®é«˜åº¦ã‚’æŒ‡å®š
+			const double trace_factor = 1e3, // ç£å ´ãƒˆãƒ¬ãƒ¼ã‚¹ã®ç²¾åº¦
+			std::vector<vector>* const out_trace_line = NULL// ãƒˆãƒ¬ãƒ¼ã‚¹çµŒè·¯ã‚’æ ¼ç´
 		) const;
 
 
 	protected:
-		// ‘¾—z•ûŒüA©“]²A¥² -------------------------------------
-		// ‚±‚ê‚ç‚Ìƒƒ\ƒbƒh‚ÉŒÀ‚èAGSEÀ•WŒn‚Å•Ô‚·B
+		// å¤ªé™½æ–¹å‘ã€è‡ªè»¢è»¸ã€ç£è»¸ -------------------------------------
+		// ã“ã‚Œã‚‰ã®ãƒ¡ã‚½ãƒƒãƒ‰ã«é™ã‚Šã€GSEåº§æ¨™ç³»ã§è¿”ã™ã€‚
 		const vector  getRotationalAxisInGSE() const;
 		const vector  getMagneticalAxisInGSE() const;
 
@@ -168,13 +168,13 @@ namespace rtc {
 		basic_plasma_model& m_plasma;
 
 	private:
-		const double m_radius;        // ˜f¯‚Ì”¼Œa
-		const double m_vdm;           // ˜f¯‚Ì‰¼‘z¥‹Cƒ‚[ƒƒ“ƒg
+		const double m_radius;        // æƒ‘æ˜Ÿã®åŠå¾„
+		const double m_vdm;           // æƒ‘æ˜Ÿã®ä»®æƒ³ç£æ°—ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆ
 
-		axis_info m_axisInfo; // ²‚ÌˆÊ’u
+		axis_info m_axisInfo; // è»¸ã®ä½ç½®
 
 #	ifndef NDEBUG
-		// ƒeƒXƒg—p‚Ìƒƒ\ƒbƒh
+		// ãƒ†ã‚¹ãƒˆç”¨ã®ãƒ¡ã‚½ãƒƒãƒ‰
 		void test() const;
 #	endif
 	};

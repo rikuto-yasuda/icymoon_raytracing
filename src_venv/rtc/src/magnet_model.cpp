@@ -1,4 +1,4 @@
-// basic_magnetic_model.cpp: basic_magnetic_model ƒNƒ‰ƒX‚ÌƒCƒ“ƒvƒŠƒƒ“ƒe[ƒVƒ‡ƒ“
+// basic_magnetic_model.cpp: basic_magnetic_model ã‚¯ãƒ©ã‚¹ã®ã‚¤ãƒ³ãƒ—ãƒªãƒ¡ãƒ³ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³
 //
 //////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
@@ -6,7 +6,7 @@
 
 using namespace rtc;
 //////////////////////////////////////////////////////////////////////
-// \’z/Á–Å
+// æ§‹ç¯‰/æ¶ˆæ»…
 //////////////////////////////////////////////////////////////////////
 
 basic_magnet_model::basic_magnet_model()
@@ -41,7 +41,7 @@ int basic_magnet_model::create( basic_planet& mother )
 
 const vector basic_magnet_model::getMagneticMoment() const
 {
-	// ¥‹É‚Íí‚ÉZ²•ûŒü‚ğŒü‚­
+	// ç£æ¥µã¯å¸¸ã«Zè»¸æ–¹å‘ã‚’å‘ã
 	vector m = boost::numeric::ublas::zero_vector<double>(3);
 	m[2] = getCosmos().getPlanet().getVirtualDipoleMagnet()*cnst::u0;
 
@@ -49,15 +49,15 @@ const vector basic_magnet_model::getMagneticMoment() const
 }
 
 // operator () ----------------------------------
-// w’èˆÊ’u‚Ì¥êƒxƒNƒgƒ‹‚ğŒvZ‚µA•Ô‚·B
+// æŒ‡å®šä½ç½®ã®ç£å ´ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¨ˆç®—ã—ã€è¿”ã™ã€‚
 vector basic_magnet_model::operator()( const vector& pos ) const
 {
 	return getField(pos);
 }
 
 // getFootPrint() -------------------------------
-// ŠJnˆÊ’u sp ‚É‚¨‚¯‚é¥—Íü‚ğƒgƒŒ[ƒX‚µA
-// •ê˜f¯‚Ì’n•\–Ê‚ğfootprint“_‚Æ‚µ‚Ä•Ô‚·B
+// é–‹å§‹ä½ç½® sp ã«ãŠã‘ã‚‹ç£åŠ›ç·šã‚’ãƒˆãƒ¬ãƒ¼ã‚¹ã—ã€
+// æ¯æƒ‘æ˜Ÿã®åœ°è¡¨é¢ã‚’footprintç‚¹ã¨ã—ã¦è¿”ã™ã€‚
 vector basic_magnet_model::getFootPrint(
 	const vector&           sp,
 	double        trace_factor
@@ -66,7 +66,7 @@ vector basic_magnet_model::getFootPrint(
 #if defined RTC_BASIC_MAGNET_MODEL_STORE_PAST && RTC_BASIC_MAGNET_MODEL_STORE_PAST > 0
 	{
 		vector old_result = boost::numeric::ublas::zero_vector<double>(3);
-		// ‰ß‹‚ÌŒ‹‰Ê‚ğ‹™‚èA“¯‚¶ŠJn“_‚ÌŒ‹‰Ê‚ª‚ ‚ê‚Î‚»‚ê‚ğ•Ô‚·B
+		// éå»ã®çµæœã‚’æ¼ã‚Šã€åŒã˜é–‹å§‹ç‚¹ã®çµæœãŒã‚ã‚Œã°ãã‚Œã‚’è¿”ã™ã€‚
 		if( past_search( m_pastFootPrint, sp, old_result ) ) {
 			return old_result;
 		}
@@ -80,7 +80,7 @@ vector basic_magnet_model::getFootPrint(
 		return sp;
 	}
 	
-	// L’l‚ğŒ³‚ÉAtrace_factor‚ğ’²®‚·‚éB
+	// Lå€¤ã‚’å…ƒã«ã€trace_factorã‚’èª¿æ•´ã™ã‚‹ã€‚
 	{
 		const vector ptr = convertToPolar(sp);
 		const double
@@ -93,14 +93,14 @@ vector basic_magnet_model::getFootPrint(
 
 	register double factor = 0.0;
 	{
-		// ŠJn“_‚ª–k”¼‹…‚©“ì”¼‹…‚©A‹y‚Ñ¥‹É‚Ì•ûŒü‚ğŒ©‚ÄA
-		// ƒgƒŒ[ƒX‚·‚é•ûŒü‚ğŒˆ’è‚·‚éB
+		// é–‹å§‹ç‚¹ãŒåŒ—åŠçƒã‹å—åŠçƒã‹ã€åŠã³ç£æ¥µã®æ–¹å‘ã‚’è¦‹ã¦ã€
+		// ãƒˆãƒ¬ãƒ¼ã‚¹ã™ã‚‹æ–¹å‘ã‚’æ±ºå®šã™ã‚‹ã€‚
 		const bool
 			is_ptr_north    = (sp[2] >= 0.0),
 			is_moment_north = (getMagneticMoment()[2] >= 0.0 );
 
-		// —¼•û–k‚©“ì‚¾‚Á‚½‚ç¥ê•ûŒü‚ÉA
-		// •Ğ•û‚ª–kA•Ğ•û‚ª“ì‚¾‚Á‚½‚ç¥ê‚Æ‹t•ûŒü‚ÉƒgƒŒ[ƒX‚·‚éB
+		// ä¸¡æ–¹åŒ—ã‹å—ã ã£ãŸã‚‰ç£å ´æ–¹å‘ã«ã€
+		// ç‰‡æ–¹ãŒåŒ—ã€ç‰‡æ–¹ãŒå—ã ã£ãŸã‚‰ç£å ´ã¨é€†æ–¹å‘ã«ãƒˆãƒ¬ãƒ¼ã‚¹ã™ã‚‹ã€‚
 		const double trend_factor = 
 			(is_ptr_north ^ is_moment_north) ? 1.0 : -1.0;
 
@@ -115,7 +115,7 @@ vector basic_magnet_model::getFootPrint(
 		
 		const vector ds = factor * B/norm_2(B);
 		
-		// î•ñ—‚¿‚É‚æ‚é–³ŒÀƒ‹[ƒv‰ñ”ğ
+		// æƒ…å ±è½ã¡ã«ã‚ˆã‚‹ç„¡é™ãƒ«ãƒ¼ãƒ—å›é¿
 		const vector v_next = v+ds;
 		if( std::equal( v.begin(), v.end(), v_next.begin() ) ) {
 			break;
@@ -124,8 +124,8 @@ vector basic_magnet_model::getFootPrint(
 		
 	} while( !mother.isUnderSoil(v) );
 
-	// ’¼‘O‚Å’â~Bc‚è‚Ì‹——£•ª‚ğŒvZ‚µ‚ÄA‚Ò‚Á‚¿‚è’n•\‚É‚Á‚Ä‚­‚éB
-	// ’n•\‚Í‹…–Ê‚È‚Ì‚ÅAŒë·‚ª1.0[m]ˆÈ“à‚É‚È‚é‚Ü‚ÅŒJ‚è•Ô‚·B
+	// ç›´å‰ã§åœæ­¢ã€‚æ®‹ã‚Šã®è·é›¢åˆ†ã‚’è¨ˆç®—ã—ã¦ã€ã´ã£ã¡ã‚Šåœ°è¡¨ã«æŒã£ã¦ãã‚‹ã€‚
+	// åœ°è¡¨ã¯çƒé¢ãªã®ã§ã€èª¤å·®ãŒ1.0[m]ä»¥å†…ã«ãªã‚‹ã¾ã§ç¹°ã‚Šè¿”ã™ã€‚
 	for(
 		double lest = mother.restToSoil(v);
 		lest > 1.0;
@@ -148,8 +148,8 @@ vector basic_magnet_model::getFootPrint(
 }
 
 // getEquatorPrint() -------------------------------
-// ŠJnˆÊ’u sp ‚É‚¨‚¯‚é¥—Íü‚ğƒgƒŒ[ƒX‚µA
-// Ô“¹–Ê(Z=0)‚É“‚Á‚½“_‚ğEquatorPrint‚Æ‚µ‚Ä•Ô‚·B
+// é–‹å§‹ä½ç½® sp ã«ãŠã‘ã‚‹ç£åŠ›ç·šã‚’ãƒˆãƒ¬ãƒ¼ã‚¹ã—ã€
+// èµ¤é“é¢(Z=0)ã«åˆ°ã£ãŸç‚¹ã‚’EquatorPrintã¨ã—ã¦è¿”ã™ã€‚
 vector basic_magnet_model::getEquatorPrint(
 	const vector&           sp,
 	double        trace_factor
@@ -157,14 +157,14 @@ vector basic_magnet_model::getEquatorPrint(
 
 	const basic_planet& mother = getMother();
 
-	// ŠJn“_‚ª–k”¼‹…‚©“ì”¼‹…‚©A‹y‚Ñ¥‹É‚Ì•ûŒü‚ğŒ©‚ÄA
-	// ƒgƒŒ[ƒX‚·‚é•ûŒü‚ğŒˆ’è‚·‚éB
+	// é–‹å§‹ç‚¹ãŒåŒ—åŠçƒã‹å—åŠçƒã‹ã€åŠã³ç£æ¥µã®æ–¹å‘ã‚’è¦‹ã¦ã€
+	// ãƒˆãƒ¬ãƒ¼ã‚¹ã™ã‚‹æ–¹å‘ã‚’æ±ºå®šã™ã‚‹ã€‚
 	const bool
 		is_ptr_north    = (sp[2] >= 0.0),
 		is_moment_north = (getMagneticMoment()[2] >= 0.0 );
 
-	// —¼•û–k‚©“ì‚¾‚Á‚½‚ç¥ê‚Æ‹t•ûŒü‚ÉA
-	// •Ğ•û‚ª–kA•Ğ•û‚ª“ì‚¾‚Á‚½‚ç¥ê•ûŒü‚ÉƒgƒŒ[ƒX‚·‚éB
+	// ä¸¡æ–¹åŒ—ã‹å—ã ã£ãŸã‚‰ç£å ´ã¨é€†æ–¹å‘ã«ã€
+	// ç‰‡æ–¹ãŒåŒ—ã€ç‰‡æ–¹ãŒå—ã ã£ãŸã‚‰ç£å ´æ–¹å‘ã«ãƒˆãƒ¬ãƒ¼ã‚¹ã™ã‚‹ã€‚
 	const double trend_factor = 
 		(is_ptr_north ^ is_moment_north) ? -1.0 : 1.0;
 
@@ -179,7 +179,7 @@ vector basic_magnet_model::getEquatorPrint(
 		ds = trend_factor * B * (trace_factor/norm_2(B));
 	};
 
-	// ’¼‘O‚Å’â~Bc‚è‚Ì‹——£•ª‚ğŒvZ‚µ‚ÄA‚Ò‚Á‚¿‚èÔ“¹–Ê‚É‚Á‚Ä‚­‚éB
+	// ç›´å‰ã§åœæ­¢ã€‚æ®‹ã‚Šã®è·é›¢åˆ†ã‚’è¨ˆç®—ã—ã¦ã€ã´ã£ã¡ã‚Šèµ¤é“é¢ã«æŒã£ã¦ãã‚‹ã€‚
 	vector lest = -v;
 	lest[0] = lest[1] = 0.0;
 
@@ -193,8 +193,8 @@ vector basic_magnet_model::getEquatorPrint(
 // plotModel() ----------------------------------
 void basic_magnet_model::plotModel(
 	cnst::plot_style ps,
-	const double     step,  // ˆêƒ}ƒX‚Ì•
-	const double     range, // -range ‚©‚ç range ‚É‚í‚½‚Á‚Äƒvƒƒbƒg‚·‚é
+	const double     step,  // ä¸€ãƒã‚¹ã®å¹…
+	const double     range, // -range ã‹ã‚‰ range ã«ã‚ãŸã£ã¦ãƒ—ãƒ­ãƒƒãƒˆã™ã‚‹
 	const double other_param 
 ) const throw() {
 
@@ -253,9 +253,9 @@ void basic_magnet_model::traceModel(
 
 	std::list<vector> start_ptr;
 
-	// ¥êƒ‚[ƒƒ“ƒg‚ğy²’†S‚É‰ñ“]‚µ‚ÄA
-	// “K“–‚ÈŠÔŠu‚ğ‚ ‚¯‚Äƒvƒƒbƒg‚·‚éB
-	// ‰ñ“]‚Ì•û–@‚ÍAray::makeInitialVector()‚ğQÆB
+	// ç£å ´ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆã‚’yè»¸ä¸­å¿ƒã«å›è»¢ã—ã¦ã€
+	// é©å½“ãªé–“éš”ã‚’ã‚ã‘ã¦ãƒ—ãƒ­ãƒƒãƒˆã™ã‚‹ã€‚
+	// å›è»¢ã®æ–¹æ³•ã¯ã€ray::makeInitialVector()ã‚’å‚ç…§ã€‚
 	for( double lat = 0; lat <= 90.; lat += 90./div )
 	for( double lng = 0; lng < 360.; lng += 360./6 )
 	{
@@ -268,18 +268,18 @@ void basic_magnet_model::traceModel(
 	std::list<vector>::const_iterator it;
 	for( it = start_ptr.begin(); it != start_ptr.end(); ++it )
 	{
-		// ŠJn“_‚ª–k”¼‹…‚©“ì”¼‹…‚©A‹y‚Ñ¥‹É‚Ì•ûŒü‚ğŒ©‚ÄA
-		// ƒgƒŒ[ƒX‚·‚é•ûŒü‚ğŒˆ’è‚·‚éB
+		// é–‹å§‹ç‚¹ãŒåŒ—åŠçƒã‹å—åŠçƒã‹ã€åŠã³ç£æ¥µã®æ–¹å‘ã‚’è¦‹ã¦ã€
+		// ãƒˆãƒ¬ãƒ¼ã‚¹ã™ã‚‹æ–¹å‘ã‚’æ±ºå®šã™ã‚‹ã€‚
 		const bool
 			is_ptr_north    = (*it)[2] >= 0.0,
 			is_moment_north = getMagneticMoment()[2] >= 0.0;
 
-		// —¼•û–k‚©“ì‚¾‚Á‚½‚ç¥ê•ûŒü‚ÉA
-		// •Ğ•û‚ª–kA•Ğ•û‚ª“ì‚¾‚Á‚½‚ç¥ê‚Æ‹t•ûŒü‚ÉƒgƒŒ[ƒX‚·‚éB
+		// ä¸¡æ–¹åŒ—ã‹å—ã ã£ãŸã‚‰ç£å ´æ–¹å‘ã«ã€
+		// ç‰‡æ–¹ãŒåŒ—ã€ç‰‡æ–¹ãŒå—ã ã£ãŸã‚‰ç£å ´ã¨é€†æ–¹å‘ã«ãƒˆãƒ¬ãƒ¼ã‚¹ã™ã‚‹ã€‚
 		const double trend_factor = 
 			(is_ptr_north ^ is_moment_north) ? -1.0 : 1.0;
 
-		// ‘O•ûŒü‚Éi‚ŞB
+		// å‰æ–¹å‘ã«é€²ã‚€ã€‚
 		vector p = *it;
 		do
 		{
@@ -293,8 +293,8 @@ void basic_magnet_model::traceModel(
 
 			if( norm_2(p) > 1.41*range*getMother().getRadius() )
 			{
-				// xy–Ê‚É‘ÎÛ‚ÌˆÊ’u‚ÉƒXƒ^[ƒg“_‚ğ’Ç‰Á‚µ‚ÄA
-				// ‚±‚±‚Å‚ÌƒgƒŒ[ƒX‚ÍI—¹B
+				// xyé¢ã«å¯¾è±¡ã®ä½ç½®ã«ã‚¹ã‚¿ãƒ¼ãƒˆç‚¹ã‚’è¿½åŠ ã—ã¦ã€
+				// ã“ã“ã§ã®ãƒˆãƒ¬ãƒ¼ã‚¹ã¯çµ‚äº†ã€‚
 				vector new_ptr = *it;
 				if( !(is_ptr_north ^ is_moment_north ) )
 				{
@@ -314,7 +314,7 @@ void basic_magnet_model::mapSurface() const throw()
 {
 	const basic_planet& mother = getMother();
 
-	// ‰ñ“]s—ñ‚ğì¬‚·‚éB
+	// å›è»¢è¡Œåˆ—ã‚’ä½œæˆã™ã‚‹ã€‚
 	matrix sm2geo = boost::numeric::ublas::prod(
 		mother.getGEI2GEO(),
 		makeMatrixInverse( mother.getGEI2GSE() )
@@ -357,9 +357,9 @@ bool basic_magnet_model::past_search(
 	const vector&       in_pos,
 	vector&         out_result
 ) const {
-	// ƒ}ƒ‹ƒ`ƒXƒŒƒbƒh‚É‚³‚ê‚½‚Æ‚«‚ÌƒoƒO‚ğ–h~‚·‚é‚½‚ßA
-	// ‘€ì’†‚Íí‚Émutex‚ğæ“¾‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢B
-	// ‚±‚ÌƒƒbƒN‚ÍAƒXƒR[ƒv‚ğŠO‚ê‚é‚Æ“¯‚É‰ğ•ú‚³‚ê‚éB
+	// ãƒãƒ«ãƒã‚¹ãƒ¬ãƒƒãƒ‰ã«ã•ã‚ŒãŸã¨ãã®ãƒã‚°ã‚’é˜²æ­¢ã™ã‚‹ãŸã‚ã€
+	// æ“ä½œä¸­ã¯å¸¸ã«mutexã‚’å–å¾—ã—ãªã‘ã‚Œã°ãªã‚‰ãªã„ã€‚
+	// ã“ã®ãƒ­ãƒƒã‚¯ã¯ã€ã‚¹ã‚³ãƒ¼ãƒ—ã‚’å¤–ã‚Œã‚‹ã¨åŒæ™‚ã«è§£æ”¾ã•ã‚Œã‚‹ã€‚
 	boost::mutex::scoped_lock lock( m_pastGuard );
 	
 	past_results_list::const_iterator it;
@@ -380,7 +380,7 @@ const vector& basic_magnet_model::past_newElement(
 ) const {
 	boost::mutex::scoped_lock lock( m_pastGuard );
 
-	// ŒvZŒ‹‰Ê‚ğ’Ç‰Á‚µAˆê”ÔŒÃ‚¢Œ‹‰Ê‚Í”jŠü‚·‚éB
+	// è¨ˆç®—çµæœã‚’è¿½åŠ ã—ã€ä¸€ç•ªå¤ã„çµæœã¯ç ´æ£„ã™ã‚‹ã€‚
 	l.pop_back();
 	l.push_front(
 		past_result_element(in_pos, in_element)

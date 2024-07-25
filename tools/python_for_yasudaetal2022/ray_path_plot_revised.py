@@ -6,21 +6,22 @@ import matplotlib as mpt
 import pandas as pd
 from matplotlib.colors import LogNorm
 
-object_name = "ganymede"  # europa/ganymde/callisto
+object_name = "europa"  # europa/ganymde/callisto
 spacecraft_name = "galileo"  # galileo/JUICE(?)
-time_of_flybies = 1  # ..th flyby
-highest_plasma = "1e2"  # 単位は(/cc) 2e2/4e2/16e2
-plasma_scaleheight = "10e2"  # 単位は(km) 1.5e2/3e2/6e2
-frequency = "1.063650846481323242e6"  # MHz
+time_of_flybies = 12  # ..th flyby
+# highest_plasma = "1e2"  # 単位は(/cc) 2e2/4e2/16e2
+# plasma_scaleheight = "10e2"  # 単位は(km) 1.5e2/3e2/6e2
+highest_plasma = "20.139_368.385"  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = "138.606_2.610"  # 単位は(km) 1.5e2/3e2/6e2
+frequency = "7.181954979896545410e5"  # MHz
 altitiude_interval = 20
-radio_type = "A"  # 複数選択可能にしたい
+radio_type = "D"  # 複数選択可能にしたい
 
-occultation_begining_hour = 6
+occultation_begining_hour = 12
 occultation_begining_minute = 10
 
-occultation_end_hour = 6
-occultation_end_minute = 30
-
+occultation_end_hour = 12
+occultation_end_minute = 15
 
 frequency_number = float(frequency) / 1000000
 occultation_lowest_frequency = frequency_number - 0.01
@@ -383,7 +384,7 @@ def main():
     n = -1600 + t * 0
     plt.plot(t, n, color="black")
     plt.fill_between(t, c, n, facecolor="black")
-    plt.annotate("Ganymede", (-680, -160), color="white", fontsize="xx-large")
+    plt.annotate(object_name, (-680, -160), color="white", fontsize="xx-large")
     spacecraft_plot()
     plt.grid()
     plt.savefig(

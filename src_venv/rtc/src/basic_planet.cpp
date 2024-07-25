@@ -32,16 +32,16 @@ void basic_planet::create()
 }
 
 
-// ˜f¯¥ê
+// æƒ‘æ˜Ÿç£å ´
 void basic_planet::setMagneticalAxis(
-	const double magnet_latitude, // ¥²‚ÌˆÜ“x [deg]
-	const double magnet_longitude // ¥²‚ÌŒo“x [deg]
+	const double magnet_latitude, // ç£è»¸ã®ç·¯åº¦ [deg]
+	const double magnet_longitude // ç£è»¸ã®çµŒåº¦ [deg]
 ){
 	m_axisInfo.setAxis( magnet_latitude, magnet_longitude );
 }
 
 
-// ˜f¯‚É‘Î‚·‚éÀ•WŒn --------------------------------------------------
+// æƒ‘æ˜Ÿã«å¯¾ã™ã‚‹åº§æ¨™ç³» --------------------------------------------------
 vector basic_planet::getFootPrint(
 	const vector& source_ptr,
 	double      trace_factor
@@ -67,7 +67,7 @@ double basic_planet::getFLAT(
 	double trace_factor
 ) const {
 
-	// ’¼ŒğÀ•W‚Ì point ‚©‚çA’n•\‚É‚¨‚¯‚éˆÜ“x(FLAT)‚ğ‹‚ßA•Ô‚·B
+	// ç›´äº¤åº§æ¨™ã® point ã‹ã‚‰ã€åœ°è¡¨ã«ãŠã‘ã‚‹ç·¯åº¦(FLAT)ã‚’æ±‚ã‚ã€è¿”ã™ã€‚
 	const vector fp = convertToPolar(
 		getFootPrint(
 			point,
@@ -77,10 +77,10 @@ double basic_planet::getFLAT(
 	const double ilat = std::fabs( rad2deg( fp(1) )-90.0 );
 
 	// --fix me--
-	// ilat ‚ª 90.0000000001“™‚Ì”’l‚É‚È‚Á‚Ä‚¢‚é‚±‚Æ‚ª‚ ‚éB
-	// ‚±‚ê‚É‚æ‚é‰e‹¿‚ğ”ğ‚¯‚é‚½‚ßA90.0ˆÈã‚Ìê‡‚Í
-	// ‚·‚×‚Ä 89.9999999999999 ‚É‚µ‚Ä•Ô‚·B
-	// FPU‚É‚æ‚Á‚Ä‚ÍA³í‚É“®ì‚µ‚È‚­‚È‚é‹°‚ê‚à‚ ‚é‚Ì‚Å’ˆÓ‚·‚é‚±‚ÆB
+	// ilat ãŒ 90.0000000001ç­‰ã®æ•°å€¤ã«ãªã£ã¦ã„ã‚‹ã“ã¨ãŒã‚ã‚‹ã€‚
+	// ã“ã‚Œã«ã‚ˆã‚‹å½±éŸ¿ã‚’é¿ã‘ã‚‹ãŸã‚ã€90.0ä»¥ä¸Šã®å ´åˆã¯
+	// ã™ã¹ã¦ 89.9999999999999 ã«ã—ã¦è¿”ã™ã€‚
+	// FPUã«ã‚ˆã£ã¦ã¯ã€æ­£å¸¸ã«å‹•ä½œã—ãªããªã‚‹æã‚Œã‚‚ã‚ã‚‹ã®ã§æ³¨æ„ã™ã‚‹ã“ã¨ã€‚
 	return std::min( ilat, 89.9999999999999 );
 }
 
@@ -90,7 +90,7 @@ double basic_planet::getEqLAT(
 	double  trace_factor
 ) const {
 	
-	// L’l‚ğ“±o‚µA‘o‹Éq¥ê‚ğ‰¼’è‚µ‚Ä‹‚ß‚éB
+	// Lå€¤ã‚’å°å‡ºã—ã€åŒæ¥µå­ç£å ´ã‚’ä»®å®šã—ã¦æ±‚ã‚ã‚‹ã€‚
 	const double L = norm_2(
 		getEquatorPrint( point, trace_factor )
 	) / getRadius();
@@ -105,7 +105,7 @@ double basic_planet::getEqLAT(
 
 double basic_planet::getMLT( const vector& point ) const
 {
-	// ƒ†[ƒNƒŠƒbƒh‹óŠÔ point ‚©‚çA¥‹Cƒ[ƒJƒ‹[h]‚ğ‹‚ßA•Ô‚·B
+	// ãƒ¦ãƒ¼ã‚¯ãƒªãƒƒãƒ‰ç©ºé–“ point ã‹ã‚‰ã€ç£æ°—ãƒ­ãƒ¼ã‚«ãƒ«æ™‚åˆ»[h]ã‚’æ±‚ã‚ã€è¿”ã™ã€‚
 	double mlt = 0;
 
 	vector p = convertToPolar(point);
@@ -125,10 +125,10 @@ double basic_planet::getMLT( const vector& point ) const
 
 
 vector basic_planet::getLocation(
-	const double MLAT,      // MLAT’l‚ğw’è[degree]
-	const double MLT,       // MLT’l‚ğw’è [h]
-	const double altitude,  // ˜f¯•\–Ê‚©‚ç‚Ì‚“x‚ğw’è
-	const double trace_factor, /* = 1e3 */ // ¥êƒgƒŒ[ƒX‚Ì¸“x
+	const double MLAT,      // MLATå€¤ã‚’æŒ‡å®š[degree]
+	const double MLT,       // MLTå€¤ã‚’æŒ‡å®š [h]
+	const double altitude,  // æƒ‘æ˜Ÿè¡¨é¢ã‹ã‚‰ã®é«˜åº¦ã‚’æŒ‡å®š
+	const double trace_factor, /* = 1e3 */ // ç£å ´ãƒˆãƒ¬ãƒ¼ã‚¹ã®ç²¾åº¦
 	std::vector<vector>* const out_trace_line /* = NULL */
 ) const {
 	assert( trace_factor > 0.0 );
@@ -155,11 +155,11 @@ vector basic_planet::getLocation(
 		out_trace_line->push_back(r);
 	}
 
-	// ˆÊ’ur‚©‚ç¥—Íü‚ğ“`‚Á‚Ä‚¢‚«A
-	// radius+altitude‚É’B‚µ‚½“_‚ÅI—¹‚·‚éB
+	// ä½ç½®rã‹ã‚‰ç£åŠ›ç·šã‚’ä¼ã£ã¦ã„ãã€
+	// radius+altitudeã«é”ã—ãŸç‚¹ã§çµ‚äº†ã™ã‚‹ã€‚
 	vector B = m_magnet.getField(r);
 
-	// ƒgƒŒ[ƒX‚·‚é•ûŒü‚ğ’è‚ß‚éB
+	// ãƒˆãƒ¬ãƒ¼ã‚¹ã™ã‚‹æ–¹å‘ã‚’å®šã‚ã‚‹ã€‚
 	const double
 		dist      = radius+altitude - norm_2(r),
 		dist_plus = radius+altitude - norm_2(r+B);
@@ -167,7 +167,7 @@ vector basic_planet::getLocation(
 	const double sence =
 		dist > dist_plus ? +1.0 : -1.0;
 
-	// sence‚Ì•ûŒü‚ÖƒgƒŒ[ƒXB
+	// senceã®æ–¹å‘ã¸ãƒˆãƒ¬ãƒ¼ã‚¹ã€‚
 	double lest = altitude;
 	while( lest > trace_factor )
 	{
@@ -194,9 +194,9 @@ vector basic_planet::getLocation(
 		}
 	};
 
-	// |r|‚ª­‚µ‚¾‚¯‘«‚è‚È‚¢ˆÊ’u‚Å~‚Ü‚é‚Ì‚ÅA
-	// ‚Ì‚±‚è‚Ì‹——£‚ğŒvZ‚µ‚ÄA–Ú“I‚Ì‚‚³‚É‚Ò‚Á‚¿‚è‚Á‚Ä‚­‚éB
-	// theta‚Í BƒxƒNƒgƒ‹‚ÆrƒxƒNƒgƒ‹‚ª¬‚·ŠpB
+	// |r|ãŒå°‘ã—ã ã‘è¶³ã‚Šãªã„ä½ç½®ã§æ­¢ã¾ã‚‹ã®ã§ã€
+	// ã®ã“ã‚Šã®è·é›¢ã‚’è¨ˆç®—ã—ã¦ã€ç›®çš„ã®é«˜ã•ã«ã´ã£ã¡ã‚ŠæŒã£ã¦ãã‚‹ã€‚
+	// thetaã¯ Bãƒ™ã‚¯ãƒˆãƒ«ã¨rãƒ™ã‚¯ãƒˆãƒ«ãŒæˆã™è§’ã€‚
 	r += B/norm_2(B) * (
 	  lest  * (
 	    norm_2(B)*norm_2(r)/inner_prod(B,r)// == 1/cos(theta);
@@ -214,21 +214,21 @@ vector basic_planet::getLocation(
 }
 
 
-// ‘¾—z•ûŒüA©“]²A¥² -------------------------------------
+// å¤ªé™½æ–¹å‘ã€è‡ªè»¢è»¸ã€ç£è»¸ -------------------------------------
 const vector basic_planet::getRotationalAxisInGSE() const
 {
-	// ©“]²•ûŒü‚ğAGSE‚ÌOŸŒ³’¼ŒğÀ•WŒn‚Å•\Œ»‚µ
-	// ’PˆÊƒxƒNƒgƒ‹‚É‚µ‚Ä•Ô‚·B
+	// è‡ªè»¢è»¸æ–¹å‘ã‚’ã€GSEã®ä¸‰æ¬¡å…ƒç›´äº¤åº§æ¨™ç³»ã§è¡¨ç¾ã—
+	// å˜ä½ãƒ™ã‚¯ãƒˆãƒ«ã«ã—ã¦è¿”ã™ã€‚
 
-	// GSEÀ•WŒn‚ÍA
-	//  x²F‘¾—z•ûŒü
-	//  y²F‰©“¹–Ê‚Ìdusk‘¤
-	//  z²F‰©“¹²
-	// ‚Å•\Œ»‚³‚ê‚éBŒ´“_‚Í˜f¯’†SB
+	// GSEåº§æ¨™ç³»ã¯ã€
+	//  xè»¸ï¼šå¤ªé™½æ–¹å‘
+	//  yè»¸ï¼šé»„é“é¢ã®duskå´
+	//  zè»¸ï¼šé»„é“è»¸
+	// ã§è¡¨ç¾ã•ã‚Œã‚‹ã€‚åŸç‚¹ã¯æƒ‘æ˜Ÿä¸­å¿ƒã€‚
 
 
-	// ©“]²‚ÍAŒo“x0hAˆÜ“x+90‹‚ÌGEOÀ•WŒn‚©‚ç
-	// GEIŒn‚É•ÏŠ·‚µAŸ‚ÉGSEŒn‚É•ÏŠ·‚·‚éB
+	// è‡ªè»¢è»¸ã¯ã€çµŒåº¦0hã€ç·¯åº¦+90Â°ã®GEOåº§æ¨™ç³»ã‹ã‚‰
+	// GEIç³»ã«å¤‰æ›ã—ã€æ¬¡ã«GSEç³»ã«å¤‰æ›ã™ã‚‹ã€‚
 	const vector& ptr = m_axisInfo.getGeometricRotationalAxis();
 
 	const matrix
@@ -243,10 +243,10 @@ const vector basic_planet::getRotationalAxisInGSE() const
 
 const vector basic_planet::getMagneticalAxisInGSE() const
 {
-	// ¥²‚Ì•ûŒü‚ğAGSE‚ÌOŸŒ³’¼ŒğÀ•WŒn‚Å•\Œ»‚µ
-	// ’PˆÊƒxƒNƒgƒ‹‚É‚µ‚Ä•Ô‚·B
+	// ç£è»¸ã®æ–¹å‘ã‚’ã€GSEã®ä¸‰æ¬¡å…ƒç›´äº¤åº§æ¨™ç³»ã§è¡¨ç¾ã—
+	// å˜ä½ãƒ™ã‚¯ãƒˆãƒ«ã«ã—ã¦è¿”ã™ã€‚
 
-	// ¥²‚ÍA’n—Œo“xEˆÜ“x‚©‚çGEIŒn‚É•ÏŠ·‚µAGSE‚É•ÏŠ·‚·‚éB
+	// ç£è»¸ã¯ã€åœ°ç†çµŒåº¦ãƒ»ç·¯åº¦ã‹ã‚‰GEIç³»ã«å¤‰æ›ã—ã€GSEã«å¤‰æ›ã™ã‚‹ã€‚
 	const vector& ptr = m_axisInfo.getGeometricMagneticalAxis();
 
 	const matrix t = boost::numeric::ublas::prod(
@@ -261,7 +261,7 @@ const vector basic_planet::getMagneticalAxisInGSE() const
 }
 
 
-// ‰ñ“]s—ñ --------------------------------------------------
+// å›è»¢è¡Œåˆ— --------------------------------------------------
 matrix basic_planet::getGEI2GEO() const
 { 
 #ifdef RTC_RAYTRACE_ENABLE_LOG
@@ -306,8 +306,8 @@ matrix basic_planet::getGSM2SM () const
 ////////////////////////////////////////////////////////////////////////
 // basic_planet::axis_info
 basic_planet::axis_info::axis_info(
-	const double magnet_latitude, // ¥²‚ÌˆÜ“x [deg]
-	const double magnet_longitude // ¥²‚ÌŒo“x [deg]
+	const double magnet_latitude, // ç£è»¸ã®ç·¯åº¦ [deg]
+	const double magnet_longitude // ç£è»¸ã®çµŒåº¦ [deg]
 ) : m_magAxis(3),
     m_rotAxis(3)
 {
@@ -321,19 +321,19 @@ basic_planet::axis_info::axis_info(
 {}
 
 void basic_planet::axis_info::setAxis(
-	const double magnet_latitude, // ¥²‚ÌˆÜ“x [deg]
-	const double magnet_longitude // ¥²‚ÌŒo“x [deg]
+	const double magnet_latitude, // ç£è»¸ã®ç·¯åº¦ [deg]
+	const double magnet_longitude // ç£è»¸ã®çµŒåº¦ [deg]
 ) {
-	// ’n²‚ÍAz²‚Æ“¯‚¶‚Å‚ ‚éB
+	// åœ°è»¸ã¯ã€zè»¸ã¨åŒã˜ã§ã‚ã‚‹ã€‚
 	m_rotAxis[0] = 0;
 	m_rotAxis[1] = 0;
 	m_rotAxis[2] = 1.0;
 
-	// ¥²‚ÍA“n‚³‚ê‚½ˆÜ“xŒo“x‚©‚çZo‚·‚éB
+	// ç£è»¸ã¯ã€æ¸¡ã•ã‚ŒãŸç·¯åº¦çµŒåº¦ã‹ã‚‰ç®—å‡ºã™ã‚‹ã€‚
 	double lat, lng;
 
-	// ¥‹Cƒ‚[ƒƒ“ƒg‚ª“ìŒü‚«‚Ìê‡‚Å‚à
-	// ¥²‚Í–kŒü‚«‚ğí‚É³‚Æ‚µ‚Ä•Û‚·‚éB
+	// ç£æ°—ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆãŒå—å‘ãã®å ´åˆã§ã‚‚
+	// ç£è»¸ã¯åŒ—å‘ãã‚’å¸¸ã«æ­£ã¨ã—ã¦ä¿æŒã™ã‚‹ã€‚
 	if( magnet_latitude < 0.0 )
 	{
 		lat = deg2rad( -magnet_latitude       );
@@ -352,14 +352,14 @@ void basic_planet::axis_info::setAxis(
 	assert( m_magAxis[2] >= 0.0 );
 }
 
-// ƒeƒXƒg—p‚Ìƒƒ\ƒbƒh --------------------------------------------------
+// ãƒ†ã‚¹ãƒˆç”¨ã®ãƒ¡ã‚½ãƒƒãƒ‰ --------------------------------------------------
 #ifndef NDEBUG
 
 void basic_planet::test() const
 {
-	// getMagneticalAxisInGSE()‚Æ
-	// SMÀ•WŒn‚ÌZ²’PˆÊƒxƒNƒgƒ‹‚ğGES‚É•ÏŠ·‚µ
-	// Œ‹‰Ê‚ª“¯‚¶‚É‚È‚é‚©‚ğƒ`ƒFƒbƒN‚·‚éB
+	// getMagneticalAxisInGSE()ã¨
+	// SMåº§æ¨™ç³»ã®Zè»¸å˜ä½ãƒ™ã‚¯ãƒˆãƒ«ã‚’GESã«å¤‰æ›ã—
+	// çµæœãŒåŒã˜ã«ãªã‚‹ã‹ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã€‚
 	vector m = boost::numeric::ublas::zero_vector<double>(3);
 	m[2] = 1.0;
 

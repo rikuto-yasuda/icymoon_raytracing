@@ -10,7 +10,7 @@ STDLIB = \
 include makefile.common
 PCH = $(LIBNAME).pch
 
-# ����ѥ�����Υե饰�����
+# コンパイル時のフラグを指定
 CC_FLAG = \
 	/nologo /G6 /MT /W3 /GX /O2         \
 	/D "WIN32" /D "NDEBUG"              \

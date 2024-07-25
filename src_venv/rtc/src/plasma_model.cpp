@@ -1,4 +1,4 @@
-// basic_plasma_model.cpp: basic_plasma_model ƒNƒ‰ƒX‚ÌƒCƒ“ƒvƒŠƒƒ“ƒe[ƒVƒ‡ƒ“
+// basic_plasma_model.cpp: basic_plasma_model ã‚¯ãƒ©ã‚¹ã®ã‚¤ãƒ³ãƒ—ãƒªãƒ¡ãƒ³ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³
 //
 //////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
@@ -6,7 +6,7 @@
 
 using namespace rtc;
 //////////////////////////////////////////////////////////////////////
-// \’z/Á–Å
+// æ§‹ç¯‰/æ¶ˆæ»…
 //////////////////////////////////////////////////////////////////////
 
 basic_plasma_model::basic_plasma_model()
@@ -27,9 +27,9 @@ int basic_plasma_model::create( basic_planet& mother )
 	m_mother = &mother;
 
 #ifdef RTC_ENABLE_PLASMA_CAVITY
-	// ƒLƒƒƒrƒeƒB‚Ì\’z //
-	// addCavity()‚ªcreate()‚æ‚è‘O‚ÉŒÄ‚Ño‚³‚ê‚½‚à‚Ì‚É•t‚¢‚Ä‚Í
-	// ‚±‚±‚Å–Ê“|‚ğŒ©‚éB
+	// ã‚­ãƒ£ãƒ“ãƒ†ã‚£ã®æ§‹ç¯‰ //
+	// addCavity()ãŒcreate()ã‚ˆã‚Šå‰ã«å‘¼ã³å‡ºã•ã‚ŒãŸã‚‚ã®ã«ä»˜ã„ã¦ã¯
+	// ã“ã“ã§é¢å€’ã‚’è¦‹ã‚‹ã€‚
 	cavity_list_t::iterator it;
 	for( it = m_cavity.begin(); it != m_cavity.end(); ++it )
 	{
@@ -60,13 +60,13 @@ void basic_plasma_model::addCavity( const cavity& c )
 #ifdef RTC_ENABLE_PLASMA_CAVITY
 	m_cavity.push_back(c);
 
-	// cavity::create()‚Í m_mother‚ª•K—v‚Å‚ ‚é‚ªA‚±‚ê‚Í
-	// basic_plasma_model::create()‚ªŒÄ‚Ño‚³‚ê‚½Œã‚Å‚È‚¢‚Ææ“¾‚Å‚«‚È‚¢B
-	// addCavity()‚Í‚¢‚ÂŒÄ‚Ño‚³‚ê‚é‚©‚í‚©‚ç‚È‚¢‚½‚ßA
-	// basic_plasma_modell::create()“à•”‚Å‚Ü‚Æ‚ß‚ÄŒÄ‚Ño‚·‚Ì‚Æ“¯‚É
-	// ‚»‚ÌŒã‚ÉaddCavity()‚ªŒÄ‚Ño‚³‚ê‚½‚à‚Ì‚É‚Â‚¢‚Ä‚Í‚±‚±‚Å‚àŒÄ‚Ño‚·B
-	// create()‘O‚©‚ ‚Æ‚©‚ÍAm_mother‚ªNULL‚©‚Ç‚¤‚©‚Å”»’f‚Å‚«‚éB
-	// NULL‚Å–³‚¢ê‡Acavity::create()‚ğŒÄ‚Ño‚·B
+	// cavity::create()ã¯ m_motherãŒå¿…è¦ã§ã‚ã‚‹ãŒã€ã“ã‚Œã¯
+	// basic_plasma_model::create()ãŒå‘¼ã³å‡ºã•ã‚ŒãŸå¾Œã§ãªã„ã¨å–å¾—ã§ããªã„ã€‚
+	// addCavity()ã¯ã„ã¤å‘¼ã³å‡ºã•ã‚Œã‚‹ã‹ã‚ã‹ã‚‰ãªã„ãŸã‚ã€
+	// basic_plasma_modell::create()å†…éƒ¨ã§ã¾ã¨ã‚ã¦å‘¼ã³å‡ºã™ã®ã¨åŒæ™‚ã«
+	// ãã®å¾Œã«addCavity()ãŒå‘¼ã³å‡ºã•ã‚ŒãŸã‚‚ã®ã«ã¤ã„ã¦ã¯ã“ã“ã§ã‚‚å‘¼ã³å‡ºã™ã€‚
+	// create()å‰ã‹ã‚ã¨ã‹ã¯ã€m_motherãŒNULLã‹ã©ã†ã‹ã§åˆ¤æ–­ã§ãã‚‹ã€‚
+	// NULLã§ç„¡ã„å ´åˆã€cavity::create()ã‚’å‘¼ã³å‡ºã™ã€‚
 	if( m_mother ){
 		m_cavity.back().create( getMother() );
 	}

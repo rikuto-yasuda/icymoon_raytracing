@@ -6,76 +6,76 @@
 #define RTC_RAYTRACE_CORE_CONFIG_H
 
 //
-// raytrace�̒����\�ȃp�����[�^�͂����ŋL�q�B
+// raytraceの調整可能なパラメータはここで記述。
 //
 
 //
-// ���x���z�A������z���v�Z����Ƃ��̕������[�g���P�ʂŎw�肷��B
+// 密度勾配、磁場勾配を計算するときの幅をメートル単位で指定する。
 //
 #define RTC_DERIVATIVE_DISTANCE 1.0
 
 
 //
-// basic_magnet_model::getFootPrint()���A
-// �ߋ��̌v�Z���ʂ�ێ�������������}��ꍇ�ɒ�`����B
-// ��`���ꂽ���������ߋ��̌v�Z���ʂ�ێ�����B
+// basic_magnet_model::getFootPrint()���A
+// 過去の計算結果を保持した高速化を図る場合に定義する。
+// 定義された個数分だけ過去の計算結果を保持する。
 //
 #define RTC_BASIC_MAGNET_MODEL_STORE_PAST 5
 
 
 //
-// cavity �ɂ��v���Y�}���x�ւ̉e����^����ꍇ�A��`����B
-// ������`���Ȃ����Ƃɂ���āAbasic_plasma_model::operator ()�̌��ʂ�
-// �v���Y�}�L���r�e�B���܂܂Ȃ��A���̒l��Ԃ��B
-// ���̌��ʁA�ق�̏��������̍������������ނ��Ƃ��ł���B
-// ����`�̏�Ԃł� cavity�N���X�̃C���X�^���X�����邱�Ƃ͂ł��邵
-// setCavity()���Ăяo�����Ƃ��\�����A�v���Y�}�ɂ͑S���e�����Ȃ��B
+// cavity によるプラズマ密度への影響を与える場合、定義する。
+// これを定義しないことによって、basic_plasma_model::operator ()の結果は
+// プラズマキャビティを含まない、生の値を返す。
+// その結果、ほんの少しだけの高速化を見込むことができる。
+// 未定義の状態でも cavityクラスのインスタンスをつくることはできるし
+// setCavity()を呼び出すことも可能だが、プラズマには全く影響しない。
 //
 #define RTC_ENABLE_PLASMA_CAVITY
 
 
 //
-// raytrace���ɁA�p�����[�^�w��̎��Ԃ�菭�Ȃ��o�ߎ��Ԃ��K�v��
-// ���f���ꂽ�����G���[�Ɣ��f���A��O���Ȃ���悤�ɂ���B
-// ���f���̕s��ȂǂŖ������[�v�Ɋׂ�ꍇ�A�L���ɂ���B
+// raytrace時に、パラメータ指定の時間より少ない経過時間が必要と
+// 判断された時をエラーと判断し、例外をなげるようにする。
+// モデルの不具合などで無限ループに陥る場合、有効にする。
 //
 #define RTC_RAYTRACE_ENABLE_EXCEPTION_WHEN_TIMESTEP_UNDERFLOW
 
 
 // -----------------------------------------------
-// �ȉ��A�f�o�b�O���ɂ̂ݗL���ɂ���B
-// ��f�o�b�O�����L���ɂ���ꍇ��
-// ifndef�߂��R�����g�A�E�g����B
+// 以下、デバッグ時にのみ有効にする。
+// 非デバッグ時も有効にする場合は
+// ifndef節をコメントアウトする。
 #ifndef NDEBUG
 
 //
-// rtc::clearNaN()��L���ɂ���ꍇ�A��`����B
+// rtc::clearNaN()を有効にする場合、定義する。
 //
 #define RTC_RAYTRACE_ENABLE_CLEARNAN
 
 
 //
-// rtc::clearNaN()���L���ł��������A
-// ���ۂ�NaN���N���A�����Ƃ��Ƀ��|�[�g�\������ꍇ�ɒ�`����B
+// rtc::clearNaN()が有効であった時、
+// 実際にNaNをクリアしたときにレポート表示する場合に定義する。
 //
 #define RTC_RAYTRACE_LOGGING_CLEARNAN
 
 
 //
-// ray::calc_dt()�ŁA�p�����[�^�w��̎��Ԕ͈͊O�ɓ��B
-// �����Ƃ��Ƀ��O���Ƃ�ꍇ�A��`����B
+// ray::calc_dt()で、パラメータ指定の時間範囲外に到達
+// したときにログをとる場合、定義する。
 //
 #define RTC_RAYTRACE_RAY_LOGS_OUT_OF_TIME_RANGE
 
 
 //
-// �f�o�b�O�p�̃��O���o�͂���ꍇ�A��`����B
+// デバッグ用のログを出力する場合、定義する。
 //
 #define RTC_RAYTRACE_ENABLE_LOG
 
 
 //
-// ���ڍׂȃf�o�b�O���O���o�͂���ꍇ�A��`����B
+// より詳細なデバッグログを出力する場合、定義する。
 //
 // #define RTC_RAYTRACE_ENABLE_DETAIL_LOG
 

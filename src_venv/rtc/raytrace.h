@@ -5,7 +5,7 @@
 #ifndef RTC_RAYTRACE_H
 #define RTC_RAYTRACE_H
 
-// rtc ŠÖ˜A‚Ìinclude ///////////////////////////////////////////////////
+// rtc ï¿½Ö˜Aï¿½ï¿½include ///////////////////////////////////////////////////
 #include "config.h"
 
 #include "src/StdAfx.h"

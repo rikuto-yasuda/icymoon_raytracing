@@ -79,17 +79,17 @@ sato_earth::parameter::operator *( double f ) const
 ////////////////////////////////////////////////////////////////////////
 double sato_earth::getDensity( const vector& point ) const
 {
-	// �n���\�ʂ���̍��x
+	// 地球表面からの高度
 	const double r = norm_2(point);
 
 	const double
 		MLT  = getMLT(point),
 		iLAT = std::max( getILAT(point), 50.0 );
 
-	// density �𒼐ڕ⊮����B
-	// ���߂� MLT=0,3,6,9,12,15,18,21,24�i�X�j�̂��ꂼ��ɑ΂���
-	// ILAT��x���ƌ��Ȃ��AILAT = iLAT �̓_�̖��x�����߂�B
-	// ���Ȃ݂Ƀ��O�����W����Ԃł͎g�����ɂȂ����ۂ��B
+	// density を直接補完する。
+	// 初めに MLT=0,3,6,9,12,15,18,21,24（９つ）のそれぞれに対して
+	// ILATをx軸と見なし、ILAT = iLAT の点の密度を求める。
+	// ちなみにラグランジュ補間では使い物にならんっぽい。
 	akima_interpolation<double> dens;
 
 	const int ilat_enable[] = {
@@ -109,11 +109,11 @@ double sato_earth::getDensity( const vector& point ) const
 		}
 		tmp.establish();
 
-		// x == iLAT �̃X�v���C���f�[�^�G�������g���쐬����B
+		// x == iLAT のスプラインデータエレメントを作成する。
 		dens.add( i, tmp.get(MLT) );
 	}
 
-	// ���x�́AiLAT��x�ƌ��Ȃ��ĕ�Ԃ��s���B
+	// 今度は、iLATをxと見なして補間を行う。
 	dens.establish();
 	return std::max(
 		dens.get(iLAT), 0.0
@@ -135,7 +135,7 @@ void sato_earth::test() const
 	}
 }
 
-// private�����o ///////////////////////////////////////////////////////
+// privateメンバ ///////////////////////////////////////////////////////
 double sato_earth::getMLT( const vector& point ) const
 {
 	return getMother().getMLT(point);
@@ -159,8 +159,8 @@ double sato_earth::getBaseDensity(
 	const double Re = getMother().getRadius();
 
 	/*// -- fix me -- //
-	// ILAT = 85�ȏ�̒l�͕s�����ۂ��̂�
-	// nsumei�̂������B
+	// ILAT = 85以上の値は不正っぽいので
+	// nsumeiのをつかう。
 	if( iLAT > 85 ) {
 		const double
 			N0    = 3433.0,
@@ -200,11 +200,11 @@ sato_earth::getBaseParam( int index ) const
 // sato_earch_plasma::m_baseParam /////////////////////////////////
 const sato_earth::SATO_PARAM
 sato_earth::m_baseParam[] = {
-	// �����i�Q�O�O�O�j�ɂ��C�_�̃R�s�[�B
-	// e.Typist�Ƃ���OCR���g���Ď�荞�񂾂����Ȃ̂ŁA
-	// ������������Ԉ���Ă邩���m��Ȃ��B
+	// 佐藤（２０００）による修論のコピー。
+	// e.TypistというOCRを使って取り込んだだけなので、
+	// もしかしたら間違ってるかも知れない。
 	//
-	// �Ȃ��A���f�[�^�ɂȂ�ILAT90�̃G�������g�́A���̎��œ��o�����B
+	// なお、元データにないILAT90のエレメントは、次の式で導出した。
 	//
 	//  SATO_PARAM == P(MLT,ILAT);
 	//  P(*,90) = (
@@ -215,8 +215,8 @@ sato_earth::m_baseParam[] = {
 	//  )/4;
 	//
 	// --fix me--
-	// MLT 0600, ILAT 70 �̃G�������g�͐������₵���B
-	// ���f�[�^���炵�ĊԈ���Ă�悤�ȋC������̂ŗv�m�F�B
+	// MLT 0600, ILAT 70 のエレメントは正直あやしい。
+	// 元データからして間違ってるような気がするので要確認。
 	//
 
 	// MLT, ILAT, N0, z0, H0, beta,----------------------------------
@@ -564,7 +564,7 @@ sato_earth::m_baseParam[] = {
 	21,   89,   1470.3844,    2133.67578,   206.856705,   0.156566665,
 	21,   90,   2331.46106,   2330.70586,   342.308517,   0.138437,
 
-	// MLT 2400 (328-368) ��MLT0000�Ɠ��������AMLT��24�ɂȂ��Ă���B
+	// MLT 2400 (328-368) ��MLT0000�Ɠ��������AMLT��24�ɂȂ��Ă���B
 	24,   50,   14297.499,    975.289673,  -87.3624878,   0.449617058,
 	24,   51,   10569.0176,   687.343872,   118.513145,   0.463367522,
 	24,   52,   8933.6543,    245.168411,   866.398376,   0.394534677,

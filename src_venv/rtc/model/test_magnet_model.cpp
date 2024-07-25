@@ -1,4 +1,4 @@
-// basic_magnetic_model.cpp: basic_magnetic_model ƒNƒ‰ƒX‚ÌƒCƒ“ƒvƒŠƒƒ“ƒe[ƒVƒ‡ƒ“
+// basic_magnetic_model.cpp: basic_magnetic_model ã‚¯ãƒ©ã‚¹ã®ã‚¤ãƒ³ãƒ—ãƒªãƒ¡ãƒ³ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³
 
 //////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
@@ -23,7 +23,7 @@ matrix magnet::test_null_magnet::getDerivativeB( const vector& pos ) const
 }
 
 // test_simple model //////////////////////////////////////////////////////
-/*magnet::test_simple::test_simple()                            //////////////–{—ˆ‚ÌƒVƒ“ƒvƒ‹ƒ‚ƒfƒ‹i‘o‹Éq¥êj
+/*magnet::test_simple::test_simple()                            //////////////æœ¬æ¥ã®ã‚·ãƒ³ãƒ—ãƒ«ãƒ¢ãƒ‡ãƒ«ï¼ˆåŒæ¥µå­ç£å ´ï¼‰
 {}
 
 vector magnet::test_simple::getField( const vector& pos ) const
@@ -48,7 +48,7 @@ magnet::test_simple::test_simple()
 
 {}
 
- //////////////’Ç‰Á‚µ‚½ƒVƒ“ƒvƒ‹ƒ‚ƒfƒ‹ix²•ûŒüˆê’èj                   ¥ê‚Ì‰e‹¿‚Í–³‹‚µ‚½‚¢‚½‚ß¥êãE”g”ƒxƒNƒgƒ‹‚ÌŒü‚«‚ğŒˆ‚ß‚é‚½‚ß¥ê‚Í•K—v..
+//////////////è¿½åŠ ã—ãŸã‚·ãƒ³ãƒ—ãƒ«ãƒ¢ãƒ‡ãƒ«ï¼ˆxè»¸æ–¹å‘ä¸€å®šï¼‰                   ç£å ´ã®å½±éŸ¿ã¯ç„¡è¦–ã—ãŸã„ãŸã‚ç£å ´å¼±ãƒ»æ³¢æ•°ãƒ™ã‚¯ãƒˆãƒ«ã®å‘ãã‚’æ±ºã‚ã‚‹ãŸã‚ç£å ´ã¯å¿…è¦..
 
 vector magnet::test_simple::getField      ( const vector& pos ) const
 {
@@ -70,7 +70,7 @@ vector magnet::test_simple::getFootPrint(
 
 	const basic_planet& mother = getMother();
 
-	// trace_factor‚Í–³‹
+	// trace_factorã¯ç„¡è¦–
 	const double r = mother.getRadius();
 	vector ptr = convertToPolar(sp);
 
@@ -95,7 +95,7 @@ vector magnet::test_simple::getEquatorPrint(
 
 	const double s = std::sin(ptr[1]);
 	ptr[0] = ptr[0] /( s*s ); // r_eq
-	ptr[1] = cnst::pi/2;      // 90‹
+	ptr[1] = cnst::pi/2;      // 90Â°
 
 	return convertToCartesian(ptr);
 }

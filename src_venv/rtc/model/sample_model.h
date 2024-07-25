@@ -10,8 +10,8 @@ namespace rtc { namespace model {
 namespace magnet {
 
 	// null model -----------------------------------------
-	// null���f���ł́A����͑��݂��Ȃ��B
-	// ��� 0 ��Ԃ��B
+	// nullモデルでは、磁場は存在しない。
+	// 常に 0 を返す。
 	class null_magnet : public basic_magnet_model
 	{
 	protected: vector getField      ( const vector& pos ) const;
@@ -19,17 +19,17 @@ namespace magnet {
 	};
 
 	// simple model ---------------------------------------
-	// �P���Ȏ��ꃂ�f�����L�q�B
-	// ���̃��f���ł́A����͒P���ȑo�Ɏq����ł���B
+	// 単純な磁場モデルを記述。
+	// このモデルでは、磁場は単純な双極子磁場である。
 	class simple : public basic_magnet_model
 	{
 	public:
 		simple();
 
-		// simple_magnet�͒P���ȑo�Ɏq����ł��邩��A
-		// �t�b�g�v�����g�͉�͓I�ɓ������Ƃ��ł���B
-		// ���̂��߁Abasic_magnet_model::getFootPrint()��
-		// �I�[�o�[���C�h���č��������邱�Ƃ��ł���B
+		// simple_magnetは単純な双極子磁場であるから、
+		// フットプリントは解析的に導くことができる。
+		// そのため、basic_magnet_model::getFootPrint()を
+		// オーバーライドして高速化することができる。
 		vector getFootPrint(
 			const vector& sp,
 			double
@@ -47,8 +47,8 @@ namespace magnet {
 } namespace plasma {
 
 	// null model -----------------------------------------
-	// null���f���ł́A�v���Y�}�͑��݂��Ȃ��B
-	// ��� 0 ��Ԃ��B
+	// nullモデルでは、プラズマは存在しない。
+	// 常に 0 を返す。
 	class null_plasma : public basic_plasma_model
 	{
 	protected:
@@ -56,10 +56,10 @@ namespace magnet {
 	};
 
 	// simple model ---------------------------------------
-	// �P���ȃv���Y�}�����f���B
-	// ���̃��f���ł́A�n�����ӂɋ��͂ȃv���Y�}�̖�������A
-	// x�������� �}�QRe ���ꂽ�ʒu�𒆐S�ɁA���͂ȃv���Y�}�̉򂪑��݂���B
-	// �����̃v���Y�}���ɂ��Ȃ�̃f�t�H���������������̂ł���ƍl���č����x���Ȃ��B
+	// 単純なプラズマ圏モデル。
+	// このモデルでは、地球周辺に強力なプラズマの膜があり、
+	// x軸方向に ±２Re 離れた位置を中心に、強力なプラズマの塊が存在する。
+	// 現実のプラズマ圏にかなりのデフォルメをかけたものであると考えて差し支えない。
 	class simple : public basic_plasma_model
 	{
 	protected:

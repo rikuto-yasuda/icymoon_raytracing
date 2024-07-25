@@ -13,12 +13,12 @@ RESOURCE =
 RES_OBJ  = $(RESOURCE:%.rc=$(OBJ_PATH)/%.res)
 
 
-# ì¬‚·‚é‚à‚Ì‚ðŽw’èB
+# ä½œæˆã™ã‚‹ã‚‚ã®ã‚’æŒ‡å®šã€‚
 # windows | console
 SUBSYS = WINDOWS
 
 
-# ƒRƒ“ƒpƒCƒ‹Žž‚Ìƒtƒ‰ƒO‚ðŽw’è
+# ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«æ™‚ã®ãƒ•ãƒ©ã‚°ã‚’æŒ‡å®š
 CC_FLAG = \
 	/nologo /G6 /MT /W3 /GX /O2 /Ob2    \
 	/DWIN32                             \
@@ -44,12 +44,12 @@ PCH_FLAG = \
 	/Fp"$(OBJ_PATH)/$(PCH)"             \
 	/FD /c
 
-# ƒŠƒ\[ƒXƒRƒ“ƒpƒCƒ‹‚Ìƒtƒ‰ƒO‚ðŽw’èB
+# ãƒªã‚½ãƒ¼ã‚¹ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã®ãƒ•ãƒ©ã‚°ã‚’æŒ‡å®šã€‚
 RSC_FLAG = \
 	/l 0x411      \
 	/d  "NDEBUG"  \
 
-# ƒŠƒ“ƒNŽž‚Ìƒtƒ‰ƒO‚ðŽw’èB
+# ãƒªãƒ³ã‚¯æ™‚ã®ãƒ•ãƒ©ã‚°ã‚’æŒ‡å®šã€‚
 LD_FLAG = $(STDLIB)              \
 	-lib                         \
 	/nologo /subsystem:$(SUBSYS) \

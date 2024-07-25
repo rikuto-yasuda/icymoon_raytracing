@@ -16,7 +16,7 @@ VIP4::VIP4( const int dimension )
 
 int VIP4::create( basic_planet& mother )
 {
-	// •ê“V‘Ì‚Ì¥‹ÉˆÊ’u‚ğw’è‚·‚éB
+	// æ¯å¤©ä½“ã®ç£æ¥µä½ç½®ã‚’æŒ‡å®šã™ã‚‹ã€‚
 	const double
 		lng = std::atan2( m_coefficients.h(1,1), m_coefficients.g(1,1) ),
 		lat = 0.5*cnst::pi - std::atan2(
@@ -28,7 +28,7 @@ int VIP4::create( basic_planet& mother )
 		rad2deg(lat), rad2deg(lng)
 	);
 
-	// ‰ñ“]s—ñ‚ğì¬‚·‚éB
+	// å›è»¢è¡Œåˆ—ã‚’ä½œæˆã™ã‚‹ã€‚
 	m_sm2geo = boost::numeric::ublas::prod(
 		mother.getGEI2GEO(),
 		makeMatrixInverse( mother.getGEI2GSE() )
@@ -51,9 +51,9 @@ vector VIP4::getField( const vector& pos ) const
 	const basic_planet& earth = getMother();
 	vector r = boost::numeric::ublas::zero_vector<double>(3);
 
-	// pos‚É‚Í SM’¼ŒğÀ•WŒn‚Å‚ÌˆÊ’uƒxƒNƒgƒ‹‚ª“n‚³‚ê‚é‚Ì‚Å’ˆÓ‚·‚éB
-	// VIP4‚Å‚ÍAGEO‹…À•WŒn‚É•ÏŠ·‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢B
-	// ‚Ü‚½A–ß‚è’l‚ÍSM’¼ŒğÀ•WŒn‚Å–³‚¯‚ê‚Î‚È‚ç‚È‚¢B
+	// posã«ã¯ SMç›´äº¤åº§æ¨™ç³»ã§ã®ä½ç½®ãƒ™ã‚¯ãƒˆãƒ«ãŒæ¸¡ã•ã‚Œã‚‹ã®ã§æ³¨æ„ã™ã‚‹ã€‚
+	// VIP4ã§ã¯ã€GEOçƒåº§æ¨™ç³»ã«å¤‰æ›ã—ãªã‘ã‚Œã°ãªã‚‰ãªã„ã€‚
+	// ã¾ãŸã€æˆ»ã‚Šå€¤ã¯SMç›´äº¤åº§æ¨™ç³»ã§ç„¡ã‘ã‚Œã°ãªã‚‰ãªã„ã€‚
 	const vector ptr = convertToPolar(
 		rotation_prod( m_sm2geo, pos )
 	);
@@ -78,7 +78,7 @@ vector VIP4::getField( const vector& pos ) const
 	P[1][0] = c_t;
 	Q[0][0] = 0.0;
 
-	// ¥‹É‚Ì^ã‚É‚¢‚éê‡As_t == 0.0‚Æ‚È‚è‚OœZƒGƒ‰[‚ª”­¶‚·‚éB
+	// ç£æ¥µã®çœŸä¸Šã«ã„ã‚‹å ´åˆã€s_t == 0.0ã¨ãªã‚Šï¼é™¤ç®—ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã™ã‚‹ã€‚
 	if( s_t != 0.0 )
 	{
 		for( int n = 1 ;; )
@@ -100,7 +100,7 @@ vector VIP4::getField( const vector& pos ) const
 				r[1] += powerd_r * m * ( G*s_ml - H*c_ml )     * P[n][m]; //  Y
 				r[2] -= powerd_r * (n+1) * ( G*c_ml + H*s_ml ) * P[n][m]; // -Z
 				
-				// I—¹ğŒ
+				// çµ‚äº†æ¡ä»¶
 				if( ++m <= n )
 				{
 					P[n][m] = (
@@ -125,7 +125,7 @@ vector VIP4::getField( const vector& pos ) const
 		r[1] /= s_t;
 	}
 
-	// ¥‹É‚Ì^ã‚É‚¢‚éê‡AP == 1.0, Q == 0.0‚Å‚ ‚éB
+	// ç£æ¥µã®çœŸä¸Šã«ã„ã‚‹å ´åˆã€P == 1.0, Q == 0.0ã§ã‚ã‚‹ã€‚
 	else
 	{
 		for( int n = 1; n < n_max; ++n )
@@ -149,15 +149,15 @@ vector VIP4::getField( const vector& pos ) const
 	}
 
 
-	// ’PˆÊ‚ª [nT] i‘½•ªj‚È‚Ì‚ÅA[T]‚É•ÏŠ·‚·‚éB
+	// å˜ä½ãŒ [nT] ï¼ˆå¤šåˆ†ï¼‰ãªã®ã§ã€[T]ã«å¤‰æ›ã™ã‚‹ã€‚
 	r *= 1e-9;
 
-	// Œ‹‰Ê‚ÍAX=–kAY=Œo“xAZ=’n‰º•ûŒü‚Ì¥ê‚È‚Ì‚Å
-	// ‰ñ“]‚µ‚Ä GEOÀ•WŒn‚É‚·‚éB
-	// ‚±‚Ì‰ñ“]‚ÍA‚Ü‚¸Y²’†S‚É ƒÆ-ƒÎ ‚¾‚¯‰ñ“]‚µA
-	// Ÿ‚ÉZ²’†S‚É ƒÓ ‚¾‚¯‰ñ“]‚·‚éB
+	// çµæœã¯ã€X=åŒ—ã€Y=çµŒåº¦ã€Z=åœ°ä¸‹æ–¹å‘ã®ç£å ´ãªã®ã§
+	// å›è»¢ã—ã¦ GEOåº§æ¨™ç³»ã«ã™ã‚‹ã€‚
+	// ã“ã®å›è»¢ã¯ã€ã¾ãšYè»¸ä¸­å¿ƒã« Î¸-Ï€ ã ã‘å›è»¢ã—ã€
+	// æ¬¡ã«Zè»¸ä¸­å¿ƒã« Ï† ã ã‘å›è»¢ã™ã‚‹ã€‚
 	//
-	// ‚»‚ÌŒã‚ÉSMÀ•WŒn‚É•ÏŠ·‚µA•Ô‚·B
+	// ãã®å¾Œã«SMåº§æ¨™ç³»ã«å¤‰æ›ã—ã€è¿”ã™ã€‚
 
 	matrix rm = boost::numeric::ublas::prod(
 		m_geo2sm,
@@ -209,7 +209,7 @@ double VIP4::coefficient::H( int n, int m ) const
 
 void VIP4::coefficient::load()
 {
-	int c = 0;// ƒJƒEƒ“ƒ^ê—p•Ï”
+	int c = 0;// ã‚«ã‚¦ãƒ³ã‚¿å°‚ç”¨å¤‰æ•°
 
 	const int max_n = getDimensionEnd();
 
@@ -225,7 +225,7 @@ void VIP4::coefficient::load()
 		//  G = g[n][m] * sqrt( em * (n-m)! / (n+m)! );
 		//  H = h[n][m] * sqrt( em * (n-m)! / (n+m)! );
 		//  em = ( m == 0 ? 1 : 2 )
-		// ‚Ì’l‚àŠi”[‚·‚éB
+		// ã®å€¤ã‚‚æ ¼ç´ã™ã‚‹ã€‚
 		int i;
 		assert( n >= m );
 		const double em = ( m == 0 ? 1 : 2 );

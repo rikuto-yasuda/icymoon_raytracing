@@ -5,7 +5,7 @@
 #ifndef RTC_RAYTRACE_TESTING_H
 #define RTC_RAYTRACE_TESTING_H
 
-// •W€‚Åg—p‚·‚éƒ‰ƒCƒuƒ‰ƒŠ‚Ö‚Ì include ‚Í‚±‚±‚É‘‚­B
+// æ¨™æº–ã§ä½¿ç”¨ã™ã‚‹ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã¸ã® include ã¯ã“ã“ã«æ›¸ãã€‚
 #include <iostream>
 #include <iomanip>
 #include <ctime>
@@ -160,7 +160,7 @@ public:
 	}
 };
 
-// ŠÖ”ƒeƒ“ƒvƒŒ[ƒg /////////////////////////////
+// é–¢æ•°ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ /////////////////////////////
 testing_env *parseCmdline(int argc, char *argv[]);
 void printHelp();
 

@@ -4,10 +4,10 @@
 //	Copyright (C) 2005 Miyamoto Luisch
 namespace rtc {
 
-// ƒŒƒCƒgƒŒ[ƒVƒ“ƒO‚ğÀs‚µAˆê•ài‚Ş //////////////////////////////////
+// ãƒ¬ã‚¤ãƒˆãƒ¬ãƒ¼ã‚·ãƒ³ã‚°ã‚’å®Ÿè¡Œã—ã€ä¸€æ­©é€²ã‚€ //////////////////////////////////
 double ray::take_a_step()
 {
-	// ˆø”‚©‚çƒxƒNƒgƒ‹‚ğæ‚èo‚·B
+	// å¼•æ•°ã‹ã‚‰ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–ã‚Šå‡ºã™ã€‚
 	vector& r  = m_rk.first;
 	vector& k  = m_rk.second;
 
@@ -25,23 +25,23 @@ double ray::take_a_step()
 	m_drk.first  = -dgdk*dwdg; // -drdt
 	m_drk.second =  dgdr*dwdg; //  dkdt
 
-	// calc_dt() ‚Ì’†‚Å update_intermediate()‚ªŒÄ‚Ño‚³‚ê
-	// m_im ‚ªXV‚³‚ê‚éB
+	// calc_dt() ã®ä¸­ã§ update_intermediate()ãŒå‘¼ã³å‡ºã•ã‚Œ
+	// m_im ãŒæ›´æ–°ã•ã‚Œã‚‹ã€‚
 	const double dt = calc_dt(
 		m_rk, m_drk,
 		m_im
 	);
 
-	// Œ‹‰Ê‚ğŠi”[‚µ‚ÄA§Œä‚ğ•Ô‚·B
+	// çµæœã‚’æ ¼ç´ã—ã¦ã€åˆ¶å¾¡ã‚’è¿”ã™ã€‚
 	m_drk.first  *= dt;
 	m_drk.second *= dt;
 	r += m_drk.first;
 	k += m_drk.second;
 
-	// V‚µ‚¢“_‚Å‚ÌŒõ‚Ìó‘Ô‚ğƒ`ƒFƒbƒN‚·‚éB
+	// æ–°ã—ã„ç‚¹ã§ã®å…‰ã®çŠ¶æ…‹ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã€‚
 	checkState(m_im,m_drk,r,k);
 
-	//”½ËƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚Ìê‡ˆÈ‰º—˜—p cf)ray.cpp
+	//åå°„ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®å ´åˆä»¥ä¸‹åˆ©ç”¨ cf)ray.cpp
 /*
     if(checkReflection(r,m_drk)==1)
 	{
@@ -49,9 +49,9 @@ double ray::take_a_step()
 		gettimeofday(&_time, NULL);
 		srand(_time.tv_usec);
 
-		if((rand()%1000)/1000.0 < 0.2) //”½Ë‚·‚é‰Â”\«‚ğ‹L“ü(not •S•ª—¦)
+		if((rand()%1000)/1000.0 < 0.2) //åå°„ã™ã‚‹å¯èƒ½æ€§ã‚’è¨˜å…¥(not ç™¾åˆ†ç‡)
 		{
-			r -= m_drk.first;  //r,k = m_rkŒ³‚É–ß‚é
+			r -= m_drk.first;  //r,k = m_rkï¿½ï¿½ï¿½É–ß‚ï¿½
 			k -= m_drk.second;
 			m_drk.first  /= dt;
 			m_drk.second /= dt;
@@ -71,10 +71,10 @@ double ray::take_a_step()
 	return dt; 
 
 	
-	//mainloop‚ÅŒÄ‚Ño‚³‚ê‚é‚à‚Ì
+	//mainloopã§å‘¼ã³å‡ºã•ã‚Œã‚‹ã‚‚ã®
 	//dt=calc(), getDeltaR()=m_dkr.first, getDeltaK()=m_dkr.second
-	//getR()=m_rk.first, getK()=m_rk.second ‚±‚±‚ÅQÆ‚³‚ê‚Ä‚¢‚é‚Ì‚Å’l‚ÌXV‚ª‰Â”\‚É
-	//checkstate‚ÅŒÅ‘Ì•”‚Ì”»’f‚ğ‚·‚é‚½‚ß‚±‚ê‚ç‚Ì’l‚Ídt‚ğ•Ô‚·‘O‚É•ÏX‚·‚é•K—v‚ ‚è
+	//getR()=m_rk.first, getK()=m_rk.second ã“ã“ã§å‚ç…§ã•ã‚Œã¦ã„ã‚‹ã®ã§å€¤ã®æ›´æ–°ãŒå¯èƒ½ã«
+	//checkstateã§å›ºä½“éƒ¨ã®åˆ¤æ–­ã‚’ã™ã‚‹ãŸã‚ã“ã‚Œã‚‰ã®å€¤ã¯dtã‚’è¿”ã™å‰ã«å¤‰æ›´ã™ã‚‹å¿…è¦ã‚ã‚Š
 }
 
 }// namespace rtc

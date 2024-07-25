@@ -10,21 +10,21 @@ namespace rtc { namespace model { namespace magnet {
 	/******************************************
 	class IGRF
 		http://www.ngdc.noaa.gov/IAGA/vmod/igrf.html, IAGA
-	
-		�n�����������Z���^�[���������W no.402
+		
+		地質調査総合センター研究資料集 no.402
 		Calculation of the Internatinal Geomagnetic Reference Field(3),
 		Tadashi Nakatsuka et al.
 	
-		IAGA�ɂ�鍑�ەW���n�����ꃂ�f���̎����B
-		IAGA���T�N�����Ƀ����[�X����K�E�X�W��
-		����ɁA��������̎�����v�Z���A�Ԃ��B
-		cosmos�Œ�`���ꂽ�������͈͊O�̏ꍇ�A
-		getField()�� out_of_range��O�𓊂���B
+		IAGAによる国際標準地球磁場モデルの実装。
+		IAGAが５年おきにリリースするガウス係数
+		を基に、特定日時の磁場を計算し、返す。
+		cosmosで定義された日時が範囲外の場合、
+		getField()が out_of_range例外を投げる。
 
-		�f�[�^�́AIGRF�������[�X����e�L�X�g�t�@�C����
-		�R���X�g���N�^�Ŏw�肵�A�H�ׂ����邱�Ƃ��ł���B
-		�w�肵�Ȃ������ꍇ�A�f�t�H���g�őg�ݍ��܂�Ă���
-		IGRF10(2005)���g�p����B
+		データは、IGRFがリリースするテキストファイルを
+		コンストラクタで指定し、食べさせることができる。
+		指定しなかった場合、デフォルトで組み込まれている
+		IGRF10(2005)を使用する。
 		
 	******************************************/
 	
@@ -38,18 +38,18 @@ namespace rtc { namespace model { namespace magnet {
 		int create( basic_planet& mother );
 		
 	private:
-		// �v�Z���Ɏg�p���鍀���v�Z���A���邢�͕ێ����Ԃ��B
-		// IAGA�ɂ��K�E�X�W���̃f�[�^�ێ�
+		// 計算時に使用する項を計算し、あるいは保持し返す。
+		// IAGAによるガウス係数のデータ保持
 		class coefficient
 		{
 		public:
-			// �K�E�X�W���f�[�^�̕ێ�
+			// ガウス係数データの保持
 			struct coefficient_element {
 				coefficient_element()
 				: g(0.0), G(0.0),
 				  h(0.0), H(0.0)
 				{};
-				double g, h; // �f�[�^�̐��̒l
+				double g, h; // データの生の値
 				double G, H; // (g|h) * ( em * (n-m)! / (n+m)! )
 			};
 			typedef boost::multi_array< coefficient_element, 2 > coeff_array_t;
@@ -58,50 +58,50 @@ namespace rtc { namespace model { namespace magnet {
 			coefficient( const int n_max );
 			coefficient( const char* data_file, const int n_max );
 			
-			// cosmos�̎����f�[�^��p���āA
-			//���f�[�^��������␳���s�������ʂ�Ԃ��B
+			// cosmosの時刻データを用いて、
+			//元データから日時補正を行った結果を返す。
 			double g( int n, int m ) const;
 			double h( int n, int m ) const;
 
-			// �W���ɕK�v�ȃt�@�N�^�[�����炩���ߊ|�����킹�����l��Ԃ��B
-			// ����̌v�Z���ɂ͒ʏ킱������g���B
+			// 係数に必要なファクターをあらかじめ掛け合わせた数値を返す。
+			// 磁場の計算時には通常こちらを使う。
 			double G( int n, int m ) const;
 			double H( int n, int m ) const;
 
-			// �ێ����Ă���f�[�^�̍ő原��N+1��Ԃ��B
+			// 保持しているデータの最大次数N+1を返す。
 			int getDimensionEnd() const
 			{ return m_elements.shape()[0] + m_elements.index_bases()[0]; }
 			
 		private:
-			// �K�E�X�W���f�[�^��ǂݏo���B�R���X�g���N�^����̂݌Ăяo�����B
-			// igrf2c.pl�ɂ���ĕϊ����ꂽ�z�񂩂�ǂݏo���B
+			// ガウス係数データを読み出す。コンストラクタからのみ呼び出される。
+			// igrf2c.plによって変換された配列から読み出す。
 			void load();
 
-			// �������IGRF�Ō��J����Ă���text�^�C�v�̂��̂�ǂݏo���B
+			// こちらはIGRFで公開されているtextタイプのものを読み出す。
 			void load( const char* data_file );
 			
-			// 9x10�̓񎟌��z��B
-			// m_elements[n][m]�ŃA�N�Z�X���鎖���ł���B
-			// �A�N�Z�X�͈͂́An = [1,9], m = [0,9]�B
-			// n = 0�ł̃A�N�Z�X��s�\�ɂ��邽�߂ɁA
+			// 9x10の二次元配列。
+			// m_elements[n][m]でアクセスする事ができる。
+			// アクセス範囲は、n = [1,9], m = [0,9]。
+			// n = 0でのアクセスを不可能にするために、
 			//  m_elements( boost::extents[ multi_array<>::extent_range(1,9)][10] )
-			// �ŏ���������B
-			// m_elements�́A�\�z����UT���Q�Ƃ��Ď����␳���s���ێ�����B
-			// �\�z���UT��ύX�����ꍇ�̌��ʂ͖���`�ł���B
-			// �o�N�ω����́A�����̃f�[�^�Ɋւ��Ă�SV�l�����̂܂܁A
-			// �����łȂ��ꍇ�͑O��N�̍���������`�I�ɓ����o���B
+			// で初期化する。
+			// m_elementsは、構築時のUTを参照して時刻補正を行い保持する。
+			// 構築後にUTを変更した場合の結果は未定義である。
+			// 経年変化率は、未来のデータに関してはSV値をそのまま、
+			// そうでない場合は前後年の差分から線形的に導き出す。
 			coeff_array_t m_elements;
 			
 		} m_coefficients;
 		
 
-		// SM��Geodetic�n�̕ϊ��s��
+		// SMとGeodetic系の変換行列
 		matrix
 			m_sm2geo,
 			m_geo2sm;
 		
 
-	protected: // �O���ւ̃C���^�[�t�F�C�X
+	protected: // 外部へのインターフェイス
 
 		vector getField( const vector& pos ) const;
 

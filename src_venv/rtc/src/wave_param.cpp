@@ -1,4 +1,4 @@
-// wave_param.cpp: wave_parameter ƒNƒ‰ƒX‚ÌƒCƒ“ƒvƒŠƒƒ“ƒe[ƒVƒ‡ƒ“
+// wave_param.cpp: wave_parameter ã‚¯ãƒ©ã‚¹ã®ã‚¤ãƒ³ãƒ—ãƒªãƒ¡ãƒ³ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³
 //
 //////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
@@ -6,7 +6,7 @@
 
 using namespace rtc;
 //////////////////////////////////////////////////////////////////////
-// \’z/Á–Å
+// æ§‹ç¯‰/æ¶ˆæ»…
 //////////////////////////////////////////////////////////////////////
 
 wave_parameter::wave_parameter(
@@ -34,7 +34,7 @@ wave_parameter::wave_parameter( const wave_parameter& r )
 wave_parameter::~wave_parameter()
 {}
 
-// ”g“®ğŒ‚Ì–â‚¢‡‚í‚¹ ////////////////////////////////////////////////
+// æ³¢å‹•æ¡ä»¶ã®å•ã„åˆã‚ã› ////////////////////////////////////////////////
 int wave_parameter::LO_or_RX() const
 { return static_cast<int>(m_mode); }
 
@@ -54,7 +54,7 @@ const std::pair<double,double>&
 wave_parameter::getTimeStep() const
 { return m_dt; }
 
-// ”g“®ğŒ‚ÌÄİ’è ////////////////////////////////////////////////////
+// æ³¢å‹•æ¡ä»¶ã®å†è¨­å®š ////////////////////////////////////////////////////
 void wave_parameter::setPrecision( const double prec )
 { m_precision = prec; }
 
