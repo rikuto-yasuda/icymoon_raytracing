@@ -23,7 +23,7 @@ COORD="euclid" # (euclid|polar9
 #SZ=2e6         # (source.z|altitude)
 #SZ=1.1e8        # (source.z|altitude)
 
-SX=-6000
+SX=-4000 # ganymede .. -6500, europa .. -4000, callisto .. -6500
 SY=0
 SZ=${HIG}
 
@@ -40,11 +40,11 @@ TIME="0:0.0"     # hour:minutes.sec
 ## 波動特性を設定 ##
 FREQ=${FREQ}      # 周波数[Hz]
 MODE="LO"       # 波動モード(LO|RX)
-RAY_L=4e8     # トレースする最大の光路長
+RAY_L=0.8e7     # トレースする最大の光路長 [m](ganymede .. 1.3e7, europa .. 0.8e7, callisto ..1.3e7)
 PITCH=0        # 磁場に対するピッチ角
 SEGMENT=300     # 出力する光路上の点の数
-#MAX_STEP=1300 # トレース・ステップの最大数
-MAX_STEP=45000 # トレース・ステップの最大数
+# MAX_STEP=45000 # トレース・ステップの最大数
+MAX_STEP=450000 # トレース・ステップの最大数
 #STEP_LENGTH=100  # １ステップで進む最大の光路長 (1step毎に進める最大長を[m]で指定する)
 STEP_LENGTH=10000000  # １ステップで進む最大の光路長 (1step毎に進める最大長を[m]で指定する)
 PRECISION="10000"  # １ステップ間のベクトル誤差の許容率
