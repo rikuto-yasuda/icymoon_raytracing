@@ -54,7 +54,7 @@ double plasma::europa_nonplume::getDensity(const vector &point) const //////////
 
 	return t;
 }
-
+/*
 double plasma::ganymede_nonplume::getDensity(const vector &point) const ///////////////ガニメデ拡散並行モデル
 {
 	const double
@@ -63,6 +63,20 @@ double plasma::ganymede_nonplume::getDensity(const vector &point) const ////////
 		rxy = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)));
 	const double
 		t = std::fabs(1e8 * exp(-(r - 2.6341e6) / 10e5)); 
+	;
+
+	return t;
+}
+*/
+
+double plasma::ganymede_nonplume::getDensity(const vector &point) const ///////////////ガニメデ拡散並行モデル
+{
+	const double
+		r = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)) + (pow(point(2) + 2.6341e6, 2.0)));
+	const double
+		rxy = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)));
+	const double
+		t = std::fabs(100e8 * exp(-(r - 2.6341e6) / 0.1e5)); 
 	;
 
 	return t;

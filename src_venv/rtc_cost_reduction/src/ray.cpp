@@ -320,22 +320,24 @@ double ray::calc_dt(
 	// step.first == max, step.second == min;
 	const std::pair<double,double>& step = getWaveParam().getTimeStep();
 	double        dt = m_dt_before;
-	const  double abs_drdt = norm_2(drk.first);
+	const  double abs_drdt = norm_2(drk.first); // dr/dtの長さ
 
 	// dt = m_dt_before 時の前後ベクトルを比較し、
 	// 許容範囲内なら、許容範囲ぎりぎりまでdtをのばし
 	// 許容範囲外なら、許容範囲までdtをけずる。
 	vector
-		r = rk.first  + dt*drk.first,
-		k = rk.second + dt*drk.second;
+		r = rk.first  + dt*drk.first, // Yasuda Master thesis 2022 (2.13)
+		k = rk.second + dt*drk.second; // Yasuda Master thesis 2022 (2.14)
 
 	intermediate i;
 	update_intermediate(i,r,k);
 
 	double ratio = norm_2(
 		calc_dGdk(i,r,k)/calc_dGdw(i,r,k)
-	) / abs_drdt;
+	) / abs_drdt; // dr/dt nextとdr/dtの比率
 
+
+	// 時間ステップの調整
 	if(
 	   1.0 - precision < ratio && ratio < 1.0 + precision &&
 	   abs_drdt*dt < m_wave.getStepLength()               &&
