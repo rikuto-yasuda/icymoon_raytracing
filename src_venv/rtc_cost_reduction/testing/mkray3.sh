@@ -1,22 +1,31 @@
-#for HIG in `seq 0 1 500` 
-for HIG in -2500 -1500 -500 0
-do
 
-#for FREQ in 6.510338783264160156e5 
-for FREQ in 3.984813988208770752e5 5.644999980926513672e6
-do
+#for FREQ in 3.984813988208770752e5 5.644999980926513672e6
+#do
  
-for STEP_LEN in 0.1e3 1e3 10e3 100e3 1000e3
+#for STEP_LEN in 0.1e3 1e3 10e3 100e3 1000e3
+#do
+
+#for PREC in 0.0001 0.00009 0.00008 0.00007 0.00006 0.00005 0.00004 0.00003 0.00002 0.00001 0.000009 0.000008 0.000007 0.000006 0.000005 0.000004 0.000003 0.000002 0.000001 0.0000009 0.0000008 0.0000007 0.0000006 0.0000005 0.0000004 0.0000003 0.0000002 0.0000001
+#do
+
+#for HIG in -500 -1500 -2500
+#do
+
+for STEP_LEN in 10e3
 do
 
-for PREC in 1 0.1 0.01 0.001 0.0001 0.00001
+for PREC in 0.000001
 do
+
+for FREQ in 6.510338783264160156e5
+do
+
+for HIG in `seq 0 1 500`
+do 
 
 RAYTRACE='./testing'
 
-
-## パラメータを設定 ##############################
-## 発生源を指定 ##
+#ray-Pganymede_nonplume_100e2_0.1e2-Mtest_simple-benchmark-LO-Z-2500-FR3.984813988208770752e5-STEP10e3-PREC0.0000009
 # euclid指定の場合は、惑星半径単位で。
 # polar指定の場合は、MKS単位で。
 #COORD="polar"   # (euclid|polar)
@@ -47,8 +56,8 @@ MODE="LO"       # 波動モード(LO|RX)
 # RAY_L=4e8     # (past) トレースする最大の光路長
 RAY_L=1.3e7     # トレースする最大の光路長 [m](ganymede .. 1.3e7, europa .. 0.8e7, callisto ..1.3e7)
 PITCH=0        # 磁場に対するピッチ角
-SEGMENT=300     # 出力する光路上の点の数
-MAX_STEP=450000 # トレース・ステップの最大数
+SEGMENT=10000    # 出力する光路上の点の数
+MAX_STEP=1e10000 # トレース・ステップの最大数
 
 # STEP_LENGTH=10000000  # １ステップで進む最大の光路長 (1step毎に進める最大長を[m]で指定する)
 STEP_LENGTH=${STEP_LEN}  # １ステップで進む最大の光路長 (1step毎に進める最大長を[m]で指定する)
@@ -58,7 +67,7 @@ PRECISION=${PREC}  # １ステップ間のベクトル誤差の許容率
 
 
 #TIME_RANGE="4e-6:1e-13"  # １ステップ間の時間分解能レンジ  (1step毎に進める時間の最大値・最小値を指定する。)
-TIME_RANGE="1e-3:1e-13"  # １ステップ間の時間分解能レンジ  (1step毎に進める時間の最大値・最小値を指定する。)
+TIME_RANGE="1:1e-100"  # １ステップ間の時間分解能レンジ  (1step毎に進める時間の最大値・最小値を指定する。)
 
 
 
@@ -71,7 +80,7 @@ CAVITY_LIST=(                      \
 
 ## 出力ファイル名を指定する。
 #OUTPUT="ray-P${PLASMA}_1e2_10e2-M${MAGNET}-${PLANET}-${MODE}-Z${SZ}-FR${FREQ}"
-OUTPUT="ray-P${PLASMA}_100e2_0.1e2-M${MAGNET}-${PLANET}-${MODE}-Z${SZ}-FR${FREQ}-STEP${STEP_LEN}-PREC${PREC}"
+OUTPUT="ray-P${PLASMA}_1e2_10e2-M${MAGNET}-${PLANET}-${MODE}-Z${SZ}-FR${FREQ}-STEP${STEP_LEN}-PREC${PREC}"
 
 ##OUTPUT="ray-P${PLASMA}-M${MAGNET}-${PLANET}-${MODE}-X${SX}-FR${FREQ}-PITCH${PITCH}"
 LOG="${0}.log"

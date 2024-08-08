@@ -183,7 +183,7 @@ void ray::checkState(
 
 }
 
-// �����̔��˂̗L�����`�F�b�N //////////////////////////////////////////////////
+// 反射のチェック //////////////////////////////////////////////////////
 int ray::checkReflection (
 	const vector&        r,
 	const vector_pair& drk	
