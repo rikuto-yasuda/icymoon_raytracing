@@ -13,6 +13,7 @@ SRC = \
 	wave_param.cpp   \
 	model_sato_earth.cpp   \
 	model_nsumei_earth.cpp \
+	Lathys_europa_3d.cpp  \
 	model_aon_earth.cpp    \
 
 #.oファイルを置く場所

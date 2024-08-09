@@ -10,6 +10,7 @@ SRC = \
     test_plasma_model.cpp \
     model_sato_earth.cpp    \
     model_nsumei_earth.cpp  \
+	Lathys_europa_3d.cpp    \
 	DevineGarrett.cpp       \
     IGRF.cpp                \
 	VIP4.cpp                \

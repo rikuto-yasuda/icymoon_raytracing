@@ -13,6 +13,7 @@
 #include "model/test_model.h"
 
 #include "model/model_nsumei_earth.h"
+#include "model/Lathys_europa_3d.h"
 #include "model/model_sato_earth.h"
 #include "model/DevineGarrett.h"
 

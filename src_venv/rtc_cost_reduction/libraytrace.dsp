@@ -101,6 +101,10 @@ SOURCE=.\model_nsumei_earth.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Lathys_europa_3d.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\model_sato_earth.cpp
 # End Source File
 # Begin Source File
@@ -139,6 +143,10 @@ SOURCE=.\model_aon_earth.h
 # Begin Source File
 
 SOURCE=.\model_nsumei_earth.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Lathys_europa_3d.h
 # End Source File
 # Begin Source File
 

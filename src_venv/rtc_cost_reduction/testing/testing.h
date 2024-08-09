@@ -72,6 +72,7 @@ public:
 		model_callisto_nonplume,
 		model_sato_earth,
 		model_nsumei_earth,
+		model_lathys_europa_3d,
 		model_devine_garrett,
 		model_igrf,
 		model_igrf4,
@@ -124,6 +125,9 @@ public:
 
 		case model_nsumei_earth:
 			return "nsumei";
+		
+		case model_lathys_europa_3d:
+			return "lathys_europa_3d";
 
 		case model_devine_garrett:
 			return "dg";

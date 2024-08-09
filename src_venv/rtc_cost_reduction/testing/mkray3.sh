@@ -20,7 +20,7 @@ do
 for FREQ in 6.510338783264160156e5
 do
 
-for HIG in `seq 0 1 500`
+for HIG in `seq 0 1 5`
 do 
 
 RAYTRACE='./testing'
@@ -42,7 +42,7 @@ SZ=${HIG}
 
 
 ## モデルを選択 ##
-PLASMA="ganymede_nonplume"    #(null|test_null|simple|test_simple|europa_plume|europa_nonplume|ganymede_nonplume|sato|nsumei|devine_garrett)
+PLASMA="lathys_europa_3d"    #(null|test_null|simple|test_simple|europa_plume|europa_nonplume|ganymede_nonplume|sato|nsumei|lathys_europa_3d|devine_garrett)
 MAGNET="test_simple"         #(null|test_null|simple|test_simple|igrf|igrf4|vip4)
 PLANET="benchmark"        #(earth(?)|jupiter|benchmark)
 

@@ -94,6 +94,11 @@ SOURCE=.\model_nsumei_earth.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Lathys_europa_3d.cpp 
+# ADD CPP /W4
+# End Source File
+# Begin Source File
+
 SOURCE=.\model_sato_earth.cpp
 # ADD CPP /W4
 # End Source File
@@ -135,6 +140,10 @@ SOURCE=.\igrf_coeffs.h
 # Begin Source File
 
 SOURCE=.\model_nsumei_earth.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Lathys_europa_3d.h
 # End Source File
 # Begin Source File
 

@@ -86,6 +86,7 @@ rtc::basic_plasma_model &getPlasmaModel(const testing_env *env)
 	static rtc::model::plasma::callisto_nonplume callisto_nonplume;
 	static rtc::model::plasma::sato_earth sato;
 	static rtc::model::plasma::nsumei_earth nsumei(2.0 /*Kp*/);
+	static rtc::model::plasma::lathys_europa_3d lathys_europa_3d;
 	static rtc::model::plasma::DevineGarrett dg;
 
 	switch (env->plasma_model)
@@ -119,6 +120,9 @@ rtc::basic_plasma_model &getPlasmaModel(const testing_env *env)
 
 	case testing_env::model_nsumei_earth:
 		return nsumei;
+
+	case testing_env::model_lathys_europa_3d:
+		return lathys_europa_3d;
 
 	case testing_env::model_devine_garrett:
 		return dg;

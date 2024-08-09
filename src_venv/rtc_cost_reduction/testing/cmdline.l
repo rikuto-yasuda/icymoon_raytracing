@@ -1,4 +1,4 @@
-*********************************************************************
+/*********************************************************************
 	コマンドライン解析専用 lex - ただしflex専用。
 	コンパイルするときは -Pcmd するべし。
 	
@@ -390,10 +390,10 @@ string  [A-Za-z_][A-Za-z0-9_]*
 	{
 		g_env.plasma_model = testing_env::model_sato_earth;
 	}
-	else if( str == "nsumei" )
+	else if( str == "lathys_europa_3d" )
 	{
-		g_env.plasma_model = testing_env::model_nsumei_earth;
-	}
+		g_env.plasma_model = testing_env::model_lathys_europa_3d;
+	}	
 	else if( str == "devine_garrett" )
 	{
 		g_env.plasma_model = testing_env::model_devine_garrett;
