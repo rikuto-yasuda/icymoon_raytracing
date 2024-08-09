@@ -925,27 +925,51 @@ def density_fitting(src_dir, typefile, rundate, diagtime):
     y_array_moon_center_phylen = np.arange(0, (nc[1]) * gs[1], gs[1]) - centr[1]
     z_array_moon_center_phylen = np.arange(0, (nc[2]) * gs[2], gs[2]) - centr[2]
 
-    print("x:", x_array_moon_center_phylen)
-    print("y:", y_array_moon_center_phylen)
-    print("z:", z_array_moon_center_phylen)
+    # position array from moon center (unit..Re)
+    x_array_moon_center_Re = x_array_moon_center_phylen * nrm_len / 1560.8
+    y_array_moon_center_Re = y_array_moon_center_phylen * nrm_len / 1560.8
+    z_array_moon_center_Re = z_array_moon_center_phylen * nrm_len / 1560.0
 
-    print("x:", x_array_moon_center_phylen* nrm_len[0])
-    print("y:", y_array_moon_center_phylen* nrm_len[0])
-    print("z:", z_array_moon_center_phylen* nrm_len[0])
+    """
+    plot_in_xaxis(
+        x_array_moon_center_Re,
+        y_array_moon_center_Re,
+        z_array_moon_center_Re,
+        Dn,
+        1,
+        [-4, 4],
+        y_pos=0,
+        z_pos=0,
+    )
 
-    print(nrm_len[0])
+    plot_in_yaxis(
+        x_array_moon_center_Re,
+        y_array_moon_center_Re,
+        z_array_moon_center_Re,
+        Dn,
+        1,
+        [-4, 4],
+        x_pos=0,
+        z_pos=0,
+    )
 
-    # position array from moon center (unit..km)
-    x_array_moon_center = x_array_moon_center_phylen * nrm_len 
-    y_array_moon_center = y_array_moon_center_phylen * nrm_len
-    z_array_moon_center = z_array_moon_center_phylen * nrm_len
-
+    plot_in_zaxis(
+        x_array_moon_center_Re,
+        y_array_moon_center_Re,
+        z_array_moon_center_Re,
+        Dn,
+        1,
+        [-4, 4],
+        x_pos=0,
+        y_pos=0,
+    )
+    """
 
     # position array from moon center meshgrid (unit..Re)
     x_meshgrid, y_meshgrid, z_meshgrid = np.meshgrid(
-        x_array_moon_center,
-        y_array_moon_center,
-        z_array_moon_center,
+        x_array_moon_center_Re,
+        y_array_moon_center_Re,
+        z_array_moon_center_Re,
         indexing="ij",
     )
 
@@ -960,25 +984,18 @@ def density_fitting(src_dir, typefile, rundate, diagtime):
     Dn_1d = Dn.flatten()
     # print(Dn_1d)
 
-    print("x:", x_meshgrid_1d)
-    print("y:", y_meshgrid_1d)
-    print("z:", z_meshgrid_1d)
-    print("Dn:", Dn_1d)
+    not_nan_indices = np.where(~np.isnan(Dn_1d))[0]
+    x_fitted = x_meshgrid_1d[not_nan_indices]
+    y_fitted = y_meshgrid_1d[not_nan_indices]
+    z_fitted = z_meshgrid_1d[not_nan_indices]
+    Dn_fitted = Dn_1d[not_nan_indices]
 
-    print("x shape:", x_meshgrid_1d.shape)
-    print("y shape:", y_meshgrid_1d.shape)
-    print("z shape:", z_meshgrid_1d.shape)
-    print("Dn shape:", Dn_1d.shape)
-
-    print("nc:", nc)
-    print("gs:", gs)
-    print("centr:", centr)
-    print("nrm_len:", nrm_len)
-
+    r_fitted, theta_fitted, phi_fitted = cartesian_to_spherical(
+        x_meshgrid_1d, y_meshgrid_1d, z_meshgrid_1d
+    )
 
     # plot_in_optimal_axis(x_fitted, y_fitted, z_fitted, Dn_fitted, Re, theta, phi)
 
-    """
     fitting_result = ""
 
 
@@ -1000,7 +1017,6 @@ def density_fitting(src_dir, typefile, rundate, diagtime):
     with open("../check_model_code/diffusion_fitting_result/fitting_result.txt", "w") as f:
         # 文字列をファイルに書き込む
         f.write(fitting_result)
-    """
 
 
 # %%
