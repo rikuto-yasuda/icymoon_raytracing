@@ -18,6 +18,7 @@ namespace rtc { namespace model { namespace plasma {
 
 	public:
 		lathys_europa_3d();
+
 	};
 
 }}}// namespace rtc

@@ -20,8 +20,9 @@ void handle_error(int status) {
 }
 
 lathys_europa_3d::lathys_europa_3d() {
-	const std::string& filename = "O2pl_19_04_23_t00600.nc";
-    loadData(filename);
+	std::cerr << "Error: " << std::endl;	
+	const std::string& filename = "/home/parallels/Desktop/Parallels Shared Folders/Home/research/icymoon_raytracing/src_venv/rtc_cost_reduction/model/O2pl_19_04_23_t00600.nc";
+	loadData(filename);
 }
 
 void lathys_europa_3d::loadData(const std::string& filename) {
@@ -29,7 +30,7 @@ void lathys_europa_3d::loadData(const std::string& filename) {
     nc_type var_type;
     int ndims;
     int dimids[NC_MAX_VAR_DIMS];
-
+	std::cerr << "Error: " << filename << std::endl;	
     // NetCDFファイルを開く
     handle_error(nc_open(filename.c_str(), NC_NOWRITE, &ncid));
 
@@ -86,40 +87,39 @@ double lathys_europa_3d::getDensity( const vector& point ) const
 	*/
 
 
-
-	const double initial_pos[] = {--10146685.791015625, -23134443.603515625, -23146307.4207482}; // [m]
+	const double initial_pos[] = {-10146685.791015625, -23134443.603515625, -23146307.4207482}; // [m]
 	//const int grid_numbser[] = {dimlen[2], dimlen[1], dimlen[0]}; 
 	const int grid_numbser[] = {202, 458, 458}; 
 	const double grid_size[] = {101466.85791016, 101466.85791016, 101518.89219626}; // [m]
 
-	const double x = point[0]; // [m]
-	const double y = point[1]; // [m]
-	const double z = point[2]; // [m]
+	double x = point[0]; // [m]cdcd
+	double y = point[1]; // [m]
+	double z = point[2]; // [m]
 
-	const double x2i = x-initial_pos[0];
-	const double y2i = y-initial_pos[1];
-	const double z2i = z-initial_pos[2];
+	double x2i = x-initial_pos[0];
+	double y2i = y-initial_pos[1];
+	double z2i = z-initial_pos[2];
 
-	const int x_ind = static_cast<int>(x2i/grid_size[0]);
-	const int y_ind = static_cast<int>(y2i/grid_size[1]);
-	const int z_ind = static_cast<int>(z2i/grid_size[2]);
+	int x_ind = static_cast<int>(x2i/grid_size[0]);
+	int y_ind = static_cast<int>(y2i/grid_size[1]);
+	int z_ind = static_cast<int>(z2i/grid_size[2]);
 
-	const double x2l = x2i - x_ind*grid_size[0];
-	const double y2l = y2i - y_ind*grid_size[1];
-	const double z2l = z2i - z_ind*grid_size[2];
+	double x2l = x2i - x_ind*grid_size[0];
+	double y2l = y2i - y_ind*grid_size[1];
+	double z2l = z2i - z_ind*grid_size[2];
 
-	const double x2h = grid_size[0] - x2l;
-	const double y2h = grid_size[1] - y2l;
-	const double z2h = grid_size[2] - z2l;
+	double x2h = grid_size[0] - x2l;
+	double y2h = grid_size[1] - y2l;
+	double z2h = grid_size[2] - z2l;
 
-	const int index_lll = x_ind + grid_numbser[0]*y_ind + grid_numbser[0]*grid_numbser[1]*z_ind;
-	const int index_llh = x_ind + grid_numbser[0]*y_ind + grid_numbser[0]*grid_numbser[1]*(z_ind+1);
-	const int index_lhl = x_ind + grid_numbser[0]*(y_ind+1) + grid_numbser[0]*grid_numbser[1]*z_ind;
-	const int index_lhh = x_ind + grid_numbser[0]*(y_ind+1) + grid_numbser[0]*grid_numbser[1]*(z_ind+1);
-	const int index_hll = (x_ind + 1) + grid_numbser[0]*y_ind + grid_numbser[0]*grid_numbser[1]*z_ind;
-	const int index_hlh = (x_ind + 1) + grid_numbser[0]*y_ind + grid_numbser[0]*grid_numbser[1]*(z_ind+1);
-	const int index_hhl = (x_ind + 1) + grid_numbser[0]*(y_ind+1) + grid_numbser[0]*grid_numbser[1]*z_ind;
-	const int index_hhh = (x_ind + 1) + grid_numbser[0]*(y_ind+1) + grid_numbser[0]*grid_numbser[1]*(z_ind+1);
+	int index_lll = x_ind + grid_numbser[0]*y_ind + grid_numbser[0]*grid_numbser[1]*z_ind;
+	int index_llh = x_ind + grid_numbser[0]*y_ind + grid_numbser[0]*grid_numbser[1]*(z_ind+1);
+	int index_lhl = x_ind + grid_numbser[0]*(y_ind+1) + grid_numbser[0]*grid_numbser[1]*z_ind;
+	int index_lhh = x_ind + grid_numbser[0]*(y_ind+1) + grid_numbser[0]*grid_numbser[1]*(z_ind+1);
+	int index_hll = (x_ind + 1) + grid_numbser[0]*y_ind + grid_numbser[0]*grid_numbser[1]*z_ind;
+	int index_hlh = (x_ind + 1) + grid_numbser[0]*y_ind + grid_numbser[0]*grid_numbser[1]*(z_ind+1);
+	int index_hhl = (x_ind + 1) + grid_numbser[0]*(y_ind+1) + grid_numbser[0]*grid_numbser[1]*z_ind;
+	int index_hhh = (x_ind + 1) + grid_numbser[0]*(y_ind+1) + grid_numbser[0]*grid_numbser[1]*(z_ind+1);
 
 	double density = (x2h*y2h*z2h*buffer[index_lll] + x2h*y2h*z2l*buffer[index_llh] + x2h*y2l*z2h*buffer[index_lhl] + x2h*y2l*z2l*buffer[index_lhh] + x2l*y2h*z2h*buffer[index_hll] + x2l*y2h*z2l*buffer[index_hlh] + x2l*y2l*z2h*buffer[index_hhl] + x2l*y2l*z2l*buffer[index_hhh])/grid_size[0]/grid_size[1]/grid_size[2];
 
