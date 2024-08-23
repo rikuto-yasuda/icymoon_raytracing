@@ -5,8 +5,8 @@ OBJECT_EXP = .o
 PCH_EXP    = .gch
 EXEC_EXP   = .a
 LIBRT      =
-INCLUDE_OPT=
-STDLIB     =
+INCLUDE_OPT= /usr/include
+STDLIB     = 
 
 PCH = $(STDHEADER)$(PCH_EXP)
 

@@ -9,7 +9,9 @@
 #include <iostream>
 #include <iomanip>
 #include <ctime>
+#include <vector>
 #include <boost/format.hpp>
+#include <netcdf.h>
 #include "../raytrace.h"
 
 class testing_env

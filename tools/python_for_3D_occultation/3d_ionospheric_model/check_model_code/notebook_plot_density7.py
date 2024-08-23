@@ -32,6 +32,7 @@ import gc
 from scipy.optimize import curve_fit
 
 
+
 # %%
 def plot_in_xaxis(x_array, y_array, z_array, Dn, radius, x_range, y_pos=0, z_pos=0):
     y_ind = (np.abs(y_array - y_pos)).argmin()
@@ -929,6 +930,16 @@ def density_fitting(src_dir, typefile, rundate, diagtime):
     x_array_moon_center_Re = x_array_moon_center_phylen * nrm_len / 1560.8
     y_array_moon_center_Re = y_array_moon_center_phylen * nrm_len / 1560.8
     z_array_moon_center_Re = z_array_moon_center_phylen * nrm_len / 1560.0
+
+    print("x_array_moon_center_m", x_array_moon_center_Re*1560.8*1000)
+    print("x_array_moon_center_m_diff", np.diff(x_array_moon_center_Re*1560.8*1000))
+    print("x_array_moon_center_len", len(x_array_moon_center_Re))
+    print("y_array_moon_center_m", y_array_moon_center_Re*1560.8*1000)
+    print("y_array_moon_center_m_diff", np.diff(y_array_moon_center_Re*1560.8*1000))
+    print("y_array_moon_center_len", len(y_array_moon_center_Re))
+    print("z_array_moon_center_m", z_array_moon_center_Re*1560.8*1000)
+    print("z_array_moon_center_m_diff", np.diff(z_array_moon_center_Re*1560.8*1000))
+    print("z_array_moon_center_len", len(z_array_moon_center_Re))
 
     """
     plot_in_xaxis(

@@ -6,18 +6,18 @@
 
 namespace rtc { namespace model { namespace plasma {
 
-	/********************************************
-	class sato_earth
-	　このモデルは、佐藤さん(2000年卒業,PPARC)によって
-	観測された電子密度モデルを元に作成しています。
-
-	*********************************************/
 	class lathys_europa_3d : public basic_plasma_model
 	{
+	private:
+		std::vector<float> buffer;
+		size_t dimlen[3];
+		void loadData(const std::string& filename);
 
 	protected:
 		double getDensity( const vector& point ) const;
-	
+
+	public:
+		lathys_europa_3d();
 	};
 
 }}}// namespace rtc

@@ -10,10 +10,10 @@ LIBRT      = \
     ../lib/planet.a \
     /usr/lib/aarch64-linux-gnu/libboost_thread.a \
     /usr/lib/aarch64-linux-gnu/libpthread.so \
+    /usr/lib/aarch64-linux-gnu/libnetcdf.so \
 
-
-INCLUDE_OPT=
-STDLIB     = pthread boost_thread
+INCLUDE_OPT= /usr/include
+STDLIB     = pthread boost_thread netcdf
 
 PCH = $(STDHEADER)$(PCH_EXP)
 
