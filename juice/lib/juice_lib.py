@@ -221,6 +221,23 @@ def get_juice_pos_venus(et, x_ref="SUN"):
     return [x, y, z, r, lat, lon]
 
 
+# ---------------------------------------------------------
+#   Calculate direction from JUICE
+#   reference frame: JUICE
+#   target: 
+#   origin: JUICE
+#   refernce target on the x-axis: x_ref
+# ---------------------------------------------------------
+
+
+def get_direction_from_juice(et, target):
+
+    x, y, z, r, lat, lon = get_pos(
+        et, ref="JUICE", tar = target, org="JUICE"
+    )
+
+    return [x, y, z, r, lat, lon]
+
 def get_pos(et, ref="IAU_SUN", tar="JUICE", org="SUN"):
 
     # light time correction

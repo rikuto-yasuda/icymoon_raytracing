@@ -20,7 +20,6 @@ void handle_error(int status) {
 }
 
 lathys_europa_3d::lathys_europa_3d() {
-	std::cerr << "Error: " << std::endl;	
 	const std::string& filename = "/home/parallels/Desktop/Parallels Shared Folders/Home/research/icymoon_raytracing/src_venv/rtc_cost_reduction/model/O2pl_19_04_23_t00600.nc";
 	loadData(filename);
 }
@@ -30,7 +29,6 @@ void lathys_europa_3d::loadData(const std::string& filename) {
     nc_type var_type;
     int ndims;
     int dimids[NC_MAX_VAR_DIMS];
-	std::cerr << "Error: " << filename << std::endl;	
     // NetCDFファイルを開く
     handle_error(nc_open(filename.c_str(), NC_NOWRITE, &ncid));
 
