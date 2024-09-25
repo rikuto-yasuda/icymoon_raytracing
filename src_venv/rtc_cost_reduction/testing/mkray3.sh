@@ -2,7 +2,7 @@
 for FREQ in 6.510338783264160156e5
 do
 
-for HIG in `seq 0 1 500`
+for HIG in `seq 0 100 1000`
 do 
 
 RAYTRACE='./testing'
@@ -42,15 +42,13 @@ SEGMENT=10000    # 出力する光路上の点の数
 MAX_STEP=1e10000 # トレース・ステップの最大数
 STEP_LENGTH=50e3   # １ステップで進む最大の光路長 (1step毎に進める最大長を[m]で指定する)
 #STEP_LENGTH=${STEP_LEN}  # １ステップで進む最大の光路長 (1step毎に進める最大長を[m]で指定する)
-
 PRECISION=0.000001  # １ステップ間のベクトル誤差の許容率
 # PRECISION=${PREC}  # １ステップ間のベクトル誤差の許容率
 
 
 #TIME_RANGE="4e-6:1e-13"  # １ステップ間の時間分解能レンジ  (1step毎に進める時間の最大値・最小値を指定する。)
 TIME_RANGE="1:1e-100"  # １ステップ間の時間分解能レンジ  (1step毎に進める時間の最大値・最小値を指定する。)
-
-
+ROUND_DIV=50
 
 ## plasma cavity ##
 # --cavity [fp/fc]/[ilat]:[ilat range]/[mlt]:[mlt range]/[height upper]:[height bottom]
@@ -85,6 +83,7 @@ send_mail()
 
 	$RAYTRACE \
 	  --plot ray                    \
+	  --parallel                    \
 	  --verbose                     \
 	  --source-coord ${COORD}       \
 	  --source-x     ${SX}          \
@@ -100,6 +99,7 @@ send_mail()
 	  --time-range   ${TIME_RANGE}  \
 	  --precision    ${PRECISION}   \
 	  --pitch        ${PITCH}       \
+	  --round-div    ${ROUND_DIV}       \
 	  --ray-path-segment ${SEGMENT} \
 	  --planet       ${PLANET}      \
 	  ${CAVITY_LIST}                \
@@ -115,10 +115,6 @@ send_mail()
 
 	echo "END (${OUTPUT}) at " `date` >> ${LOG}
 	send_mail
-
-done
-
-done
 
 done
 

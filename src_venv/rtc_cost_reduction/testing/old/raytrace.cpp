@@ -12,12 +12,10 @@
 //
 raytrace::raytrace(
 	const testing_env*   env,
-	const double       round,
-	const double	   delta_source_z
+	const double       round
 ) : m_env( env  ),
     m_ray( NULL ),
 	m_round(round),
-	m_delta_source_z(delta_source_z),
 	m_progress( 0.0 ),
     m_state("init")
 {
@@ -41,9 +39,8 @@ raytrace::raytrace(
 	
 	if( env->is_verbose )
 	{
-		// ラウンド角の方向を出力 z方向のグリッド
+		// ラウンド角の方向を出力
 		m_output << "## round : " << rtc::rad2deg(round) << " ##\n";
-		m_output << "## delta_source_z : " << delta_source_z << " ##\n";
 	}
 }
 
@@ -87,7 +84,7 @@ void raytrace::operator ()()
 		m_ray->initialize(
 			m_env->source_x,
 			m_env->source_y,
-			m_env->source_z + m_delta_source_z,
+			m_env->source_z,
 			m_env->pitch_angle,
 			m_round
 		);

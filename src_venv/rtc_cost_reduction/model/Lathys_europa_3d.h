@@ -9,7 +9,11 @@ namespace rtc { namespace model { namespace plasma {
 	class lathys_europa_3d : public basic_plasma_model
 	{
 	private:
-		std::vector<float> buffer;
+		std::vector<float> density_buffer;
+		std::vector<float> s_center_buffer;
+		std::vector<float> phys_length_buffer;
+		std::vector<float> Gs_buffer;
+		std::vector<size_t> grid_len_buffer; // 次元の長さを格納するバッファ
 		size_t dimlen[3];
 		void loadData(const std::string& filename);
 
