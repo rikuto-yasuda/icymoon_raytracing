@@ -2,7 +2,8 @@
 for FREQ in 6.510338783264160156e5
 do
 
-for HIG in `seq 0 100 1000`
+#for HIG in `seq 0 100 3000`
+for HUG in 0
 do 
 
 RAYTRACE='./testing'
@@ -48,7 +49,7 @@ PRECISION=0.000001  # １ステップ間のベクトル誤差の許容率
 
 #TIME_RANGE="4e-6:1e-13"  # １ステップ間の時間分解能レンジ  (1step毎に進める時間の最大値・最小値を指定する。)
 TIME_RANGE="1:1e-100"  # １ステップ間の時間分解能レンジ  (1step毎に進める時間の最大値・最小値を指定する。)
-ROUND_DIV=50
+ROUND_DIV=31
 
 ## plasma cavity ##
 # --cavity [fp/fc]/[ilat]:[ilat range]/[mlt]:[mlt range]/[height upper]:[height bottom]
@@ -59,7 +60,7 @@ CAVITY_LIST=(                      \
 
 ## 出力ファイル名を指定する。
 #OUTPUT="ray-P${PLASMA}_1e2_10e2-M${MAGNET}-${PLANET}-${MODE}-Z${SZ}-FR${FREQ}"
-OUTPUT="ray-P${PLASMA}_1e2_10e2-M${MAGNET}-${PLANET}-${MODE}-Z${SZ}-FR${FREQ}-STEP${STEP_LEN}-PREC${PREC}"
+OUTPUT="ray-P${PLASMA}_4.5e2_6e2-M${MAGNET}-${PLANET}-${MODE}-Z${SZ}-FR${FREQ}-STEP${STEP_LEN}-PREC${PREC}"
 
 ##OUTPUT="ray-P${PLASMA}-M${MAGNET}-${PLANET}-${MODE}-X${SX}-FR${FREQ}-PITCH${PITCH}"
 LOG="${0}.log"
@@ -99,7 +100,7 @@ send_mail()
 	  --time-range   ${TIME_RANGE}  \
 	  --precision    ${PRECISION}   \
 	  --pitch        ${PITCH}       \
-	  --round-div    ${ROUND_DIV}       \
+	  --round-div    ${ROUND_DIV}   \
 	  --ray-path-segment ${SEGMENT} \
 	  --planet       ${PLANET}      \
 	  ${CAVITY_LIST}                \

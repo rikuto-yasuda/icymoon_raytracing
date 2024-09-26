@@ -21,7 +21,7 @@ void handle_error(int status) {
 }
 
 lathys_europa_3d::lathys_europa_3d() {
-	const std::string& filename = "/home/parallels/Desktop/Parallels Shared Folders/Home/research/icymoon_raytracing/src_venv/rtc_cost_reduction/model/O2pl_19_04_23_t00600.nc";
+	const std::string& filename = "/home/parallels/Desktop/Parallels Shared Folders/Home/research/icymoon_raytracing/src_venv/rtc_cost_reduction/model/3d_model/summed_density.nc";
 	loadData(filename);
 }
 
@@ -68,12 +68,13 @@ void lathys_europa_3d::loadData(const std::string& filename) {
 
     // std::cerr << "Finish reading data from NetCDF file!" << std::endl;
 
+    /*
     // phys_length_bufferの要素を1000倍して単位を[m]に変換
     for (auto& val : phys_length_buffer) {
         val *= 1000;
     }
 
-    /*
+
     // s_centr_bufferの出力
     std::cerr << "s_center: ";
     for (const auto& val : s_center_buffer) {

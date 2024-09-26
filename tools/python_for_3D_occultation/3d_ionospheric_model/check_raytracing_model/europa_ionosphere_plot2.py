@@ -27,6 +27,9 @@ xx, zz = np.meshgrid(x_array, z_array)
 print(xx[10][140])
 print(zz[10][140])
 
+# カラーバーの範囲を指定
+vmin = 1e6  # 最小値
+vmax = 1e11  # 最大値
 
 v = df[:,3].reshape(c_size, r_size).T
 print(v[10][140])
@@ -37,6 +40,7 @@ plt.pcolor(
     v,
     cmap="jet",
     shading="auto",
+    norm=LogNorm(vmin=vmin, vmax=vmax)  # カラーバーの範囲を指定
 )
 
 plt.xlim(-5000, 5000)
@@ -78,6 +82,7 @@ plt.pcolor(
     v,
     cmap="jet",
     shading="auto",
+    norm=LogNorm(vmin=vmin, vmax=vmax)  # カラーバーの範囲を指定
 )
 
 plt.xlim(-5000, 5000)

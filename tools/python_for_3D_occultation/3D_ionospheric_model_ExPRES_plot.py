@@ -10,7 +10,7 @@ from matplotlib.colors import LogNorm
 # In[]
 
 df = np.genfromtxt(
-    "/Users/yasudarikuto/research/icymoon_raytracing/src_local_env/rtc_3D/tools/map_model/pxz-normal"
+    "/Users/yasudarikuto/research/icymoon_raytracing/src_venv/rtc_cost_reduction/tools/map_model/pxy_normal"
 )
 l_2d = len(df)
 idx = np.array(np.where(df[:, 0] > df[0][0]))

@@ -56,3 +56,4 @@ src_venv/rtc_cost_reduction/model/O2pl_19_04_23_t00600.nc
 src_venv/rtc_cost_reduction/testing/old_results
 tools/python_for_3D_occultation/3d_ionospheric_model/check_model_code/summed_density.nc
 tools/python_for_3D_occultation/3d_ionospheric_model/check_raytracing_model/summed_density.nc
+src_venv/rtc_cost_reduction/model/3d_model

@@ -350,7 +350,7 @@ int raytrace_start(testing_env *env)
 			// raytraceクラスを構築し、operator ()を呼び出してループ処理を行う。
 			// 光が終着点に到達したとき、operator ()から制御が返る。
 			//raytrace rtrc(env, (2 * rtc::cnst::pi / env->round_div) * round, 0.0);
-			raytrace rtrc(env, 0.0, 2e3 * round); 
+			raytrace rtrc(env, 0.0, 100e3 * round); 
 			rtrc(); // operator()を実行してる
 
 			std::cout << rtrc.getResult() << std::endl;
@@ -368,7 +368,7 @@ int raytrace_start(testing_env *env)
 		for (int round = 0; round < env->round_div; ++round)
 		{
 			// raytrace *r = new raytrace(env, (2 * rtc::cnst::pi / env->round_div) * round, 0.0);
-			raytrace *r = new raytrace(env, 0.0, 2e3 * round);	
+			raytrace *r = new raytrace(env, 0.0, 100e3 * round);	
 			rays.push_back(r);
 			threads.create_thread(boost::ref(*r));
 		}

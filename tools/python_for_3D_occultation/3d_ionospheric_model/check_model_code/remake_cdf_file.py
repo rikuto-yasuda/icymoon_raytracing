@@ -31,9 +31,17 @@ def sum_density_and_save(src_files, output_file):
     with Dataset(output_file, 'a') as nc_out:
         if 'Density' in nc_out.variables:
             density_var = nc_out.variables['Density']
-            density_var[:] = total_density
+            density_var[:] = total_density*10**6  # 単位を cm^-3 に変換
         else:
             raise ValueError(f"'Density' variable not found in the copied file {output_file}")
+
+        # "phys_length" 変数を1000倍にする
+        if 'phys_length' in nc_out.variables:
+            phys_length_var = nc_out.variables['phys_length']
+            phys_length_var[:] = phys_length_var[:] * 1000  # 単位を変換
+        else:
+            raise ValueError(f"'phys_length' variable not found in the copied file {output_file}")
+
 
     print(f"Summed density saved to {output_file}")
 
