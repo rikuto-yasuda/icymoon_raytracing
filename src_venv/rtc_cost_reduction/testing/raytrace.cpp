@@ -259,7 +259,7 @@ void raytrace::mainloop()
 
 	// m_outputに整理して出力
 	const double n = m_raypath.size();
-	const double t_step = m_raypath[n-1].first / n; // 08/06
+	const double t_step = m_raypath[n-1].first / m_env->ray_segment; // 08/06
 	if( n < m_env->ray_segment )
 	{
 		int i = 0;
@@ -269,12 +269,14 @@ void raytrace::mainloop()
 ////////////////////////////////////////////////////////step間隔確認用
 			print_variation( m_rayvariation[i] );
 		}
+		/*
 		for( ; i < m_env->ray_segment; ++i )
 		{
 			print_location( m_raypath[ static_cast<int>(n-1) ] );
 ///////////////////////////////////////////////////////////////////////
 			print_variation( m_rayvariation[ static_cast<int>(n-1) ] );
 		}
+		*/
 	}
 	/*
 	else for( int i = 0; i < m_env->ray_segment; ++i )

@@ -297,7 +297,7 @@ ray* ray::initialize(
 
 ray* ray::initialize(
 	double rx, double ry, double rz,
-	double pitch, double 
+	double pitch, double round
 ) {
 
 	vector r = boost::numeric::ublas::zero_vector<double>(3);

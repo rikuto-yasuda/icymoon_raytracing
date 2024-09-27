@@ -1231,7 +1231,7 @@ char *yytext;
 #define STEP_COUNT 10
 #define PRECISION 11
 #define PITCH_ANGLE 12
-#define PARALLEL_NUMBER 13
+#define ROUND_DIV 13
 #define PLOT_MODE 14
 #define PLASMA_MODEL 15
 #define MAGNET_MODEL 16
@@ -1594,7 +1594,7 @@ case 12:
 YY_RULE_SETUP
 #line 98 "cmdline.l"
 {
-	BEGIN PARALLEL_NUMBER;
+	BEGIN ROUND_DIV;
 }
 	YY_BREAK
 case 13:
@@ -1822,7 +1822,7 @@ case 38:
 YY_RULE_SETUP
 #line 246 "cmdline.l"
 {
-	g_env.parallel_number = strtod( yytext, NULL );
+	g_env.round_div = strtod( yytext, NULL );
 	BEGIN 0;
 }
 	YY_BREAK
@@ -2083,7 +2083,7 @@ case YY_STATE_EOF(STEP_TIME):
 case YY_STATE_EOF(STEP_COUNT):
 case YY_STATE_EOF(PRECISION):
 case YY_STATE_EOF(PITCH_ANGLE):
-case YY_STATE_EOF(PARALLEL_NUMBER):
+case YY_STATE_EOF(ROUND_DIV):
 case YY_STATE_EOF(PLOT_MODE):
 case YY_STATE_EOF(PLASMA_MODEL):
 case YY_STATE_EOF(MAGNET_MODEL):
@@ -3127,7 +3127,7 @@ testing_env* parseCmdline( int argc, char* argv[] )
 	g_env.step_count  = ~0;
 	g_env.precision   = 3.74e-4;
 	g_env.pitch_angle = 90 * (rtc::cnst::pi/180.0);
-	g_env.parallel_number   = 1;
+	g_env.round_div   = 1;
 	g_env.ray_segment = 100;
 
 	g_env.is_plot_startptr = true;
@@ -3181,7 +3181,7 @@ void printHelp()
 		"--step-length [length]   "                                                       "\n"
 		"--step-count  [count]    "                                                       "\n"
 		"--pitch       [angle]    "                                                       "\n"
-		"--parallel-number   [division] "                                                 "\n"
+		"--round-div   [division] "                                                       "\n"
 		"--precision   [prec]     "                                                       "\n"
 		"--ray-path-segment [n]   "                                                       "\n"
 		"--time-range [max]-[min] "                                                       "\n"

@@ -345,11 +345,11 @@ int raytrace_start(testing_env *env)
 	{
 		// ここでは初期位置とピッチ角を固定し、
 		// 磁力線周りに３６０度回転させた波動を生成する。
-		for (int round = 0; round < env->parallel_number; ++round)
+		for (int round = 0; round < env->round_div; ++round)
 		{
 			// raytraceクラスを構築し、operator ()を呼び出してループ処理を行う。
 			// 光が終着点に到達したとき、operator ()から制御が返る。
-			raytrace rtrc(env, (2 * rtc::cnst::pi / env->parallel_number) * round);
+			raytrace rtrc(env, (2 * rtc::cnst::pi / env->round_div) * round);
 			rtrc(); // operator()を実行してる
 
 			std::cout << rtrc.getResult() << std::endl;
@@ -364,9 +364,9 @@ int raytrace_start(testing_env *env)
 		// 光の数だけスレッドを構築
 		boost::thread_group threads;
 
-		for (int round = 0; round < env->parallel_number; ++round)
+		for (int round = 0; round < env->round_div; ++round)
 		{
-			raytrace *r = new raytrace(env, (2 * rtc::cnst::pi / env->parallel_number) * round);
+			raytrace *r = new raytrace(env, (2 * rtc::cnst::pi / env->round_div) * round);
 			rays.push_back(r);
 			threads.create_thread(boost::ref(*r));
 		}
@@ -452,7 +452,7 @@ int main(int argc, char *argv[])
 						 (env->source_coord == testing_env::source_coord_polar
 							  ? "(mlat,mlt,h)"
 							  : "(x,y,z)     ") %
-						 env->source_x % env->source_y % env->source_z % env->freq % (env->mode == rtc::wave_parameter::LO_MODE ? "LO" : "RX") % env->step_length % env->ray_length % env->pitch_angle % env->ray_segment % env->step_count % (env->is_back_trace ? "true" : "false") % env->time_range.max % env->time_range.min % env->getModelName(env->plasma_model) % env->getModelName(env->magnet_model) % env->date_time.year % env->date_time.month % env->date_time.day % env->date_time.hour % env->date_time.minute % env->date_time.sec % env->precision % std::ctime(&start_at) % (env->is_parallel ? "true" : "false") % env->parallel_number % env->getPlanetName(env->planet) //%27%
+						 env->source_x % env->source_y % env->source_z % env->freq % (env->mode == rtc::wave_parameter::LO_MODE ? "LO" : "RX") % env->step_length % env->ray_length % env->pitch_angle % env->ray_segment % env->step_count % (env->is_back_trace ? "true" : "false") % env->time_range.max % env->time_range.min % env->getModelName(env->plasma_model) % env->getModelName(env->magnet_model) % env->date_time.year % env->date_time.month % env->date_time.day % env->date_time.hour % env->date_time.minute % env->date_time.sec % env->precision % std::ctime(&start_at) % (env->is_parallel ? "true" : "false") % env->round_div % env->getPlanetName(env->planet) //%27%
 				  << std::endl;
 
 		int n = 0;

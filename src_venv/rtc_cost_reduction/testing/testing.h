@@ -23,7 +23,7 @@ public:
 
 	double step_length, ray_length;
 	double pitch_angle;
-	double parallel_number;
+	double round_div;
 	double ray_segment;
 	double precision;
 

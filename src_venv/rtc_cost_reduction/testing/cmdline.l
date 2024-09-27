@@ -42,7 +42,7 @@ string  [A-Za-z_][A-Za-z0-9_]*
 %s STEP_COUNT
 %s PRECISION
 %s PITCH_ANGLE
-%s PARALLEL_NUMBER
+%s ROUND_DIV
 %s PLOT_MODE
 %s PLASMA_MODEL
 %s MAGNET_MODEL
@@ -95,8 +95,8 @@ string  [A-Za-z_][A-Za-z0-9_]*
 	BEGIN PITCH_ANGLE;
 }
 
---parallel-number {
-	BEGIN PARALLEL_NUMBER;
+--round-div {
+	BEGIN ROUND_DIV;
 }
 
 --precision {
@@ -243,8 +243,8 @@ string  [A-Za-z_][A-Za-z0-9_]*
 	BEGIN 0;
 };
 
-<PARALLEL_NUMBER>{digit} {
-	g_env.parallel_number = strtod( yytext, NULL );
+<ROUND_DIV>{digit} {
+	g_env.round_div = strtod( yytext, NULL );
 	BEGIN 0;
 }
 
@@ -489,7 +489,7 @@ testing_env* parseCmdline( int argc, char* argv[] )
 	g_env.step_count  = ~0;
 	g_env.precision   = 3.74e-4;
 	g_env.pitch_angle = 90 * (rtc::cnst::pi/180.0);
-	g_env.parallel_number   = 1;
+	g_env.round_div   = 1;
 	g_env.ray_segment = 100;
 
 	g_env.is_plot_startptr = true;
@@ -543,7 +543,7 @@ void printHelp()
 		"--step-length [length]   "                                                       "\n"
 		"--step-count  [count]    "                                                       "\n"
 		"--pitch       [angle]    "                                                       "\n"
-		"--parallel-number   [division] "                                                       "\n"
+		"--round-div   [division] "                                                       "\n"
 		"--precision   [prec]     "                                                       "\n"
 		"--ray-path-segment [n]   "                                                       "\n"
 		"--time-range [max]-[min] "                                                       "\n"
