@@ -3,7 +3,7 @@ for FREQ in 6.510338783264160156e5
 do
 
 #for HIG in `seq 0 100 3000`
-for HUG in 0
+for HIG in 0
 do 
 
 RAYTRACE='./testing'
@@ -35,7 +35,7 @@ TIME="0:0.0"     # hour:minutes.sec
 
 ## 波動特性を設定 ##
 FREQ=${FREQ}      # 周波数[Hz]
-MODE="LO"       # 波動モード(LO|RX)
+MODE="RX"       # 波動モード(LO|RX)
 # RAY_L=4e8     # (past) トレースする最大の光路長
 RAY_L=1.3e7     # トレースする最大の光路長 [m](ganymede .. 1.3e7, europa .. 0.8e7, callisto ..1.3e7)
 PITCH=0        # 磁場に対するピッチ角
@@ -84,8 +84,6 @@ send_mail()
 
 	$RAYTRACE \
 	  --plot ray                    \
-	  --parallel                    \
-	  --verbose                     \
 	  --source-coord ${COORD}       \
 	  --source-x     ${SX}          \
 	  --source-y     ${SY}          \
@@ -103,6 +101,8 @@ send_mail()
 	  --round-div    ${ROUND_DIV}   \
 	  --ray-path-segment ${SEGMENT} \
 	  --planet       ${PLANET}      \
+	  --parallel                    \
+	  --verbose                     \
 	  ${CAVITY_LIST}                \
 	  2>&1                          \
 	  1> ${OUTPUT}                  \

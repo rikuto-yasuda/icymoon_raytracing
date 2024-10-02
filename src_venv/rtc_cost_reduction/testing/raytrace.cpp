@@ -41,9 +41,10 @@ raytrace::raytrace(
 	
 	if( env->is_verbose )
 	{
-		// ラウンド角の方向を出力 z方向のグリッド
-		m_output << "## round : " << rtc::rad2deg(round) << " ##\n";
-		m_output << "## delta_source_z : " << delta_source_z << " ##\n";
+		// 並列計算時用の初期位置表示
+		m_output << "# source position (km) = (" << (m_env->source_x)/1000 << ", " << (m_env->source_y)/1000 << ", " << (m_env->source_z + m_delta_source_z)/1000 << ") " << " \n";
+		m_output << "# frequency (Hz) = " << m_env->freq << " \n";	
+		m_output << " \n" << " \n";	
 	}
 }
 
@@ -84,6 +85,9 @@ void raytrace::operator ()()
 		//
 		// ３引数版では、ピッチ角とラウンド角を指定することで
 		// 磁力線に対する任意の角度をつけることができる。
+		// 1レイパスごとの出力データの名前はm_titleで指定する
+
+
 		m_ray->initialize(
 			m_env->source_x,
 			m_env->source_y,
@@ -92,6 +96,7 @@ void raytrace::operator ()()
 			m_round
 		);
 		m_state = "run";
+		m_title << "Freq_" << m_env->freq << "Hz-X_" << (m_env->source_x)/1000 << "km-Y_" << (m_env->source_y)/1000 << "km-Z_" << (m_env->source_z + m_delta_source_z)/1000 << "km" <<std::endl;
 		mainloop();
 		
 		// バックトレース ----------------------------

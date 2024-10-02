@@ -341,8 +341,9 @@ int raytrace_start(testing_env *env)
 	}
 
 	// 並列化しない場合
-	if (env->is_parallel)
+	if (!env->is_parallel)
 	{
+		std::cerr << "no parallel";		
 		// ここでは初期位置とピッチ角を固定し、
 		// 磁力線周りに３６０度回転させた波動を生成する。
 		for (int round = 0; round < env->round_div; ++round)
@@ -352,7 +353,6 @@ int raytrace_start(testing_env *env)
 			//raytrace rtrc(env, (2 * rtc::cnst::pi / env->round_div) * round, 0.0);
 			raytrace rtrc(env, 0.0, 100e3 * round); 
 			rtrc(); // operator()を実行してる
-
 			std::cout << rtrc.getResult() << std::endl;
 		}
 	}
@@ -360,6 +360,7 @@ int raytrace_start(testing_env *env)
 	// 並列化する場合
 	else
 	{
+		std::cerr << "parallel";		
 		watch::rays_list rays;
 
 		// 光の数だけスレッドを構築
@@ -383,13 +384,32 @@ int raytrace_start(testing_env *env)
 		w.exit();
 		w_thread.join();
 
+
+    	
 		// 結果を順に出力
 		watch::rays_list::iterator it;
 		for (it = rays.begin(); it != rays.end(); ++it)
 		{
-			std::cout << (*it)->getResult() << std::endl;
+			///std::ofstream outFile((*it)->getTitle());
+            // std::stringを使用してファイル名を生成
+            std::string fileName = " Pla_" + std::string(env->getModelName(env->plasma_model)) + "-Mag_" + std::string(env->getModelName(env->magnet_model)) + "-Mode_" +  std::string(env->mode == rtc::wave_parameter::LO_MODE ? "LO" : "RX")  + "-" + (*it)->getTitle();
+            std::ofstream outFile(fileName);
+            if (!outFile) {
+                std::cerr << "Failed to open " << fileName << " for writing" << std::endl;
+                continue;
+            }
+
+			outFile << "# plasma model = " << env->getModelName(env->plasma_model) << std::endl;
+			outFile << "# magnet model = " << env->getModelName(env->magnet_model) << std::endl;
+			outFile << "# wave mode = "  <<  std::string(env->mode == rtc::wave_parameter::LO_MODE ? "LO" : "RX") << std::endl;
+			outFile << (*it)->getResult() << std::endl;
+			std::cout << (*it)->getResult() << std::endl;			
 			delete (*it);
+			outFile.close();
 		}
+
+		
+
 	}
 
 	return 0;

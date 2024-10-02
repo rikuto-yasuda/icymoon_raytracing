@@ -22,6 +22,9 @@ public:
 	
 	std::string getResult() const
 	{ return m_output.str(); }
+
+	std::string getTitle() const
+	{ return m_title.str(); }
 	
 	const std::string& getState() const
 	{ return m_state; }
@@ -38,6 +41,7 @@ private:
 	void print_variation( const raypath_element& ptr );
 	
 	std::ostringstream    m_output;
+	std::ostringstream    m_title;
 	std::string            m_state;
 	rtc::ray*                m_ray;
 	const testing_env* const m_env;
