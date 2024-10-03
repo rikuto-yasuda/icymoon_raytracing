@@ -1,8 +1,15 @@
-testing start at : Thu Oct  3 14:31:41 2024
+testing start at : Thu Oct  3 16:31:04 2024
 
-parallel-------------------------------------------------------------------------------
+x_list_size = 20
+parallelround = 0round = 1round = 2round = 3round = 4round = 5round = 6-------------------------------------------------------------------------------
  thr | proc[%]| status | thr | proc[%]| status | thr | proc[%]| status | all[%]
    0 |     0% |   init |   1 |     0% |   init |   2 |     0% |   init ||    0%
-testing is normal end at : Thu Oct  3 14:31:42 2024
+round = 7round = 8round = 9round = 10round = 11round = 12round = 13-------------------------------------------------------------------------------
+ thr | proc[%]| status | thr | proc[%]| status | thr | proc[%]| status | all[%]
+   0 |     0% |   init |   1 |     0% |   init |   2 |     0% |   init || 1.528%
+round = 14round = 15round = 16round = 17round = 18round = 19-------------------------------------------------------------------------------
+ thr | proc[%]| status | thr | proc[%]| status | thr | proc[%]| status | all[%]
+   0 |     0% |   init |   1 |     0% |   init |   2 |     0% |   init ||    0%
+testing is normal end at : Thu Oct  3 16:31:08 2024
 
-END (ray-Plathys_europa_3d_4.5e2_6e2-Mtest_simple-benchmark-RX-Z0-FR6.510338783264160156e5) at  Thu 03 Oct 2024 02:31:42 PM JST
+END (ray-Plathys_europa_3d_4.5e2_6e2-Mtest_simple-benchmark-RX-Z0-FR6.510338783264160156e5) at  Thu 03 Oct 2024 04:31:08 PM JST

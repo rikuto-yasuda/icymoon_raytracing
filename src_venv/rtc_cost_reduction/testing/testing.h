@@ -12,6 +12,9 @@
 #include <vector>
 #include <boost/format.hpp>
 #include <netcdf.h>
+#include <string>
+#include <fstream>
+#include <sstream>
 #include "../raytrace.h"
 
 class testing_env

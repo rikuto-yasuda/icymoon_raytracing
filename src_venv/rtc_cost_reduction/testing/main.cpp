@@ -192,6 +192,28 @@ double LO_cutoff(const rtc::vector &r)
 	return std::max(std::max(flo, std::sqrt(fp)), std::sqrt(fc));
 }
 
+std::tuple<std::vector<double>, std::vector<double>, std::vector<double>> Read_position()
+{
+    std::ifstream ifs("/home/parallels/Desktop/Parallels Shared Folders/Home/research/icymoon_raytracing/src_venv/rtc_cost_reduction/testing/position.txt");
+    if (ifs.fail()) {
+       std::cerr << "Cannot open file\n";
+       exit(0);
+    }
+    std::string str;
+    std::vector<double> x, y, z;
+    double x_temp, y_temp, z_temp;
+    while (getline(ifs, str)) {
+          std::stringstream ss(str);
+          ss >> x_temp >> y_temp >> z_temp;
+          x.push_back(x_temp);
+          y.push_back(y_temp);
+          z.push_back(z_temp);
+    }	    		
+
+    return std::make_tuple(x, y, z);
+}
+
+
 class watch
 {
 public:
@@ -340,6 +362,11 @@ int raytrace_start(testing_env *env)
 		}
 	}
 
+	std::vector<double> x_list, y_list, z_list;
+    std::tie(x_list, y_list, z_list) = Read_position();
+	int x_list_size = x_list.size(); // 配列の要素数を計算
+	std::cerr << "x_list_size = " << x_list_size << std::endl;
+	int loop_times = (x_list_size/env->round_div) + 1;
 
 	// 並列化しない場合
 	if (!env->is_parallel)
@@ -356,60 +383,65 @@ int raytrace_start(testing_env *env)
 			rtrc(); // operator()を実行してる
 			std::cout << rtrc.getResult() << std::endl;
 		}
+
+
 	}
 
 	// 並列化する場合
 	else
 	{
-		std::cerr << "parallel";		
-		watch::rays_list rays;
+		std::cerr << "parallel";
 
-		// 光の数だけスレッドを構築
-		boost::thread_group threads;
-
-		for (int round = 0; round < env->round_div; ++round)
+		for (int loop = 0; loop < loop_times; ++loop)
 		{
-			// raytrace *r = new raytrace(env, (2 * rtc::cnst::pi / env->round_div) * round, 0.0);
-			raytrace *r = new raytrace(env, 0.0, 0.0, 0.0, 100e3 * round);	
-			rays.push_back(r);
-			threads.create_thread(boost::ref(*r));
+			// 並列計算用のスレッドを構築
+			watch::rays_list rays;
+
+			// 光の数だけスレッドを構築
+			boost::thread_group threads;
+
+			for (int round = loop * env->round_div; round < std::min(static_cast<int>((loop+1) * env->round_div), static_cast<int>(x_list_size)) ; ++round)
+			{
+				std::cerr << "round = " << round;
+				// raytrace *r = new raytrace(env, (2 * rtc::cnst::pi / env->round_div) * round, 0.0);
+				raytrace *r = new raytrace(env, 0.0, x_list[round], y_list[round], z_list[round]);	
+				rays.push_back(r);
+				threads.create_thread(boost::ref(*r));
+			}
+
+			// 経過状態をレポートしつつ、
+			watch w(rays);
+			boost::thread w_thread(boost::ref(w));
+
+			// 全トレースが終了するまで待つ。
+			threads.join_all();
+
+			w.exit();
+			w_thread.join();
+			
+			// 結果を順に出力
+			watch::rays_list::iterator it;
+			for (it = rays.begin(); it != rays.end(); ++it)
+			{
+				///std::ofstream outFile((*it)->getTitle());
+				// std::stringを使用してファイル名を生成
+				std::string fileName = " Pla_" + std::string(env->getModelName(env->plasma_model)) + "-Mag_" + std::string(env->getModelName(env->magnet_model)) + "-Mode_" +  std::string(env->mode == rtc::wave_parameter::LO_MODE ? "LO" : "RX")  + "-" + (*it)->getTitle();
+				std::ofstream outFile(fileName);
+				if (!outFile) {
+					std::cerr << "Failed to open " << fileName << " for writing" << std::endl;
+					continue;
+				}
+
+				outFile << "# plasma model = " << env->getModelName(env->plasma_model) << std::endl;
+				outFile << "# magnet model = " << env->getModelName(env->magnet_model) << std::endl;
+				outFile << "# wave mode = "  <<  std::string(env->mode == rtc::wave_parameter::LO_MODE ? "LO" : "RX") << std::endl;
+				outFile << (*it)->getResult() << std::endl;
+				std::cout << (*it)->getResult() << std::endl;			
+				delete (*it);
+				outFile.close();
+			}
+
 		}
-
-		// 経過状態をレポートしつつ、
-		watch w(rays);
-		boost::thread w_thread(boost::ref(w));
-
-		// 全トレースが終了するまで待つ。
-		threads.join_all();
-
-		w.exit();
-		w_thread.join();
-
-
-    	
-		// 結果を順に出力
-		watch::rays_list::iterator it;
-		for (it = rays.begin(); it != rays.end(); ++it)
-		{
-			///std::ofstream outFile((*it)->getTitle());
-            // std::stringを使用してファイル名を生成
-            std::string fileName = " Pla_" + std::string(env->getModelName(env->plasma_model)) + "-Mag_" + std::string(env->getModelName(env->magnet_model)) + "-Mode_" +  std::string(env->mode == rtc::wave_parameter::LO_MODE ? "LO" : "RX")  + "-" + (*it)->getTitle();
-            std::ofstream outFile(fileName);
-            if (!outFile) {
-                std::cerr << "Failed to open " << fileName << " for writing" << std::endl;
-                continue;
-            }
-
-			outFile << "# plasma model = " << env->getModelName(env->plasma_model) << std::endl;
-			outFile << "# magnet model = " << env->getModelName(env->magnet_model) << std::endl;
-			outFile << "# wave mode = "  <<  std::string(env->mode == rtc::wave_parameter::LO_MODE ? "LO" : "RX") << std::endl;
-			outFile << (*it)->getResult() << std::endl;
-			std::cout << (*it)->getResult() << std::endl;			
-			delete (*it);
-			outFile.close();
-		}
-
-		
 
 	}
 
