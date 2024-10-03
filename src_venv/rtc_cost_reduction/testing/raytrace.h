@@ -13,6 +13,8 @@ public:
 	raytrace(
 		const testing_env*   env,
 		const double       round,
+		const double 	   delta_source_x,
+		const double	   delta_source_y,
 		const double	   delta_source_z
 	);
 	~raytrace();
@@ -46,6 +48,8 @@ private:
 	rtc::ray*                m_ray;
 	const testing_env* const m_env;
 	const double           m_round;
+	const double           m_delta_source_x;
+	const double           m_delta_source_y;
 	const double           m_delta_source_z;
 	volatile double     m_progress;
 

@@ -13,10 +13,14 @@
 raytrace::raytrace(
 	const testing_env*   env,
 	const double       round,
+	const double 	   delta_source_x,
+	const double	   delta_source_y,
 	const double	   delta_source_z
 ) : m_env( env  ),
     m_ray( NULL ),
 	m_round(round),
+	m_delta_source_x(delta_source_x),
+	m_delta_source_y(delta_source_y),
 	m_delta_source_z(delta_source_z),
 	m_progress( 0.0 ),
     m_state("init")
@@ -42,7 +46,7 @@ raytrace::raytrace(
 	if( env->is_verbose )
 	{
 		// 並列計算時用の初期位置表示
-		m_output << "# source position (km) = (" << (m_env->source_x)/1000 << ", " << (m_env->source_y)/1000 << ", " << (m_env->source_z + m_delta_source_z)/1000 << ") " << " \n";
+		m_output << "# source position (km) = (" << (m_env->source_x+m_delta_source_x)/1000 << ", " << (m_env->source_y + m_delta_source_y)/1000 << ", " << (m_env->source_z + m_delta_source_z)/1000 << ") " << " \n";
 		m_output << "# frequency (Hz) = " << m_env->freq << " \n";	
 		m_output << " \n" << " \n";	
 	}
@@ -89,14 +93,14 @@ void raytrace::operator ()()
 
 
 		m_ray->initialize(
-			m_env->source_x,
-			m_env->source_y,
+			m_env->source_x + m_delta_source_x,
+			m_env->source_y + m_delta_source_y,
 			m_env->source_z + m_delta_source_z,
 			m_env->pitch_angle,
 			m_round
 		);
 		m_state = "run";
-		m_title << "Freq_" << m_env->freq << "Hz-X_" << (m_env->source_x)/1000 << "km-Y_" << (m_env->source_y)/1000 << "km-Z_" << (m_env->source_z + m_delta_source_z)/1000 << "km" <<std::endl;
+		m_title << "Freq_" << m_env->freq << "Hz-X_" << (m_env->source_x+m_delta_source_x)/1000 << "km-Y_" << (m_env->source_y)/1000 << "km-Z_" << (m_env->source_z + m_delta_source_z)/1000 << "km" <<std::endl;
 		mainloop();
 		
 		// バックトレース ----------------------------
