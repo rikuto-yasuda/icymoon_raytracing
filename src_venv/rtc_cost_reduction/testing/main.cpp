@@ -301,10 +301,11 @@ private:
 // 環境値に従って初期値を作成し、raytrace()に制御を渡してトレースを実行する。
 // この関数を呼び出すまでに宇宙環境は完備すること。
 //
-int raytrace_start(testing_env *env)
+int raytrace_start(testing_env *env, const std::string &header_str)
 {
 	// コマンドライン引数が極座標系で指定されている場合は
 	// あらかじめそれを直交座標に変換しておかなければならない。
+	// （2024/07）この操作は後で初期位置をテキストファイルから指定するため計算上意味をなさない
 	rtc::vector source = boost::numeric::ublas::zero_vector<double>(3);
 	if (env->source_coord == testing_env::source_coord_polar)
 	{
@@ -328,6 +329,7 @@ int raytrace_start(testing_env *env)
 		env->source_y = source[1];
 		env->source_z = source[2];
 	}
+	// （2024/07）この操作も後で初期位置をテキストファイルから指定するため計算上意味をなさない
 	else
 	{
 		const double Re = rtc::getCosmos().getPlanet().getRadius();
@@ -338,6 +340,7 @@ int raytrace_start(testing_env *env)
 
 	// もし env->freq == 0.0 なら、初期位置での
 	// カットオフ周波数の 1.05倍値を使用する
+	// （2024/07）この操作は後も初期位置をテキストファイルから指定するため計算上意味をなさない
 	if (env->freq == 0.0)
 	{
 		double fc = 0;
@@ -362,11 +365,12 @@ int raytrace_start(testing_env *env)
 		}
 	}
 
+	// 初期位置のテキストファイルから読み込む箇所、env_x, y, zは使用されない
 	std::vector<double> x_list, y_list, z_list;
     std::tie(x_list, y_list, z_list) = Read_position();
 	int x_list_size = x_list.size(); // 配列の要素数を計算
 	std::cerr << "x_list_size = " << x_list_size << std::endl;
-	int loop_times = (x_list_size/env->round_div) + 1;
+	int loop_times = (x_list_size/env->thread) + 1;
 
 	// 並列化しない場合
 	if (!env->is_parallel)
@@ -374,14 +378,26 @@ int raytrace_start(testing_env *env)
 		std::cerr << "no parallel";		
 		// ここでは初期位置とピッチ角を固定し、
 		// 磁力線周りに３６０度回転させた波動を生成する。
-		for (int round = 0; round < env->round_div; ++round)
+		for (int round = 0; round < static_cast<int>(x_list_size); ++round)
 		{
 			// raytraceクラスを構築し、operator ()を呼び出してループ処理を行う。
 			// 光が終着点に到達したとき、operator ()から制御が返る。
-			//raytrace rtrc(env, (2 * rtc::cnst::pi / env->round_div) * round, 0.0);
-			raytrace rtrc(env, 0.0, 0.0, 0.0, 100e3 * round); 
+			//raytrace rtrc(env, (2 * rtc::cnst::pi / env->thread) * round, 0.0);
+			raytrace rtrc(env, 0.0, x_list[round], y_list[round], z_list[round]);	
 			rtrc(); // operator()を実行してる
 			std::cout << rtrc.getResult() << std::endl;
+
+			// std::stringを使用してファイル名を生成
+			std::string fileName = " Pla_" + std::string(env->getModelName(env->plasma_model)) + "-Mag_" + std::string(env->getModelName(env->magnet_model)) + "-Mode_" +  std::string(env->mode == rtc::wave_parameter::LO_MODE ? "LO" : "RX")  + "-" + rtrc.getTitle();
+			std::ofstream outFile(fileName);
+			if (!outFile) {
+				std::cerr << "Failed to open " << fileName << " for writing" << std::endl;
+				continue;
+			}
+			outFile << header_str;
+			outFile << rtrc.getResult() << std::endl;	
+			outFile.close();
+
 		}
 
 
@@ -400,10 +416,10 @@ int raytrace_start(testing_env *env)
 			// 光の数だけスレッドを構築
 			boost::thread_group threads;
 
-			for (int round = loop * env->round_div; round < std::min(static_cast<int>((loop+1) * env->round_div), static_cast<int>(x_list_size)) ; ++round)
+			for (int round = loop * env->thread; round < std::min(static_cast<int>((loop+1) * env->thread), static_cast<int>(x_list_size)) ; ++round)
 			{
 				std::cerr << "round = " << round;
-				// raytrace *r = new raytrace(env, (2 * rtc::cnst::pi / env->round_div) * round, 0.0);
+				// raytrace *r = new raytrace(env, (2 * rtc::cnst::pi / env->thread) * round, 0.0);
 				raytrace *r = new raytrace(env, 0.0, x_list[round], y_list[round], z_list[round]);	
 				rays.push_back(r);
 				threads.create_thread(boost::ref(*r));
@@ -431,14 +447,11 @@ int raytrace_start(testing_env *env)
 					std::cerr << "Failed to open " << fileName << " for writing" << std::endl;
 					continue;
 				}
-
-				outFile << "# plasma model = " << env->getModelName(env->plasma_model) << std::endl;
-				outFile << "# magnet model = " << env->getModelName(env->magnet_model) << std::endl;
-				outFile << "# wave mode = "  <<  std::string(env->mode == rtc::wave_parameter::LO_MODE ? "LO" : "RX") << std::endl;
+				outFile << header_str;
 				outFile << (*it)->getResult() << std::endl;
 				std::cout << (*it)->getResult() << std::endl;			
 				delete (*it);
-				outFile.close();
+				outFile.close();	
 			}
 
 		}
@@ -462,6 +475,46 @@ int main(int argc, char *argv[])
 
 	// コマンドライン引数を解析する。
 	testing_env *env = parseCmdline(argc, argv);
+
+	std::string header = boost::str(boost::format(
+		"# frequency    = %5%[Hz]"
+		"\n"
+		"# wave mode    = %6%"
+		"\n"
+		"# step length  = %7%[m]"
+		"\n"
+		"# ray length   = %8%[m]"
+		"\n"
+		"# pitch angle  = %9%[rad]"
+		"\n"
+		"# round div    = %26%"
+		"\n"
+		"# segment      = %10%"
+		"\n"
+		"# precision    = %23%"
+		"\n"
+		"# step count   = %11%"
+		"\n"
+		"# back trace   = %12%"
+		"\n"
+		"# parallel     = %25%"
+		"\n"
+		"# time range   = [%13%]-[%14%]"
+		"\n"
+		"# plasma model = %15%"
+		"\n"
+		"# magnet model = %16%"
+		"\n"
+		"# planet       = %27%"
+		"\n"
+		"# date         = %17%/%18%/%19% %20%:%21%.%22%"
+		"\n"
+		"# testing start at : %24%") %
+		(env->source_coord == testing_env::source_coord_polar
+			? "(mlat,mlt,h)"
+			: "(x,y,z)     ") %
+		env->source_x % env->source_y % env->source_z % env->freq % (env->mode == rtc::wave_parameter::LO_MODE ? "LO" : "RX") % env->step_length % env->ray_length % env->pitch_angle % env->ray_segment % env->step_count % (env->is_back_trace ? "true" : "false") % env->time_range.max % env->time_range.min % env->getModelName(env->plasma_model) % env->getModelName(env->magnet_model) % env->date_time.year % env->date_time.month % env->date_time.day % env->date_time.hour % env->date_time.minute % env->date_time.sec % env->precision % std::ctime(&start_at) % (env->is_parallel ? "true" : "false") % env->thread % env->getPlanetName(env->planet));
+
 
 	if (env->is_verbose)
 	{
@@ -507,7 +560,7 @@ int main(int argc, char *argv[])
 						 (env->source_coord == testing_env::source_coord_polar
 							  ? "(mlat,mlt,h)"
 							  : "(x,y,z)     ") %
-						 env->source_x % env->source_y % env->source_z % env->freq % (env->mode == rtc::wave_parameter::LO_MODE ? "LO" : "RX") % env->step_length % env->ray_length % env->pitch_angle % env->ray_segment % env->step_count % (env->is_back_trace ? "true" : "false") % env->time_range.max % env->time_range.min % env->getModelName(env->plasma_model) % env->getModelName(env->magnet_model) % env->date_time.year % env->date_time.month % env->date_time.day % env->date_time.hour % env->date_time.minute % env->date_time.sec % env->precision % std::ctime(&start_at) % (env->is_parallel ? "true" : "false") % env->round_div % env->getPlanetName(env->planet) //%27%
+						 env->source_x % env->source_y % env->source_z % env->freq % (env->mode == rtc::wave_parameter::LO_MODE ? "LO" : "RX") % env->step_length % env->ray_length % env->pitch_angle % env->ray_segment % env->step_count % (env->is_back_trace ? "true" : "false") % env->time_range.max % env->time_range.min % env->getModelName(env->plasma_model) % env->getModelName(env->magnet_model) % env->date_time.year % env->date_time.month % env->date_time.day % env->date_time.hour % env->date_time.minute % env->date_time.sec % env->precision % std::ctime(&start_at) % (env->is_parallel ? "true" : "false") % env->thread % env->getPlanetName(env->planet) //%27%
 				  << std::endl;
 
 		int n = 0;
@@ -570,7 +623,7 @@ int main(int argc, char *argv[])
 		switch (env->exec_mode)
 		{
 		case testing_env::plot_raypath:
-			raytrace_start(env);
+			raytrace_start(env, header);
 			break;
 
 		case testing_env::plot_plasma:

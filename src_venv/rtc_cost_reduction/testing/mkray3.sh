@@ -19,6 +19,7 @@ COORD="euclid" # (euclid|polar9
 #SZ=1.1e8        # (source.z|altitude)
 
 # SX=-6000  # (past)
+# 以下の初期位置の指定は計算に使用されない・初期位置はtesting/position.txtで指定される
 SX=-6500 # ganymede .. -6500, europa .. -4000, callisto .. -6500
 SY=0
 SZ=${HIG}
@@ -49,7 +50,7 @@ PRECISION=0.000001  # １ステップ間のベクトル誤差の許容率
 
 #TIME_RANGE="4e-6:1e-13"  # １ステップ間の時間分解能レンジ  (1step毎に進める時間の最大値・最小値を指定する。)
 TIME_RANGE="1:1e-100"  # １ステップ間の時間分解能レンジ  (1step毎に進める時間の最大値・最小値を指定する。)
-ROUND_DIV=7
+THREAD=1
 
 ## plasma cavity ##
 # --cavity [fp/fc]/[ilat]:[ilat range]/[mlt]:[mlt range]/[height upper]:[height bottom]
@@ -98,7 +99,7 @@ send_mail()
 	  --time-range   ${TIME_RANGE}  \
 	  --precision    ${PRECISION}   \
 	  --pitch        ${PITCH}       \
-	  --round-div    ${ROUND_DIV}   \
+	  --thread       ${THREAD}      \
 	  --ray-path-segment ${SEGMENT} \
 	  --planet       ${PLANET}      \
 	  --parallel                    \

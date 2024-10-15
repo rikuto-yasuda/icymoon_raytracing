@@ -20,13 +20,13 @@
 class testing_env
 {
 public:
-	double source_x, source_y, source_z;
+	double source_x, source_y, source_z;  //（2024/07~）初期位置のテキストファイルから読み込む箇所、env_x, y, zは使用されない
 	double freq;
 	rtc::wave_parameter::wave_mode mode;
 
 	double step_length, ray_length;
 	double pitch_angle;
-	double round_div;
+	double thread;
 	double ray_segment;
 	double precision;
 
