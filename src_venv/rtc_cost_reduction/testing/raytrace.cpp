@@ -99,7 +99,7 @@ void raytrace::operator ()()
 			m_round
 		);
 		m_state = "run";
-		m_title << "Freq_" << m_env->freq << "Hz-X_" << (m_delta_source_x)/1000 << "km-Y_" << (m_env->source_y)/1000 << "km-Z_" << (m_delta_source_z)/1000 << "km" <<std::endl;
+		m_title << "Freq_" << m_env->freq << "Hz-X_" << (m_delta_source_x)/1000 << "km-Y_" << (m_delta_source_y)/1000 << "km-Z_" << (m_delta_source_z)/1000 << "km" <<std::endl;
 		mainloop();
 		
 		// バックトレース ----------------------------

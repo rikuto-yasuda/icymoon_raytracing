@@ -1,15 +1,30 @@
-testing start at : Tue Oct 15 15:54:19 2024
+testing start at : Tue Oct 29 14:49:18 2024
 
-x_list_size = 3
+x_list_size = 10201
 parallelround = 0-------------------------------------------------------------------------------
  thr | proc[%]| status | thr | proc[%]| status | thr | proc[%]| status | all[%]
    0 |     0% |   init ||    0%
 round = 1-------------------------------------------------------------------------------
  thr | proc[%]| status | thr | proc[%]| status | thr | proc[%]| status | all[%]
-   0 |     0% |    run ||    0%
+   0 |     0% |   init ||    0%
 round = 2-------------------------------------------------------------------------------
  thr | proc[%]| status | thr | proc[%]| status | thr | proc[%]| status | all[%]
    0 |     0% |   init ||    0%
-testing is normal end at : Tue Oct 15 15:54:23 2024
-
-END (ray-Plathys_europa_3d_4.5e2_6e2-Mtest_simple-benchmark-RX-Z0-FR6.510338783264160156e5) at  Tue 15 Oct 2024 03:54:23 PM CEST
+round = 3-------------------------------------------------------------------------------
+ thr | proc[%]| status | thr | proc[%]| status | thr | proc[%]| status | all[%]
+   0 |     0% |   init ||    0%
+round = 4-------------------------------------------------------------------------------
+ thr | proc[%]| status | thr | proc[%]| status | thr | proc[%]| status | all[%]
+   0 |     0% |   init ||    0%
+round = 5-------------------------------------------------------------------------------
+ thr | proc[%]| status | thr | proc[%]| status | thr | proc[%]| status | all[%]
+   0 |     0% |   init ||    0%
+round = 6-------------------------------------------------------------------------------
+ thr | proc[%]| status | thr | proc[%]| status | thr | proc[%]| status | all[%]
+   0 |     0% |   init ||    0%
+round = 7-------------------------------------------------------------------------------
+ thr | proc[%]| status | thr | proc[%]| status | thr | proc[%]| status | all[%]
+   0 |     0% |   init ||    0%
+round = 8-------------------------------------------------------------------------------
+ thr | proc[%]| status | thr | proc[%]| status | thr | proc[%]| status | all[%]
+   0 |     0% |   init ||    0%

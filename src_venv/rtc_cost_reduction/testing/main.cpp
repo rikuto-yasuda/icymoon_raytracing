@@ -388,7 +388,7 @@ int raytrace_start(testing_env *env, const std::string &header_str)
 			std::cout << rtrc.getResult() << std::endl;
 
 			// std::stringを使用してファイル名を生成
-			std::string fileName = " Pla_" + std::string(env->getModelName(env->plasma_model)) + "-Mag_" + std::string(env->getModelName(env->magnet_model)) + "-Mode_" +  std::string(env->mode == rtc::wave_parameter::LO_MODE ? "LO" : "RX")  + "-" + rtrc.getTitle();
+			std::string fileName = "Pla_" + std::string(env->getModelName(env->plasma_model)) + "-Mag_" + std::string(env->getModelName(env->magnet_model)) + "-Mode_" +  std::string(env->mode == rtc::wave_parameter::LO_MODE ? "LO" : "RX")  + "-" + rtrc.getTitle();
 			std::ofstream outFile(fileName);
 			if (!outFile) {
 				std::cerr << "Failed to open " << fileName << " for writing" << std::endl;
@@ -441,7 +441,7 @@ int raytrace_start(testing_env *env, const std::string &header_str)
 			{
 				///std::ofstream outFile((*it)->getTitle());
 				// std::stringを使用してファイル名を生成
-				std::string fileName = " Pla_" + std::string(env->getModelName(env->plasma_model)) + "-Mag_" + std::string(env->getModelName(env->magnet_model)) + "-Mode_" +  std::string(env->mode == rtc::wave_parameter::LO_MODE ? "LO" : "RX")  + "-" + (*it)->getTitle();
+				std::string fileName = "Pla_" + std::string(env->getModelName(env->plasma_model)) + "-Mag_" + std::string(env->getModelName(env->magnet_model)) + "-Mode_" +  std::string(env->mode == rtc::wave_parameter::LO_MODE ? "LO" : "RX")  + "-" + (*it)->getTitle();
 				std::ofstream outFile(fileName);
 				if (!outFile) {
 					std::cerr << "Failed to open " << fileName << " for writing" << std::endl;
