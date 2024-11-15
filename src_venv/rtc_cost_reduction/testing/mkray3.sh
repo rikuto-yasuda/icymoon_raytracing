@@ -26,7 +26,7 @@ SZ=${HIG}
 
 
 ## モデルを選択 ##
-PLASMA="lathys_europa_3d"    #(null|test_null|simple|test_simple|europa_plume|europa_nonplume|ganymede_nonplume|sato|nsumei|lathys_europa_3d|devine_garrett)
+PLASMA="lathys_europa_3d"    #(null|test_null|simple|titan_gaussian|test_simple|europa_plume|europa_nonplume|ganymede_nonplume|sato|nsumei|lathys_europa_3d|devine_garrett)
 MAGNET="test_simple"         #(null|test_null|simple|test_simple|igrf|igrf4|vip4)
 PLANET="benchmark"        #(earth(?)|jupiter|benchmark)
 

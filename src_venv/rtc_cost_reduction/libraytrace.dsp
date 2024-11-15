@@ -174,6 +174,10 @@ SOURCE=.\sample_model.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\parameter_plasma_model.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\spline.h
 # End Source File
 # Begin Source File

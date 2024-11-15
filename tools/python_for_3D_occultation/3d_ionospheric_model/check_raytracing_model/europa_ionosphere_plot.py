@@ -97,3 +97,4 @@ plt.gca().add_artist(circle)
 
 # plt.savefig("300_dpi_scatter.png", format="png", dpi=300)
 plt.show()
+# %%

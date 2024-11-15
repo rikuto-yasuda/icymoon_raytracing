@@ -79,6 +79,7 @@ rtc::basic_plasma_model &getPlasmaModel(const testing_env *env)
 	static rtc::model::plasma::null_plasma null;
 	static rtc::model::plasma::test_null_plasma test_null;
 	static rtc::model::plasma::simple simple;
+	static rtc::model::plasma::titan_gaussian titan_gaussian;	
 	static rtc::model::plasma::test_simple test_simple;
 	static rtc::model::plasma::europa_plume europa_plume;
 	static rtc::model::plasma::europa_nonplume europa_nonplume;
@@ -99,6 +100,9 @@ rtc::basic_plasma_model &getPlasmaModel(const testing_env *env)
 
 	case testing_env::model_simple:
 		return simple;
+	
+	case testing_env::model_titan_gaussian:
+		return titan_gaussian;
 
 	case testing_env::model_test_simple:
 		return test_simple;

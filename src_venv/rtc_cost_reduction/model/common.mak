@@ -7,6 +7,7 @@ SRC = \
     sample_magnet_model.cpp \
     test_magnet_model.cpp \
     sample_plasma_model.cpp \
+	parameter_plasma_model.cpp \
     test_plasma_model.cpp \
     model_sato_earth.cpp    \
     model_nsumei_earth.cpp  \

@@ -1965,6 +1965,10 @@ YY_RULE_SETUP
 	{
 		g_env.plasma_model = testing_env::model_simple;
 	}
+	else if( str == "titan_gaussian" )
+	{
+		g_env.plasma_model = testing_env::model_titan_gaussian;
+	}	
 	else if( str == "test_simple" )
 	{
 		g_env.plasma_model = testing_env::model_test_simple;

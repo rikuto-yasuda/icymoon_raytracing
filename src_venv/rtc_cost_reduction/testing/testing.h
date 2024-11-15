@@ -70,6 +70,7 @@ public:
 		model_null,
 		model_test_null,
 		model_simple,
+		model_titan_gaussian,
 		model_test_simple,
 		model_europa_nonplume,
 		model_europa_plume,
@@ -112,6 +113,9 @@ public:
 
 		case model_test_simple:
 			return "test_simple";
+
+		case model_titan_gaussian:
+			return "titan_gaussian";
 
 		case model_europa_plume:
 			return "europa_plume";

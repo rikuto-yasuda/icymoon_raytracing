@@ -10,6 +10,7 @@
 #include "model/StdAfx.h"
 
 #include "model/sample_model.h"
+#include "model/parameter_plasma_model.h"
 #include "model/test_model.h"
 
 #include "model/model_nsumei_earth.h"
