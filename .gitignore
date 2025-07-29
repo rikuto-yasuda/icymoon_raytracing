@@ -61,3 +61,6 @@ src_venv/rtc_cost_reduction/model/3d_model
 tools/python_Titan_ionsphere/Cassini_radio_data
 tools/result_titan/Baptiste_titan
 tools/result_titan/expres_cdf_data
+src_venv/rtc_cost_reduction.zip
+tools/result_titan/Titan.zip
+*.DS_Store
