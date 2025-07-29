@@ -1,0 +1,157 @@
+{
+    "SIMU": {
+        "NAME": "Occultation_Titan_lat75+beaming63",
+        "OUT": ""
+    },
+        "NUMBER": {
+        "BODY": 1,
+        "DENSITY": 1,
+        "SOURCE": 2
+    },
+    "TIME": {
+        "MIN": 0,
+        "MAX": 0,
+        "NBR": 0
+    },
+    "FREQUENCY": {
+            "TYPE": "Pre-Defined",
+            "MIN": 0.05,
+            "MAX": 1.0,
+            "NBR": 41,
+            "SC": [0.090071, 0.11393, 0.17393, 0.24169, 0.27829, 0.32043, 0.36875, 0.43125, 0.46875, 0.53125, 0.56875, 0.63125, 0.66875, 0.73125, 0.76875, 0.83125, 0.86875, 0.93125, 0.96875]
+    },
+    "OBSERVER": {
+        "TYPE": "Pre-Defined",
+        "EPHEM": "WGC_StateVector_20241209152511.csv",
+        "FIXE_DIST": "auto",
+        "FIXE_SUBL": "auto",
+        "FIXE_DECL": "auto",
+        "PARENT": "Saturn",
+        "SC": "Cassini",
+        "SCTIME": "",
+        "SEMI_MAJ": 0.0,
+        "SEMI_MIN": 0.0,
+        "SUBL": 0.0,
+        "DECL": 0.0,
+        "PHASE": 0.0,
+        "INCL": 0.0
+    },
+    "SPDYN": {
+        "INTENSITY": false,
+        "POLAR": false,
+        "FREQ": [true, false, false, false, false],
+        "LONG": [false, false, false, false, false],
+        "LAT": [false, false, false, false, false],
+        "DRANGE": [0, 0],
+        "LGRANGE": [0, 0],
+        "LARANGE": [0, 0],
+        "LTRANGE": [0, 0],
+        "KHZ": false,
+        "LOG": false,
+        "PDF": false,
+        "CDF": {
+            "THETA": true,
+            "FP": false,
+            "FC": false,
+            "AZIMUTH": false,
+            "OBSLATITUDE": false,
+            "SRCLONGITUDE": true,
+            "SRCFREQMAX": false,
+            "OBSDISTANCE": false,
+            "OBSLOCALTIME": false,
+            "CML": false,
+            "SRCPOS": true
+        },
+        "INFOS": false
+    },
+    "MOVIE2D": {
+        "ON": false,
+        "SUBCYCLE": 1,
+        "RANGE": 30
+    },
+    "MOVIE3D": {
+        "ON": false,
+        "SUBCYCLE": 3,
+        "XRANGE": [-12, 12],
+        "YRANGE": [-12, 12],
+        "ZRANGE": [-12, 12],
+        "OBS": true,
+        "TRAJ": true
+    },
+    "BODY": [
+        {
+            "ON": true,
+            "NAME": "Saturn",
+            "RADIUS": 60268.0,
+            "PERIOD": 645.12,
+            "FLAT": 0.09796,
+            "ORB_PER": 251.56,
+            "INIT_AX": 0,
+            "MAG": "SPV",
+            "MOTION": false,
+            "PARENT": "",
+            "SEMI_MAJ": 0,
+            "SEMI_MIN": 0,
+            "DECLINATION": 0,
+            "APO_LONG": 0,
+            "INCLINATION": 0,
+            "PHASE": 0,
+            "DENS": [
+                {
+                    "ON": true,
+                    "NAME": "Body1_density1",
+                    "TYPE": "Ionospheric",
+                    "RHO0": 3000000.0,
+                    "SCALE": 700.0,
+                    "PERP": 0.0,
+                }
+            ]
+        }
+    ],
+    "SOURCE": [
+        {
+            "ON": true,
+            "NAME": "Source1",
+            "PARENT": "Saturn",
+            "TYPE": "fixed in latitude",
+            "LG_MIN": 0,
+            "LG_MAX": 359,
+            "LG_NBR": 360,
+            "LAT": 75.0,
+            "SUB": 0,
+            "AURORA_ALT": 1100.0,
+            "SAT": "",
+            "NORTH": true,
+            "SOUTH": false,
+            "WIDTH": 1,
+            "CURRENT": "Constant",
+            "CONSTANT": 63.0,
+            "ACCEL": 9,
+            "TEMP": 0,
+            "TEMPH": 0,
+            "REFRACTION": false
+        },
+        {
+            "ON": true,
+            "NAME": "Source2",
+            "PARENT": "Saturn",
+            "TYPE": "fixed in latitude",
+            "LG_MIN": 0,
+            "LG_MAX": 359,
+            "LG_NBR": 360,
+            "LAT": 75.0,
+            "SUB": 0,
+            "AURORA_ALT": 1100.0,
+            "SAT": "",
+            "NORTH": false,
+            "SOUTH": true,
+            "WIDTH": 1,
+            "CURRENT": "Constant",
+            "CONSTANT": 63.0,
+            "ACCEL": 9,
+            "TEMP": 0,
+            "TEMPH": 0,
+            "REFRACTION": false
+        }
+    ]
+}
