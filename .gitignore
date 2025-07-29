@@ -13,3 +13,4 @@ __pycache__/
 *.pyc
 *.pyo
 nohup.out
+raytrace.tohoku/src/rtc/tools/map_model/
