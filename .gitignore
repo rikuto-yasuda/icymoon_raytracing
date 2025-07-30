@@ -47,11 +47,10 @@ tools/results/
 src_venv/rtc_cost_reduction/testing/ray-Plathys_europa_3d_4.5e2_6e2-Mtest_simple-benchmark-RX-Z0-FR6.510338783264160156e5
 tools/python_for_3D_occultation/3d_ionospheric_model/check_model_code/output.txt
 
-src_venv/rtc_cost_reduction/testing/ray-Plathys_europa_3d_4.5e2_6e2-Mtest_simple-benchmark-RX-Z0-FR6.510338783264160156e5
 .DS_Store
 src_venv/.DS_Store
 src_venv/rtc_cost_reduction/.DS_Store
 src_venv/rtc_cost_reduction/testing/.DS_Store
 src_venv/rtc_cost_reduction/tools/.DS_Store
 tools/.DS_Store
-src_venv/rtc_cost_reduction/testing/ray-Plathys_europa_3d_4.5e2_6e2-Mtest_simple-benchmark-RX-Z0-FR6.510338783264160156e5
+tools/python_for_3D_occultation/3d_ionospheric_model/check_model_code/testing.tar.gz
