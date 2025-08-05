@@ -20,9 +20,9 @@ spacecraft_name = "cassini"  # galileo/JUICE(?)
 # time_of_flybies = 9  # ..th flyby
 time_of_flybies = 15  # ..th flyby
 
-occultaion_type = "egress"  # 'ingress' or 'egress
+occultaion_type = "ingress"  # 'ingress' or 'egress
 
-RH_radio_type_A2D = "B"  # saturn radioの場合'A' or 'B'
+RH_radio_type_A2D = "A"  # saturn radioの場合'A' or 'B'
 LH_radio_type_A2D = "C"  # saturn radioの場合'C' or 'D'
 
 
