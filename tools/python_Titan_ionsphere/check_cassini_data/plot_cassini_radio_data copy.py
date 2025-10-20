@@ -18,6 +18,15 @@ start_date = 106
 start_hour = 18
 duration = 4
 
+background_start_hour = 9
+background_start_min = 30
+background_end_hour = 10
+background_end_min = 0
+
+radio_start_hour = 10
+radio_start_min = 30
+radio_end_hour = 11
+radio_end_min = 0
 
 if Cassini_flyby == "T15":
     start_year = 2006
@@ -154,14 +163,61 @@ def plot_ft_nomal(
     xx, yy = np.meshgrid(Epoch, Frequency)
     fig, ax = plt.subplots(1, 1)
 
+    print(Epoch)
+
+    BG_start = background_start_hour * 60 * 60 + background_start_min * 60
+    BG_end = background_end_hour * 60 * 60 + background_end_min * 60
+
+    radio_start = radio_start_hour * 60 * 60 + radio_start_min * 60
+    radio_end = radio_end_hour * 60 * 60 + radio_end_min * 60
+
+    BG_start_id = np.where(Epoch > BG_start)[0][0]
+    BG_end_id = np.where(Epoch < BG_end)[0][-1]
+
+    radio_start_id = np.where(Epoch > radio_start)[0][0]
+    radio_end_id = np.where(Epoch < radio_end)[0][-1]
+
+    BG_intensity = Intensity[:, BG_start_id:BG_end_id]
+    detectable_intensity = Intensity[:, radio_start_id:radio_end_id]
+
+    BG_intensity_array = np.median(BG_intensity,axis=1)
+    detectable_intensity_array = np.median(detectable_intensity,axis=1)
+
+    threashold_array = (95*BG_intensity_array + 5*detectable_intensity_array)/100
+
+    plt.plot(Frequency, BG_intensity_array)
+    plt.plot(Frequency,detectable_intensity_array)
+    plt.plot(Frequency,threashold_array)
+
+    plt.xlim(100, 900)
+    plt.yscale("log")
+
+    plt.show()
+    plt.close()
+
+    boundary_array = Intensity.copy()
+    result_array = (boundary_array > threashold_array[:, np.newaxis]).astype(int)
+
+    fig, ax = plt.subplots(1, 1)
 
     pcm = ax.pcolormesh(
         xx,
         yy,
         Intensity,
-        cmap="viridis",
-        norm=LogNorm()
+        cmap="Spectral_r",
+        norm=LogNorm(vmin=1e-16, vmax=1e-12)
         )
+    
+    
+    ax.contour(
+        xx,
+        yy,
+        result_array,
+        levels=[0.5],
+        colors="red",
+        linewidths=1,
+    )
+    
     
     np.where(Hour_array == 0, 1, Intensity)
 
@@ -184,13 +240,14 @@ def plot_ft_nomal(
 
     ax.set_ylabel("Frequency (kHz)")
     ax.set_yscale("log")
-    ax.set_ylim(3, 1500)  # 3kHz~2MHz
+    ax.set_ylim(100, 900)  # 3kHz~2MHz
     #ax.set_xlim(time_range[0], time_range[1])  # 80kHz~1MHz
-    ax.set_yscale("log")
+    ax.set_xlim(start_hour*3600+8100, start_hour*3600+9000)
+    ax.set_xticks(np.arange(start_hour*3600+8100, start_hour*3600+9001, 60),fontsize=3)
+    ax.set_xticklabels([str(i//3600) + ":" + str((i%3600)//60).zfill(2) for i in np.arange(start_hour*3600+8100, start_hour*3600+9001, 60)])
 
     fig.colorbar(
         pcm,
-        extend="max",
         label=instrument_nameandunit,
     )
 
@@ -211,7 +268,7 @@ def plot_ft_polarization(
     instrument_nameandunit,
 ):
 
-    print(Frequency/1000)
+    #print(Frequency/1000)
     xx, yy = np.meshgrid(Epoch, Frequency)
     fig, ax = plt.subplots(1, 1)
 
