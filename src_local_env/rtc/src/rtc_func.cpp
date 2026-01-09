@@ -6,10 +6,10 @@
 #include "rtc_func.h"
 
 
-// —Bˆê‚ÌƒOƒ[ƒoƒ‹•Ï”
+// ï¿½Bï¿½ï¿½ÌƒOï¿½ï¿½ï¿½[ï¿½oï¿½ï¿½ï¿½Ïï¿½
 namespace rtc {
-	// ‚±‚Ì•Ï”‚ğextern‚µ‚Ä‚Í‚È‚ç‚È‚¢B
-	// •K‚¸Artc::getUniv()‚ğg‚Á‚Ä’l‚ğæ“¾‚·‚é‚±‚ÆB
+	// ï¿½ï¿½ï¿½Ì•Ïï¿½ï¿½ï¿½externï¿½ï¿½ï¿½Ä‚Í‚È‚ï¿½È‚ï¿½ï¿½B
+	// ï¿½Kï¿½ï¿½ï¿½Artc::getUniv()ï¿½ï¿½ï¿½gï¿½ï¿½ï¿½Ä’lï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½é‚±ï¿½ÆB
 	cosmos* g_cosmo = NULL;
 };
 
@@ -37,10 +37,10 @@ double rtc::mlt2rad( const double mlt )
 double rtc::rad2mlt( const double rad )
 { return 12*( rad/cnst::pi - 1 ); }
 
-// À•W•ÏŠ·Œn ----------------------------------------------------------
+// ï¿½ï¿½ï¿½Wï¿½ÏŠï¿½ï¿½n ----------------------------------------------------------
 rtc::vector rtc::convertToPolar( const rtc::vector& cartesian )
 {
-	// ƒ†[ƒNƒŠƒbƒh‹óŠÔ‚©‚ç‹ÉÀ•W‚Ö‚Ì•ÏŠ·B
+	// ï¿½ï¿½ï¿½[ï¿½Nï¿½ï¿½ï¿½bï¿½hï¿½ï¿½Ô‚ï¿½ï¿½ï¿½Éï¿½ï¿½Wï¿½Ö‚Ì•ÏŠï¿½ï¿½B
 	rtc::vector polar = boost::numeric::ublas::zero_vector<double>(3);// (r,theta,fai)
 
 	const double dr = cartesian(0)*cartesian(0) + cartesian(1)*cartesian(1);
@@ -54,7 +54,7 @@ rtc::vector rtc::convertToPolar( const rtc::vector& cartesian )
 
 rtc::vector rtc::convertToCartesian( const rtc::vector& polar )
 {
-	// ‹ÉÀ•W‚©‚çƒ†[ƒNƒŠƒbƒh‹óŠÔ‚Ö‚Ì•ÏŠ·
+	// ï¿½Éï¿½ï¿½Wï¿½ï¿½ï¿½çƒ†ï¿½[ï¿½Nï¿½ï¿½ï¿½bï¿½hï¿½ï¿½Ô‚Ö‚Ì•ÏŠï¿½
 	rtc::vector e = boost::numeric::ublas::zero_vector<double>(3);// (x,y,z);
 
 	e(0) = polar(0) * std::sin( polar(1) ) * std::cos( polar(2) );
@@ -90,22 +90,22 @@ rtc::vector rtc::rotation(
 	const rtc::vector& axis,
 	const double       angle
 ){
-	// ‚ ‚éƒxƒNƒgƒ‹ v ‚ğ”CˆÓ‚Ì²‚Å‰ñ“]‚·‚é‚½‚ß‚ÉƒNƒH[ƒ^ƒjƒIƒ“(‚SŸŒ³”)‚ğ—˜—p‚·‚éB
-	// ƒNƒH[ƒ^ƒjƒIƒ“ v(0,x,y,z) ‚ğ (nx,ny,nz)ƒxƒNƒgƒ‹‚ğ²‚Æ‚µ‚Ä theta‚¾‚¯‰ñ“]‚·‚é‚É‚ÍA
+	// ï¿½ï¿½ï¿½ï¿½xï¿½Nï¿½gï¿½ï¿½ v ï¿½ï¿½Cï¿½Ó‚Ìï¿½ï¿½Å‰ï¿½]ï¿½ï¿½ï¿½é‚½ï¿½ß‚ÉƒNï¿½Hï¿½[ï¿½^ï¿½jï¿½Iï¿½ï¿½(ï¿½Sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)ï¿½ğ—˜—pï¿½ï¿½ï¿½ï¿½B
+	// ï¿½Nï¿½Hï¿½[ï¿½^ï¿½jï¿½Iï¿½ï¿½ v(0,x,y,z) ï¿½ï¿½ (nx,ny,nz)ï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½ï¿½ thetaï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]ï¿½ï¿½ï¿½ï¿½É‚ÍA
 	// q = w + ai + bj + ck,
 	//   w = cos(theta/2);
 	//   a = nx * sin(theta/2);
 	//   b = ny * sin(theta/2);
 	//   c = nz * sin(theta/2);
-	//‚ÌA‰ñ“]quaternion(q)‚Æ‚»‚Ì‹¤–ğ‚Èquaternion(qc)‚ª•K—vB
-	// ‹¤–ğ‚Èquaternion‚ÍA(w, -a, -b, -c)‚Å’è‹`‚³‚ê‚éB
+	//ï¿½ÌAï¿½ï¿½]quaternion(q)ï¿½Æ‚ï¿½ï¿½Ì‹ï¿½ï¿½ï¿½ï¿½ï¿½quaternion(qc)ï¿½ï¿½ï¿½Kï¿½vï¿½B
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½quaternionï¿½ÍA(w, -a, -b, -c)ï¿½Å’ï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½B
 	//
-	// ‰ñ“]quaternion‚ª“¾‚ç‚ê‚½‚çA
+	// ï¿½ï¿½]quaternionï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½ï¿½A
 	//  q * v * qc
-	//‚ğŒvZ‚·‚é‚±‚Æ‚ÅA‰ñ“]Œ‹‰Ê‚ª“¾‚ç‚ê‚éB
+	//ï¿½ï¿½ï¿½vï¿½Zï¿½ï¿½ï¿½é‚±ï¿½Æ‚ÅAï¿½ï¿½]ï¿½ï¿½ï¿½Ê‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 	rtc::quaternion v( 0, ptr[0], ptr[1], ptr[2] );
 
-	// ‰ñ“]B‰ñ“]²ƒxƒNƒgƒ‹‚Í’PˆÊƒxƒNƒgƒ‹‚Å‚È‚¢‚Æ‚¢‚¯‚È‚¢B
+	// ï¿½ï¿½]ï¿½Bï¿½ï¿½]ï¿½ï¿½ï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½Í’Pï¿½Êƒxï¿½Nï¿½gï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Æ‚ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½B
 	rtc::vector n = axis;
 	n /= rtc::norm_2(n); 
 
@@ -138,17 +138,16 @@ rtc::vector rtc::rotation(
 }
 
 
-
 #if defined (_MSC_VER) && _MSC_VER < 1300
-// VC6‚¾‚ÆƒRƒ“ƒpƒCƒ‹‚Å‚«‚È‚¢•”•ª‚ª‚ ‚éB
-// ˆÈ‰º‚Å‚Í‚»‚ê‚ğ•â‚¤B
+// VC6ã ã¨ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã§ããªã„éƒ¨åˆ†ãŒã‚ã‚‹ã€‚
+// ä»¥ä¸‹ã§ã¯ãã‚Œã‚’è£œã†ã€‚
 #include <boost/numeric/ublas/lu.hpp>
 
 template<class M, class E>
 void lu_substitute(
-	const M &m, boost::numeric::ublas::matrix_expression<E> &e
+    const M &m, boost::numeric::ublas::matrix_expression<E> &e
 ) {
-	using namespace boost::numeric::ublas;
+    using namespace boost::numeric::ublas;
 
     typedef const M const_matrix_type;
     typedef matrix<E::value_type> matrix_type;
@@ -169,97 +168,97 @@ void lu_substitute(
 
 template<class M, class PMT, class PMA, class MV>
 void lu_substitute (const M &m, const boost::numeric::ublas::permutation_matrix<PMT, PMA> &pm, MV &mv) {
-	using namespace boost::numeric::ublas;
+    using namespace boost::numeric::ublas;
 
     swap_rows (pm, mv);
     ::lu_substitute (m, mv);
-}
-
-#else // VC6ˆÈŠO
-template<class M, class PMT, class PMA, class MV>
-void lu_substitute (const M &m, const boost::numeric::ublas::permutation_matrix<PMT,PMA> &pm, MV &mv) {
-	boost::numeric::ublas::lu_substitute(m,pm,mv);
 }
 
 #endif
 
 rtc::matrix rtc::makeMatrixRotationX( const double theta )
 {
-	const double
-		c = std::cos(theta),
-		s = std::sin(theta);
+    const double
+        c = std::cos(theta),
+        s = std::sin(theta);
 
-	matrix rot(4,4);
-	rot(0,0) = 1; rot(0,1) = 0; rot(0,2) =  0; rot(0,3) = 0;
-	rot(1,0) = 0; rot(1,1) = c; rot(1,2) = -s; rot(1,3) = 0;
-	rot(2,0) = 0; rot(2,1) = s; rot(2,2) =  c; rot(2,3) = 0;
-	rot(3,0) = 0; rot(3,1) = 0; rot(3,2) =  0; rot(3,3) = 1;
+    matrix rot(4,4);
+    rot(0,0) = 1; rot(0,1) = 0; rot(0,2) =  0; rot(0,3) = 0;
+    rot(1,0) = 0; rot(1,1) = c; rot(1,2) = -s; rot(1,3) = 0;
+    rot(2,0) = 0; rot(2,1) = s; rot(2,2) =  c; rot(2,3) = 0;
+    rot(3,0) = 0; rot(3,1) = 0; rot(3,2) =  0; rot(3,3) = 1;
 
-	return rot;
+    return rot;
 }
 
 rtc::matrix rtc::makeMatrixRotationY( const double theta )
 {
-	const double
-		c = std::cos(theta),
-		s = std::sin(theta);
+    const double
+        c = std::cos(theta),
+        s = std::sin(theta);
 
-	matrix rot(4,4);
-	rot(0,0) =  c; rot(0,1) = 0; rot(0,2) = s; rot(0,3) = 0;
-	rot(1,0) =  0; rot(1,1) = 1; rot(1,2) = 0; rot(1,3) = 0;
-	rot(2,0) = -s; rot(2,1) = 0; rot(2,2) = c; rot(2,3) = 0;
-	rot(3,0) =  0; rot(3,1) = 0; rot(3,2) = 0; rot(3,3) = 1;
+    matrix rot(4,4);
+    rot(0,0) =  c; rot(0,1) = 0; rot(0,2) = s; rot(0,3) = 0;
+    rot(1,0) =  0; rot(1,1) = 1; rot(1,2) = 0; rot(1,3) = 0;
+    rot(2,0) = -s; rot(2,1) = 0; rot(2,2) = c; rot(2,3) = 0;
+    rot(3,0) =  0; rot(3,1) = 0; rot(3,2) = 0; rot(3,3) = 1;
 
-	return rot;
+    return rot;
 }
 
 rtc::matrix rtc::makeMatrixRotationZ( const double theta )
 {
-	const double
-		c = std::cos(theta),
-		s = std::sin(theta);
+    const double
+        c = std::cos(theta),
+        s = std::sin(theta);
 
-	matrix rot(4,4);
-	rot(0,0) = c; rot(0,1) = -s; rot(0,2) = 0; rot(0,3) = 0;
-	rot(1,0) = s; rot(1,1) =  c; rot(1,2) = 0; rot(1,3) = 0;
-	rot(2,0) = 0; rot(2,1) =  0; rot(2,2) = 1; rot(2,3) = 0;
-	rot(3,0) = 0; rot(3,1) =  0; rot(3,2) = 0; rot(3,3) = 1;
+    matrix rot(4,4);
+    rot(0,0) = c; rot(0,1) = -s; rot(0,2) = 0; rot(0,3) = 0;
+    rot(1,0) = s; rot(1,1) =  c; rot(1,2) = 0; rot(1,3) = 0;
+    rot(2,0) = 0; rot(2,1) =  0; rot(2,2) = 1; rot(2,3) = 0;
+    rot(3,0) = 0; rot(3,1) =  0; rot(3,2) = 0; rot(3,3) = 1;
 
-	return rot;
+    return rot;
 }
 
 rtc::matrix rtc::makeMatrixInverse( const matrix& m )
 {
-	// ‹ts—ñ‚ğ‚Â‚­‚èA•Ô‚·B
-	// ‚±‚Ì‚Ö‚ñQÆFhttp://www.page.sannet.ne.jp/d_takahashi/boost/ublas/#SEC17
-	rtc::matrix
-		a = m,
-		b = boost::numeric::ublas::identity_matrix<double>(4);
+    // é€†è¡Œåˆ—ã‚’ã¤ãã‚Šã€è¿”ã™ã€‚
+    // å‚è€ƒã¸ã®ãƒªãƒ³ã‚¯ï¼šhttp://www.page.sannet.ne.jp/d_takahashi/boost/ublas/#SEC17
+    rtc::matrix
+        a = m,
+        b = boost::numeric::ublas::identity_matrix<double>(4);
 
-	boost::numeric::ublas::permutation_matrix<> pm( a.size1() );
+    boost::numeric::ublas::permutation_matrix<std::size_t> pm( a.size1() );
 
-	boost::numeric::ublas::lu_factorize( a, pm );
-	::lu_substitute( a, pm, b );
+    boost::numeric::ublas::lu_factorize( a, pm );
+    
+#if defined (_MSC_VER) && _MSC_VER < 1300
+    lu_substitute( a, pm, b );
+#else
+    boost::numeric::ublas::lu_substitute( a, pm, b );
+#endif
 
-	return b;
+    return b;
 }
 
+
 rtc::vector rtc::rotation_prod(
-	const rtc::matrix& rot,
-	const rtc::vector& ptr
+    const rtc::matrix& rot,
+    const rtc::vector& ptr
 ){
-	assert( ptr.size() == 3 );
+    assert( ptr.size() == 3 );
 
-	// ƒxƒNƒgƒ‹‚ğ‰ñ“]s—ñ‚ÉŒã‚ë‚©‚çŠ|‚¯‡‚í‚¹A
-	// OŸŒ³“I‚É‰ñ“]‚µ‚½Œ‹‰Ê‚ğ•Ô‚·B
-	vector m = boost::numeric::ublas::zero_vector<double>(4);
-	m[0] = ptr[0]; m[1] = ptr[1]; m[2] = ptr[2];
-	m[3] = 1;
+    // ãƒ™ã‚¯ãƒˆãƒ«ã‚’å›è»¢è¡Œåˆ—ã«æ›ã‘ç®—ã—ãƒã‚¤ãƒ³ã‚¿å’Œã›ã€
+    // å¹¾ä½•å­¦çš„ã«å›è»¢ã•ã›ãŸçµæœã‚’è¿”ã™ã€‚
+    vector m = boost::numeric::ublas::zero_vector<double>(4);
+    m[0] = ptr[0]; m[1] = ptr[1]; m[2] = ptr[2];
+    m[3] = 1;
 
-	m = boost::numeric::ublas::prod( rot, m );
+    m = boost::numeric::ublas::prod( rot, m );
 
-	vector r = boost::numeric::ublas::zero_vector<double>(3);
-	r[0] = m[0]; r[1] = m[1]; r[2] = m[2];
+    vector r = boost::numeric::ublas::zero_vector<double>(3);
+    r[0] = m[0]; r[1] = m[1]; r[2] = m[2];
 
-	return r;
+    return r;
 }

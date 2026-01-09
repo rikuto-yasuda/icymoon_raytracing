@@ -1,30 +1,39 @@
-## Makefile for GCC g++ ##########################
-CC = g++
-LD = g++
+BREW_PREFIX := /opt/homebrew
+
+CC = clang++
+LD = clang++
 OBJECT_EXP = .o
 PCH_EXP    = .gch
 EXEC_EXP   =
 LIBRT      = \
-    ../lib/core.a   \
-    ../lib/model.a  \
-    ../lib/planet.a
-INCLUDE_OPT=
-STDLIB     = pthread boost_thread-mt
+	../lib/core.a   \
+	../lib/model.a  \
+	../lib/planet.a
+INCLUDE_OPT = $(BREW_PREFIX)/include
+# boost_system を外す
+STDLIB     = pthread boost_thread boost_chrono boost_atomic
+AR      = ar
+ARFLAGS = rcs
+
+LDFLAGS = -L$(BREW_PREFIX)/lib -Wl,-rpath,$(BREW_PREFIX)/lib -Wl,-search_paths_first
 
 PCH = $(STDHEADER)$(PCH_EXP)
 
 # コンパイル時のフラグを指定
-CC_FLAG = -c -O2          \
-    $(INCLUDE_OPT:%=-I%)  \
-    -DNDEBUG              \
-    -D_THREAD_SAFE        \
-    -D_REENTRANT          \
-    -finline-functions    \
-    -funroll-loops        \
-#    -march=`arch`
+CC_FLAG = -c -O2 -std=c++17 -arch arm64 \
+	$(INCLUDE_OPT:%=-I%)  \
+	-DNDEBUG              \
+	-D_THREAD_SAFE        \
+	-D_REENTRANT          \
+	-DBOOST_ERROR_CODE_HEADER_ONLY \
+	-DBOOST_SYSTEM_NO_DEPRECATED \
+	-finline-functions    \
+	-funroll-loops        \
+	-Wno-deprecated-declarations \
+	-Wno-deprecated-builtins
 
 CC_OUTPUT_FLAG = -o
-LD_FLAG     = $(STDLIB:%=-l%)
+LD_FLAG     = -arch arm64 $(STDLIB:%=-l%) $(LDFLAGS)
 LD_OUTPUT   = -o $(OUTPUT)
 
 include common.mak
@@ -35,4 +44,3 @@ $(PCH):
 
 local-clean:
 	rm -f ./$(PCH)
-

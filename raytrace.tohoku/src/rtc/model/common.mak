@@ -2,29 +2,32 @@ STDHEADER = StdAfx.h
 LIBNAME   = model
 OBJ_PATH  = object
 VPATH     = $(OBJ_PATH)
-
+AR      = ar
+ARFLAGS = rcs
 SRC = \
-    sample_magnet_model.cpp \
-    test_magnet_model.cpp \
-    sample_plasma_model.cpp \
-    test_plasma_model.cpp \
-    model_sato_earth.cpp    \
-    model_nsumei_earth.cpp  \
+	sample_magnet_model.cpp \
+	test_magnet_model.cpp \
+	sample_plasma_model.cpp \
+	test_plasma_model.cpp \
+	model_sato_earth.cpp    \
+	model_nsumei_earth.cpp  \
 	DevineGarrett.cpp       \
-    IGRF.cpp                \
+	IGRF.cpp                \
 	VIP4.cpp                \
+
 
 
 OBJ = $(SRC:%.cpp=$(OBJ_PATH)/%$(OBJECT_EXP))
 .SUFFIXES:$(OBJECT_EXP).cpp
 
-OUTPUT = ../lib/$(LIBNAME)$(EXEC_EXP)
+OUTPUT = ../lib/$(LIBNAME).a
 
 ##################################################
 all : $(OUTPUT)
 
-$(OUTPUT): $(OBJ) $(RES_OBJ) $(LIBRT)
-	$(LD) $(LD_FLAG) $(LD_OUTPUT) $^
+# ライブラリ(model.a)を作成
+$(OUTPUT): $(OBJ)
+	$(AR) $(ARFLAGS) $@ $^
 
 $(OBJ_PATH)/%$(OBJECT_EXP) :: %.cpp
 	mkdir -p $(OBJ_PATH)
@@ -37,4 +40,3 @@ clean: local-clean
 	rm -f ./$(OBJ_PATH)/*$(OBJECT_EXP)
 	rm -f ./$(OBJ_PATH)/*.idb
 	rm -f $(OUTPUT)
-

@@ -6,16 +6,40 @@ import matplotlib as mpl
 import os
 import pathlib
 
+# %%
+m = np.arange(0, 0.999, 0.001)
+ba = (1+np.sqrt(1-m**2))/np.abs(m)
+
+plt.plot(m, ba)
+plt.xlabel("|mc|")
+plt.ylabel("b/a")
+plt.title("Plot of b/a vs |mc|")
+plt.ylim(1, 20)
+plt.xlim(0, 1)
+plt.vlines(0.75, 1, 2.2, colors="red", linestyles="dashed")
+plt.hlines(2.2, 0, 0.75, colors="red", linestyles="dashed")
+
+
+plt.grid()
+plt.show()
+# %%
+
 max_electron_density = 150 * (
     10**6
 )  # 最大電子密度 m-3 //n(/cc)=n*10**6(/m3)  250 or 100 /cc
+"""
 electron_density_scale_height = 600 * (
     10**3
 )  # スケールハイト m //l(km)=l*10**3(m) 1500 or 300 km
+"""
+electron_density_scale_height = 600 * (
+    10**3
+)  # スケールハイト m //l(km)=l*10**3(m) 1500 or 300 km
+
 frequency_array = np.arange(10000, 10000000, 1)
 magnetic_field_intensity = 750 * (10**-9)  # 　磁場強度 T //ガニメデ赤道表面 750 nT 木星磁場 100 nT
 moon_radius = 2634100  # 半径 m ガニメデ半球 2634.1 km = 2634100 m
-diameter_raio = 0.95  # 楕円の長辺と短辺の比率(0-1)円偏波度の考慮はここで起こる
+diameter_raio = 1/2.2  # 楕円の長辺と短辺の比率(0-1)円偏波度の考慮はここで起こる
 offset_angle_deg = 0
 
 # ガリレオ周波数バンド幅 (Hz)
@@ -70,10 +94,10 @@ gal_freq_tag_row = np.array(
     dtype="float64",
 )
 
-# JUICE バンド幅
-juice_freq_band = 37000
+# JUICE バンド幅 (Hz)
+juice_freq_band = 28000
 # JUICE周波数チャンネル
-juice_freq_tag_row = np.linspace(80000, 2096000, 72)
+juice_freq_tag_row = np.linspace(20000, 2036000, 72)
 
 
 def calc_psi_deg(max_density, scale_height, frequency, magnetic_field, radius):
@@ -142,7 +166,7 @@ def plot_original_faraday_stripe(frequency, radio_intensity, total_electron_cont
     fig.colorbar(pcm, extend="max", label="Radio intensity (normalized)")
 
     ax.set_yscale("log")
-    ax.set_ylim(3e5, 2.2e6)
+    ax.set_ylim(2e5, 2.1e6)
     ax.set_ylabel("Frequency (Hz)")
     ax.axes.xaxis.set_visible(False)
     ax.set_title(
@@ -316,7 +340,7 @@ def plot_binning_raraday_stripe(
     ax[1].legend(fontsize=12, loc="upper left")
     # ax[1].set_title("Radio intensity", fontsize=10)
     ax[1].set_xlim(3e5, 2.2e6)
-    ax[1].set_ylim(0.5, 1.2)
+    #ax[1].set_ylim(0.5, 1.2)
     ax[1].set_xscale("log")
     ax[1].set_yticks([0.5, 1])
     ax[1].set_yticklabels([0.5, 1], fontsize=12, fontname="Helvetica")
@@ -339,7 +363,7 @@ def plot_binning_raraday_stripe(
     fig.colorbar(pcm, extend="max", label="Radio intensity (normalized)")
 
     ax[2].set_yscale("log")
-    ax[2].set_ylim(3e5, 2.2e6)
+    ax[2].set_ylim(2e5, 2.1e6)
     ax[2].set_ylabel("Frequency (Hz)", fontname="Helvetica")
     ax[2].axes.xaxis.set_visible(False)
     ax[2].set_title("Spectrogram", fontsize=10, fontname="Helvetica")
@@ -411,6 +435,16 @@ def compare_binning_raraday_stripe(
 
     return
 
+def calc_TEC(min_frequency, max_frequency, n_pi, magnetic_field):
+
+
+    # 積分する関数の定義
+    K = 2.42 * (10**4)
+    coefficient = (K * magnetic_field) /  1.41421 # 0.1MHzから10MHzの係数
+
+    TEC = (n_pi * np.pi) / (coefficient * (1/(min_frequency**2) - 1/(max_frequency**2)))
+
+    return TEC
 
 def main():
     # ファラデー回転角を計算する
@@ -485,6 +519,9 @@ def main():
         galileo_frequency_array,
         galileo_binning_intensity_array,
     )
+    
+    print("TEC for 50:" + str(calc_TEC(303943, 531098, 2, magnetic_field_intensity)))
+    print("TEC for 600:" + str(calc_TEC(502704, 1013802, 3, magnetic_field_intensity)))
 
 
 if __name__ == "__main__":

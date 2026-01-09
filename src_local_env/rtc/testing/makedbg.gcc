@@ -9,11 +9,11 @@ LIBRT      = \
     ../lib/model.a  \
     ../lib/planet.a
 INCLUDE_OPT=
-STDLIB     = pthread boost_thread
+STDLIB     = pthread boost_thread-mt
 
 PCH = $(STDHEADER)$(PCH_EXP)
 
-# ¥³¥ó¥Ñ¥¤¥ë»þ¤Î¥Õ¥é¥°¤ò»ØÄê
+# ï¿½ï¿½ï¿½ï¿½Ñ¥ï¿½ï¿½ï¿½ï¿½ï¿½Î¥Õ¥é¥°ï¿½ï¿½ï¿½ï¿½ï¿½
 CC_FLAG = -c -g           \
     $(INCLUDE_OPT:%=-I%)  \
     -D_DEBUG              \

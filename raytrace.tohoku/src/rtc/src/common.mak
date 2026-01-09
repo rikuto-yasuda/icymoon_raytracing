@@ -2,16 +2,18 @@ STDHEADER = StdAfx.h
 LIBNAME   = core
 OBJ_PATH  = object
 VPATH     = $(OBJ_PATH)
+AR      = ar
+ARFLAGS = rcs
 
 SRC = \
-    rtc_func.cpp     \
-    cosmos.cpp       \
-    basic_planet.cpp \
-    magnet_model.cpp \
-    plasma_model.cpp \
-    ray.cpp          \
-    wave_param.cpp   \
-    plasma_cavity.cpp\
+	rtc_func.cpp     \
+	cosmos.cpp       \
+	basic_planet.cpp \
+	magnet_model.cpp \
+	plasma_model.cpp \
+	ray.cpp          \
+	wave_param.cpp   \
+	plasma_cavity.cpp
 
 
 OBJ = $(SRC:%.cpp=$(OBJ_PATH)/%$(OBJECT_EXP))
@@ -22,8 +24,9 @@ OUTPUT = ../lib/$(LIBNAME)$(EXEC_EXP)
 ##################################################
 all : $(OUTPUT)
 
-$(OUTPUT): $(OBJ) $(RES_OBJ) $(LIBRT)
-	$(LD) $(LD_FLAG) $(LD_OUTPUT) $^
+# ライブラリ(core)を作成
+$(OUTPUT): $(OBJ)
+	$(AR) $(ARFLAGS) $@ $^
 
 $(OBJ_PATH)/%$(OBJECT_EXP) :: %.cpp
 	mkdir -p $(OBJ_PATH)
@@ -36,4 +39,3 @@ clean: local-clean
 	rm -f ./$(OBJ_PATH)/*$(OBJECT_EXP)
 	rm -f ./$(OBJ_PATH)/*.idb
 	rm -f $(OUTPUT)
-

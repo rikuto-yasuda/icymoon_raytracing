@@ -6,8 +6,13 @@ PCH_EXP    = .gch
 EXEC_EXP   = .a
 LIBRT      =
 INCLUDE_OPT=
-STDLIB     =
+STDLIB     = pthread boost_thread boost_system
 
+BREW_PREFIX := $(shell brew --prefix 2>/dev/null)
+INCLUDE_OPT += $(BREW_PREFIX)/include
+LDFLAGS    += -L$(BREW_PREFIX)/lib
+CXXFLAGS += -Wno-enum-constexpr-conversion -Wno-deprecated-declarations
+CXXFLAGS += -Wno-deprecated-builtins -Wno-invalid-source-encoding
 PCH = $(STDHEADER)$(PCH_EXP)
 
 # コンパイル時のフラグを指定
@@ -20,9 +25,9 @@ CC_FLAG = -c -O2          \
     -funroll-loops        \
 
 #    -march=`arch`
-
+CC_FLAG += $(CXXFLAGS)
 CC_OUTPUT_FLAG = -o
-LD_FLAG     = $(STDLIB:%=-l%)
+LD_FLAG     = $(STDLIB:%=-l%) $(LDFLAGS)
 LD_OUTPUT   = r $(OUTPUT)
 
 include common.mak

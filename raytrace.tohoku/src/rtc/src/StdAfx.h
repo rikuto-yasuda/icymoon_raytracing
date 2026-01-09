@@ -44,6 +44,20 @@
 #endif
 
 // boost library ////////////////////////////////
+
+// Boost MPL ‚Ì‘Oˆ—İ’è
+#define BOOST_MPL_LIMIT_VECTOR_SIZE 30
+#define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
+
+// Clang ‚Ì enum-constexpr-conversion ‚ğˆê“I‚É–³Œø‰»
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wenum-constexpr-conversion"
+#endif
+
+#include <boost/mpl/int.hpp>
+#include <boost/mpl/integral_c.hpp>
+
 #include <boost/format.hpp>
 #include <boost/math/quaternion.hpp>
 #include <boost/numeric/ublas/vector.hpp>
@@ -53,6 +67,10 @@
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/operation.hpp>
 #include <boost/thread.hpp>
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 
 // MSVC6‚Å‚Íg‚¦‚È‚¢
 #if (defined (_MSC_VER) && _MSC_VER > 1200) || !defined _MSC_VER
