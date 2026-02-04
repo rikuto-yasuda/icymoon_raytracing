@@ -1,0 +1,88 @@
+rocedure for Simulating Occultation Observations
+
+
+❶Preparation for study for new fly-by data
+
+1.	Download the ExPRES data about the occultation timing you want to examine  from ExPRESdata→expres_gll_jupiter .. .cdf at https://maser.lesia.obspm.fr/publications/doi/jovian-auroral-radio-source.html?lang=en
+2.	Copy cdf data to the directory named result_for_yasudaetal2022/expres_cdf_data/.
+3.	Fill in the csv file named result_for_yasudaetal2022/occultation_flyby_list with the target celestial body, spacecraft name, number of flybys, cdf file name, data start and end dates used.
+4.	Get position data of the spacecraft at the time of the target flyby (see step 1)
+5.	copy orbit data to result_for_yasudaetal2022/spacecraft_ephemeris/.
+6.	write the file name of the orbit data in 　result_for_yasudaetal2022/occultation_flyby_list
+7.	Obtain location data of the moon (satellite) at the time of the target flyby from https://wgc2.jpl.nasa.gov:8443/webgeocalc/#StateVector. WebGeocalc input is   set for “the spacecraft at the time of the target flyby" and the time you want to look up.
+8.	Move the orbital data of celestial objects to result_for_yasudaetal2022/moon_ephemeris/.
+9.	Write the orbital data name in result_for_yasudaetal2022/occultation_flyby_list
+10.	enter the name of the flyby object, the name of the spacecraft, and the number of flybys in python_Jovian_radio_occultation /preparing_position_data.py and run
+①	The information for all detectable radio is created in result_for_yasudaetal2022/expres_detectable_radio_data_of_each_flyby as following: 0 year, 1 month, 2 days, 3 hours, 4 minutes, 5 seconds, ◯, ◯, ◯, ◯, 9 Frequency (MHz), 10 Longitude of magnetic field line (0~360) or (-1000) for Io, 11 Poles (North:1, South:-1), 12 x-coordinate, 13 y-coordinate, 14 z-coordinate, like “All_galileo_ganymede_1_Radio_data.txt”.
+②	The interpolated time resolution to 1 second is also saved in the same folder with name like “lnterpolated_all_galileo_ganymede_1_Radio_data.txt”
+③	The position data of the probe transformed by coordinates using the radio source results are stored in result_for_yasudaetal2022/calculated_expres_detectable_radio_data_of_each_flyby with name like interpolated_calculated_all_galileo_ganymede_1_Radio_data.txt. The following figure indicates the coordinate transformation method.
+ 
+11.	Write the date and time (day, hour, and minute) that are completely occulted into result_for_yasudaetal2022/occultation_flyby_list based on the previous study.   
+12.	Get Galileo radio data from http://das2.org/browse/uiowa/galileo/pws/survey_electric. Fill in the time range of the radio data (same as the figure in the previous study) and use "get from Jupiter" to get the data. Move the radio data to tools/result_for_yasudaetal2022/galileo_radio_data/. Add the name of the radio data to the radio_data_txt field of result_for_yasudaetal2022/occultation_flyby_list.
+
+ 
+
+❷Procedure when performing calculations with the new electron density distribution
+
+1.	Change the density parameter of /Users/yasudarikuto/research/icymoon_raytracing/raytrace.tohoku/src/rtc/model/test_plasma_model.cpp
+Below picture is for the Europa hydrostatic equilibrium model with a surface density of 400(/cc) and a scale height of 600 km.
+double plasma::europa_nonplume::getDensity(const vector &point) const ///////////////新しいプラズマモデル（z軸方向にexpで減少）
+{
+    const double
+        r = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)) + (pow(point(2) + 1.601e6, 2.0)));
+    const double
+        rxy = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)));
+    const double
+        t = std::fabs(4e8 * exp(-(r - 1.601e6) / 6e5)); //////////////エウロパ静水圧平行モデル 地表面で4.0*10^2(/cc) スケールハイト600km
+    ;
+
+    return t;
+}
+2.	 Provide the "output file name" of icymoon_raytracing/raytrace.tohoku/src/rtc/testing/mkray3.sh. Ex）ray-Peuropa_nonplume_4e2_6e2-Mtest_simple-benchmark-LO-Z-2-FR3.984813988208770752e5
+3.	Change the value of the for statement of HIG in icymoon_raytracing/raytrace.tohoku/src/rtc/testing/mkray3.sh. If it is less than or equal to 0, it is 100 every other time, and if it is greater than 0, it is 500,600,1000,1100, etc. +500 +100 repeated. Ex) for HIG in -300 -200 -100 0 100 500 600 1000 1100 1500 1600 2000 2100 2500 2600
+4.	Compile with make command in icymoon_raytracing/raytrace.tohoku/src/rtcicymo on_raytracing/raytrace.tohoku/src/rtc
+5.	Compile with make command in icymoon_raytracing/raytrace.tohoku/src/rtcicymo on_raytracing/raytrace.tohoku/src/rtc/testing
+6.	Run bash mkray3.sh in icymoon_raytracing/raytrace.tohoku/src/rtc/testing
+7.	After completing the calculation, write the target object, spacecraft name, number of flybys, maximum electron density, scale height, and maximum and minimum values of H I G specified in 3. in tools/python_Jovian_radio_occultation/occultaion_range_calc.py and run. 
+object_name = 'europa'   # europa/ganymde/callisto
+spacecraft_name = "galileo"  # galileo/JUICE(?)
+time_of_flybies = 14  # ..th flyby
+highest_plasma = '4e2'  # 単位は(/cc) 2e2/4e2/16e2
+plasma_scaleheight = '6e2'  # 単位は(km) 1.5e2/3e2/6e2
+raytrace_lowest_altitude = -300  # レイトレーシングの下端の初期高度(km) 100の倍数で
+raytrace_highest_altitude = 2600  # レイトレーシング上端の初期高度(km) 500の倍数+100で
+8.	If the message "Start position need to be far from moon" is displayed, the starting position of the ray tracing is too close to the celestial body, so decrease the value of SX and rerun.
+9.	The highest and lowest altitudes at each frequency are output, so refer to the output results and specify the range of HIG and FREQ for statements in icymoon_raytracing/raytrace.tohoku/src/rtc/testing/mkray3.sh and run it. . / python_for_yasudaetal2022 /tracing_range_'spacecraft_name'_'celestial_name'_'flyby_number'_flybys/para_'maximum_electron_density'_'scale_height'.csv' outputs the altitude range for which the calculation is required.
+10.	Write the target object, probe name, number of flybys, maximum electron density, and scale height in tools/python_Jovian_radio_occultation/detectable_radio_check.py and run it. The result returns result_for_yasudaetal2022/raytracing_'object_name'_results/'object_name'_'maximum_electron_density'_'scale_height'/Interpolated_'object_name'_'probe_name'_'number_of_flybys'_'maximum_electron_density'_' Scale height'_dectable_radio_data.txt'.
+object_name = 'ganymede'  # ganydeme/europa/calisto``
+spacecraft_name = "galileo"  # galileo/JUICE(?)
+time_of_flybies = 1  # ..th flyby
+highest_plasma = '4e2'  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = '6e2'  # 単位は(km) 1.5e2/3e2/6e2
+11.	Write the target object, spacecraft name, number of flybys, maximum electron density, scale height, and how many times the background noise should be thresholded in the tools/ python_Jovian_radio_occultation/plot_f-t_2.py and run. 
+a.	Three f-t diagrams (full, ingress. Egress) are stored in   '... /result_for_yasudaetal2022/raytracing_'+cosm name+'_results/' +cosm name+'_'+maximum electron density+'_'+scale height+'/ and '. /result_for_yasudaetal2022/f-t_plot_'+probe_name+'_'+cosm name+'_'+number of flybys+'_flyby/radio_boundary_intensity_="magnitude of noise to threshold "dB
+b.	An array examining the timing of exceeding the threshold value from the radio data at each of ingress and egress, as in '.../result_for_yasudaetal2022/radio_data_occultation_timing_' + spacecraft name + '_'+ celestial name + '_'+ number of flybys '_flyby/'+ celestial name + '_'+ "threshold noise factor" dB + '_ingress_time _data.txt', is stored for each frequency.
+c.	The estimated occultation start and end times in ray tracing are stored for each frequency in '... /result_for_yasudaetal2022/raytracing_occultation_timing_' + spacecraft name +'_'+ celestial name +'_'+ flyby number +'_flyby/interpolated_' + spacecraft name +'_'+ celestial name +'_'+ flyby number+'_'+maximum electron density+'_'+scale height+'_ingress_time_list.txt'
+d.	The difference between the occultation start and end times of ray tracings and observations is stored in '... /result_for_yasudaetal2022/radio_raytracing_occultation_timing_def_' + spacecraft name +'_'+ celestial name +'_'+ flyby number +'_flyby_radioint_"threshold noise multiplier "dB +'/ interpolated_'+source_name+'_'+max_electron_density+'_'+scale_height+'_ingress_defference_time_'+radio_type_(A~D)+'_' multiplier_of_noise_to_threshold Magnification "dB.txt', calculated for each frequency. 
+12.	Write the name of the object, the name of the spacecraft, the number of flybys, the frequency range to be examined, the radio wave strength at the threshold, the start or end of occultation (ingress or egress), and the type of radio wave (A~D) in tools/ python_Jovian_radio_occultation /evaluate_ft_2.py and run the simulation.
+13.	Based on the ray tracing results so far, which electron density distribution fits the observation well, the results are output as a figure and text. The output will be sent to '... /result_for_yasudaetal2022/evaluate_f-t_diagram_plot_' + spacecraft name + '_' + object name + '_' + flyby number + '_flyby_radioint_' + "noise factor to threshold" dB
+####################################################
+object_name = 'ganymede'  # ganydeme/europa/calisto`
+spacecraft_name = "galileo"  # galileo/JUICE(?)
+time_of_flybies = 1  # ..th flyby
+"""lowest frequency and highest_freqency(MHz)"""
+using_frequency_range = [5.5e-1, 6]  # egress
+boundary_intensity_str = '7e-16'  # '7e-16' '1e-15'
+occultaion_type = 'egress'  # 'ingress' or 'egress'
+radio_type = 'A'  # 'A' or 'B' or 'C' or 'D'
+
+ 
+❸Method for plotting the locations of occultation observations
+1.	Obtain position data of the spacecraft and the Moon as seen from the center of Jupiter in the lunar system coordinates during the time period used in the observation.（from https://wgc2.jpl.nasa.gov:8443/webgeocalc/#StateVector）
+Time ranges and time steps are based on the simulation.（/Users/yasudarikuto/research/icymoon_raytracing/tools/result_for_yasudaetal2022/occultation_flyby_list.csv）
+2.	Stored in /Users/yasudarikuto/research/icymoon_raytracing/tools/result_for_yasudaetal2022/ephemeris_for_coordinate_transformation/moon　or  spacecraft
+3.	Write the file name in /Users/yasudarikuto/research/icymoon_raytracing/tools/result_for_yasudaetal2022/occultation_flyby_list.csv
+4.	Write the object name, spacecraft name, number of flybys, occultation start & end times at the relevant flyby, and radio source in /Users/yasudarikuto/research/icymoon_raytracing/tools/python_for_yasudaetal2022/tangential_position_revised.py and execute it.
+5.	The information including the observation points of occultation observation is output to like /Users/yasudarikuto/research/icymoon_raytracing/tools/result_for_yasudaetal2022/calculated_expres_detectable_radio_data_of_each_flyby/calculated_all_galileo_callisto_9_tangential_point_revised.txt.
+6.	The maximum, minimum, and average latitude and longitude are output on the command.
+

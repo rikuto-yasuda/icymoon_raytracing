@@ -1,0 +1,257 @@
+掩蔽観測のシミュレーション手順
+
+❶新しいフライバイデータで検証するときの下準備（木星衛星・ローカル環境）
+1.	調べたい掩蔽タイミングのExpresデータをhttps://maser.lesia.obspm.fr/publications/doi/jovian-auroral-radio-source.html?lang=en　のExPRESdata→expres_gll_jupiter .. .cdf からダウンロード
+2.	result_for_yasudaetal2022/expres_cdf_data/の下にうつす
+3.	result_for_yasudaetal2022/occultation_flyby_listに対象の天体・探査機名・フライバイの回数・cdfのファイル名・使われているデータ開始日時・終了日時を追記
+4.	対象のフライバイ時の探査機の位置データを取得(1の手順参照)
+5.	result_for_yasudaetal2022/spacecraft_ephemeris/の下にうつす
+6.	result_for_yasudaetal2022/occultation_flyby_listにcsvファイル名を追記
+7.	対象のフライバイ時の月（衛星）の位置情報を取得　https://wgc2.jpl.nasa.gov:8443/webgeocalc/#StateVector設定は“対象のフライバイ時の探査機の位置データ”と調べたい時刻で合わせる（設定・ダウンロード方法は以下の動画の通り）
+8.	result_for_yasudaetal2022/moon_ephemeris/の下にうつす
+9.	result_for_yasudaetal2022/occultation_flyby_listにcsvファイル名を追記
+10.	python_Jovian_radio_occultation /preparing_position_data.py にフライバイの天体名・探査機名・フライバイの回数を入力して実行　⇨
+result_for_yasudaetal2022/expres_detectable_radio_data_of_each_flyby　に“Expresで観測可能とされている電波の情報が 0 年、1 月、2 日、3 時間、4 分、5 秒、◯、○、◯、9 周波数（MHz)、10 磁力線の経度(0~360)orイオの場合は(-1000)、11 極（北:1 南:-1)、12 x座標,13 y座標,14 z座標 を受かるパターン分だけ格納されたもの” が保存される (All_galileo_ganymede_1_Radio_data.txtのように)
+result_for_yasudaetal2022/expres_detectable_radio_data_of_each_flybyに、時間分解能を1秒に補間した電波源の位置情報が保存される、0 時間, 1 分, 2 秒, 3 周波数(MHz),  4 (0~360)orイオの場合は(-1000), 5 極（北:1 南:-1), 6 x座標,  7 y座標, 8 z座標, 9 電波源経度, 10 探査機経度, 11 電波源タイプ（A,C:1 B,D:-1)]　 (lnterpolated_all_galileo_ganymede_1_Radio_data.txtのように)
+result_for_yasudaetal2022/calculated_expres_detectable_radio_data_of_each_flybyには"時間方向に補間した電波源の結果と探査機・月の位置情報を使って掩蔽の判定ができるように探査機の位置情報を座標変換したもの 0 時間, 1 分, 2 秒, 3 周波数(MHz),  4 (0~360)orイオの場合は(-1000), 5 極（北:1 南:-1), 6 座標変換した時のx(tangential point との水平方向の距離), 7座標変換した時のy(tangential pointからの高さ方向の距離), 8 電波源経度, 9 探査機経度, 10 電波源タイプ（A,C:1 B,D:-1)]が保存される。(interpolated_calculated_all_galileo_ganymede_1_Radio_data.txtのように)
+座標変換の方法は以下の図を参照
+11.	電波データに関する情報を追記　先行研究から完全に掩蔽されている日時（日、時、分）を目視で確認してresult_for_yasudaetal2022/occultation_flyby_listに追記する  
+12.	http://das2.org/browse/uiowa/galileo/pws/survey_electric　からガリレオの電波データを取得する。電波データの時刻範囲（先行研究の図と同じ）を記入して、「get from Jupiter」でデータ取得。tools/result_for_yasudaetal2022/galileo_radio_data/　に移す。そのデータ名を、result_for_yasudaetal2022/occultation_flyby_listのradio_data_txtの欄に追記する
+ 
+以上、新しいフライバイを追加する時の手順
+
+
+ 
+❷新しい電子密度分布で計算を行う時の手順（木星衛星・ローカル）
+1.	 調べたい電子密度分布のパラメータに/Users/yasudarikuto/research/icymoon_raytracing/raytrace.tohoku/src/rtc/model/test_plasma_model.cpp のパラメータを変更する。
+下は地表面の密度400(/cc)・スケールハイト600kmのエウロパ静水圧平衡モデル
+double plasma::europa_nonplume::getDensity(const vector &point) const ///////////////新しいプラズマモデル（z軸方向にexpで減少）
+{
+    const double
+        r = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)) + (pow(point(2) + 1.601e6, 2.0)));
+    const double
+        rxy = std::sqrt((pow(point(0), 2.0)) + (pow(point(1), 2.0)));
+    const double
+        t = std::fabs(4e8 * exp(-(r - 1.601e6) / 6e5)); //////////////エウロパ静水圧平行モデル 地表面で4.0*10^2(/cc) スケールハイト600km
+    ;
+
+    return t;
+}
+2.	 icymoon_raytracing/raytrace.tohoku/src/rtc/testing/mkray3.sh　の　“出力ファイル名を指定する。”の部分で最大電子密度(/cc)&スケールハイト(km)を記入する 例）ray-Peuropa_nonplume_4e2_6e2-Mtest_simple-benchmark-LO-Z-2-FR3.984813988208770752e5
+3.	icymoon_raytracing/raytrace.tohoku/src/rtc/testing/mkray3.sh　のHIGのfor文の要素を変更する。0以下では100おき、0以上では500,600,1000,1100 のように+500 +100を繰り返した数字にする。この範囲で計算範囲が十分かを確認するので、やや広めにHIGの幅を持たせておく　例) for HIG in -300 -200 -100 0 100 500 600 1000 1100 1500 1600 2000 2100 2500 2600
+4.	icymoon_raytracing/raytrace.tohoku/src/rtc でmakeコマンドでコンパイル実行
+5.	icymoon_raytracing/raytrace.tohoku/src/rtc/testing でmakeコマンドでコンパイル実行
+6.	 icymoon_raytracing/raytrace.tohoku/src/rtc/testing でbash mkray3.sh で計算実行
+7.	計算終了後、tools/python_Jovian_radio_occultation/occultaion_range_calc.py に、探査対象天体、探査機名、フライバイ回数、最大電子密度、スケールハイト、3.で指定したH I Gの最大値と最小値を記入して実行
+object_name = 'europa'   # europa/ganymde/callisto
+spacecraft_name = "galileo"  # galileo/JUICE(?)
+time_of_flybies = 14  # ..th flyby
+highest_plasma = '4e2'  # 単位は(/cc) 2e2/4e2/16e2
+plasma_scaleheight = '6e2'  # 単位は(km) 1.5e2/3e2/6e2
+raytrace_lowest_altitude = -300  # レイトレーシングの下端の初期高度(km) 100の倍数で
+raytrace_highest_altitude = 2600  # レイトレーシング上端の初期高度(km) 500の倍数+100で
+8.	"Start position need to be far from moon"というメッセージが出力された場合、レイトレーシングの開始座標が、天体に近すぎるので、SXの値を小さくして再実行
+9.	角周波数での最高高度・最低高度が出力されるので、その出力結果を参考にしてicymoon_raytracing/raytrace.tohoku/src/rtc/testing/mkray3.sh　のHIGとFREQのfor文の範囲を指定して実行。
+なお、../ python_for_yasudaetal2022 /tracing_range_'探査機名'_'天体名'_'フライバイ数'_flybys/para_'最大電子密度'_'スケールハイト'.csv'に計算が必要な高度範囲が出力されている。
+10.	tools/ python_Jovian_radio_occultation/detectable_radio_check.py 探査対象天体、探査機名、フライバイ回数、最大電子密度、スケールハイトを記入して実行。その結果が　result_for_yasudaetal2022/raytracing_'天体名'_results/'天体名'_'最大電子密度'_'スケールハイト'/Interpolated_'天体名'_'探査機名'_'フライバイ数'_'最大電子密度 '_'スケールハイト'_dectable_radio_data.txt',に格納される
+object_name = 'ganymede'  # ganydeme/europa/calisto``
+spacecraft_name = "galileo"  # galileo/JUICE(?)
+time_of_flybies = 1  # ..th flyby
+highest_plasma = '4e2'  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = '6e2'  # 単位は(km) 1.5e2/3e2/6e2
+11.	tools/ python_Jovian_radio_occultation/plot_f-t_2.py　に探査対象天体、探査機名、フライバイ回数、最大電子密度、スケールハイト、背景ノイズの何倍を閾値にするか、（csvファイルに記載した開始時刻からプロット時の開始・目盛・終了に使う時刻までの秒数、それに対応する時刻）を記入して実行。「（）の内容は自動で代入されるように改良済み」
+a.	'../result_for_yasudaetal2022/raytracing_'+天体名+'_results/' +天体名+'_'+最大電子密度+'_'+スケールハイト+'/と'../result_for_yasudaetal2022/f-t_plot_'+探査機名+'_'+天体名+'_'+フライバイ数+'_flyby/radio_boundary_intensity_="閾値にするノイズの倍率"dB, にf-tダイアグラム（full, ingress. Egress）の３つがそれぞれ保存される。(  "interpolated_"探査機名"_"天体名"_"フライバイ数"_"最大電子密度"_"スケールハイト"_boundary_int="閾値にするノイズの倍率"dB_”full or ingress or egress"のような名前で）
+b.	'../result_for_yasudaetal2022/radio_data_occultation_timing_'+探査機名+'_'+天体名+'_'+フライバイ数 '_flyby/'+天体名+ '_'+"閾値にするノイズの倍率"dB +'_ingress_time_data.txt', のようにingressとegressのそれぞれの時に、電波データから閾値を超えるタイミングを周波数ごとに調べた配列が保存される。（結果は[[周波数一覧][掩蔽開始時刻一覧]]の二次元データ 掩蔽開始時刻…レイトレーシング開始時刻からの秒数で出力）
+c.	レイトレーシングにおける掩蔽開始時刻・終了時刻を周波数ごとに計算したものが保存される　'../result_for_yasudaetal2022/raytracing_occultation_timing_'+探査機名+'_'+天体名+'_'+フライバイ数+'_flyby/interpolated_'+探査機名+'_'+天体名+'_'+フライバイ数+'_'+最大電子密度+'_'+スケールハイト+'_ingress_time_list.txt'
+d.	'../result_for_yasudaetal2022/radio_raytracing_occultation_timing_def_'+探査機名+'_'+天体名+'_'+フライバイ数+'_flyby_radioint_"閾値にするノイズの倍率"dB +'/interpolated_’+天体名+’_’+最大電子密度+'_'+スケールハイト+'_ingress_defference_time_'+電波の種類（A~D）+'_'閾値にするノイズの倍率"dB.txt'にレイトレーシングと観測結果の掩蔽開始時刻・終了時刻の差分を周波数ごとに計算したものが保存される。 
+12.	tools/ python_Jovian_radio_occultation /evaluate_ft_2.py　の天体名、探査機名、フライバイ数、調べる周波数幅、閾値の電波強度、掩蔽開始or終了時(ingress or egress)、電波の種類（A~D）を記入して実行。今までのレイトレーシング結果から、どの電子密度分布が観測とよくあっているのか、その結果が図とテキストで出力される。出力先は'../result_for_yasudaetal2022/evaluate_f-t_diagram_plot_'+探査機名+'_'+天体名+'_'+フライバイ数+'_flyby_radioint_'+"閾値にするノイズの倍率"dB
+####################################################
+object_name = 'ganymede'  # ganydeme/europa/calisto`
+spacecraft_name = "galileo"  # galileo/JUICE(?)
+time_of_flybies = 1  # ..th flyby
+"""lowest frequency and highest_freqency(MHz)"""
+using_frequency_range = [5.5e-1, 6]  # egress
+boundary_intensity_str = '7e-16'  # '7e-16' '1e-15'
+occultaion_type = 'egress'  # 'ingress' or 'egress'
+radio_type = 'A'  # 'A' or 'B' or 'C' or 'D'
+
+
+
+❸掩蔽観測の観測地点をプロットする手法
+1.	観測で利用している時間帯における　“衛星”系座標・木星中心から見た探査機と月の位置データを取得　（https://wgc2.jpl.nasa.gov:8443/webgeocalc/#StateVectorから）
+時間範囲や時間ステップはシミュレーションに合わせる（/Users/yasudarikuto/research/icymoon_raytracing/tools/result_for_yasudaetal2022/occultation_flyby_list.csv　が参考になる）
+2.	/Users/yasudarikuto/research/icymoon_raytracing/tools/result_for_yasudaetal2022/ephemeris_for_coordinate_transformation/moon　or  spacecraft に保存
+3.	ファイル名を/Users/yasudarikuto/research/icymoon_raytracing/tools/result_for_yasudaetal2022/occultation_flyby_list.csv　に記入
+4.	 
+5.	/Users/yasudarikuto/research/icymoon_raytracing/tools/python_for_yasudaetal2022/tangential_position_revised.py に天体名・探査機名・フライバイ回数・該当フライバイ時の掩蔽開始 & 終了時刻・電波源を記入して実行（表のヘッダーとフッターの行数が異なるとエラーが出るのでread_csv(
+ spacecraft_csv_path, header=15, skipfooter=4)　の値を変更して再度実行する）
+6.	うまくいけば/Users/yasudarikuto/research/icymoon_raytracing/tools/result_for_yasudaetal2022/calculated_expres_detectable_radio_data_of_each_flyby/calculated_all_galileo_callisto_9_tangential_point_revised.txtに掩蔽観測の観測地点を含む情報が出力される。以下注意点
+(ア)	ここでいう観測地点というのは、探査機と電波源を直線で結んだ時の接点である
+(イ)	衛星座標とはIAU_“衛星名”。SPICE grocalcにもあるはず
+(ウ)	出力結果には観測地点の緯度経度を含む以下の情報が含まれている
+[hour, min, frequency(MHz), 電波源データの磁力線(根本)の経度  orイオの場合は(-1000), 電波源の南北, tangential pointのIAUmoon経度, tangential pointnoのIAUmoon緯度, tangential pointからの探査機方向（tangential から90度回転）のIAUmoon経度, tangential pointからの探査機方向（tangential から90度回転）のIAUmoon緯度,座標変換した時のy(tangential pointからの高さ方向の距離)] west longitudで経度は出力されている
+(エ)	この結果には電波の屈折によって受信できなくなると予想される電波も含まれていることを留意すること
+7.	コマンド上での出力として該当事項での最大・最小・平均緯度・経度が出力される
+
+①	レーダー用（反射効果あり）or掩蔽用（光消失）
+・レーダー用のとき
+src/rtc/src/tracer.inl のif checkReflection の部分を使い、
+src/rtc/src/ray.cpp の Check state の if checkReflectionをコメントアウト
+・掩蔽用のとき
+その逆
+
+②	エウロパでの地面認定
+src/rtc/src/cosmos.cppのgetHightの関数をチェック
+エウロパ半径1560800mになっていればよし
+天体を変更するときにはその天体の半径をmで入力
+
+③	エウロパでのプラズマ密度
+・src/rtc/testing/mkray.shのplasmadensityをeuropa plume or europa nonplume
+・src/rtc/testing/mkray.shのplanetをbenchmark
+・src/rtc/model/test_plasma_model.cppをplasma density のeuropa plume or europa nonplumeを書き換えることで別天体のプラズマ密度
+
+④	データ出力の際は注意　
+プロットするpythonのコードの書き換え・
+src/rtc /tools/map_model で新しいプラズマプロットするとき..
+make -f makefile.gcc
+-2000〜500 km の高度
+2700〜10000km
+
+
+
+衛星・探査機の位置情報の取得方法
+ガリレオ探査機のデータを取得するときはマニュアルで取得する必要があるので注意
+＃カリスト30フライバイに関しては計算範囲を狭めるため12:15分くらいまで有効な電波の伝搬経路長を採用！　occultation_flyby_listを作成！！
+＃カリスト9フライバイに関しては計算範囲を狭めるため/計算簡略化のため、12:50分くらいからの有効な電波の電波の伝搬経路長を採用！　occultation_flyby_listを作成！！
+ 
+❹Latmos電離圏モデル（Lathys）の結果を用いる方法
+1.	Latyhsの密度データ（イオン種ごと）を取得する。
+2.	icymoon_raytracing/tools/python_for_3D_occultation/3d_ionospheric_model/check_model_code/remake_cdf_file.pyを使って、LathysのデータをRay tracing コードに代入可能なデータに変形する。
+
+変更する事項
+1.	各種イオン密度の足し合わせ
+2.	イオン密度の単位変更（/cc → /m3）
+3.	位置データの単位変更（m → km）
+
+使用方法
+1. src _filesに足し合わせたい密度データのパスを全て記載する
+2. 実行する
+3. 出力データがsummed_density.ncという名前のデータで出力される
+4. Ray tracingコードに密度データをインプットし、正しく補間されているかを確認する。
+
+
+方法
+1. summed_density.ncをmodel/3d_modelの中に移す（Ex: icymoon_raytracing/src_venv/rtc_cost_reduction/model/3d_model）
+2. 使用する密度データのパスを/model/Lathys_europa_3d.cppのconst std::string& filenameに記入 
+3. modelの上位ディレクトリ（例: rtc_cost_reduction）でmakeをする。これにより密度モデルがコンパイルされる
+4. /tools/map_modelで make -f makefile.gccでコンパイル。これにより密度出力用のコードがコンパイルされる
+5. /tools/map_modelで ./mapで密度出力用のコードを実行する。
+6. icymoon_raytracing/tools/python_for_3D_occultation/3d_ionospheric_model/check_raytracing_model/europa_ionosphere_plot2.pyを用いて密度データをプロットする。出力データの密度の単位（/m3）・距離の単位（km）があっているか。密度データの座標系（x,y,zの向き）が反転していないか、を確認する。
+7.	testing/mkray3.shのようなbashファイルを書き換える
+8. –plot rayの下の行に – parallelと記入する（並列計算を行えるようになる）
+9. --round-div    ${ROUND_DIV}と記入する。ROUND_DIVに値を代入する。（これで並列計算するレイの数を指定する。もし– parallelを記入しないとfor文で処理される）
+10. testing/main.cpp
+353 raytrace rtrc(env, 0.0, 100e3*round)
+371 raytrace *r = new raytrace (env, 0.0, 100e3*round)
+のroundの係数を並列したいレイのz座標間隔(m)で指定する。
+※ SZ = 100 (km), roundの係数500e3 (m), ROUND_DIV =3の場合、計算されるレイの初期座標は、z = 100, 600, 1100 (km)となる
+
+ 
+ 
+⑤ 新しいフライバイデータで検証するときの下準備（土星衛星・Deimos環境）
+1.	以下のサイトを参照して調べたい掩蔽タイミングのExpresデータを作成する。
+https://scrapbox.io/PPARC-TohokuUniv/ExPRES_%E6%83%91%E6%98%9F%E9%9B%BB%E6%B3%A2%E6%94%BE%E5%B0%84%E3%82%B7%E3%83%9F%E3%83%A5%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3
+2.	ExPERSのデータcdfファイルを/work1/rikutoyasuda/tools/result_titan/expres_cdf_dataの下にうつす
+3.	/work1/rikutoyasuda/tools/result_titan/occultation_flyby_list.csvに対象の天体・探査機名・フライバイの回数・cdfのファイル名・使われているデータ開始日時・終了日時を追記。一度ダウンロードするといいかも
+4.	1.で使った探査機の軌道データを/work1/rikutoyasuda/tools/result_titan/spacecraft_ephemerisの下にうつす
+5.	/work1/rikutoyasuda/tools/result_titan/occultation_flyby_listにcsvファイル名を追記
+対象のフライバイ時の月（衛星）の位置情報を取得　https://wgc2.jpl.nasa.gov:8443/webgeocalc/#StateVector設定は“対象のフライバイ時の探査機の位置データ”と調べたい時刻で合わせる。データは/work1/rikutoyasuda/tools/result_titan /moon_ephemeris/の下にうつす
+6.	/work1/rikutoyasuda/tools/result_titan/occultation_flyby_list.csvにcsvファイル名を追記
+7.	/work1/rikutoyasuda/tools/python_Titan_ionsphere/preparing_position_data.pyにフライバイの天体名・探査機名・フライバイの回数を入力して実行
+8.	/work1/rikutoyasuda/tools/result_titan/expres_detectable_radio_data_of_each_flybyに“Expresで観測可能とされている電波の情報が 0 年、1 月、2 日、3 時間、4 分、5 秒、◯、○、◯、9 周波数（MHz)、10 磁力線の経度(0~360)orイオの場合は(-1000)、11 極（北:1 南:-1)、12 x座標,13 y座標,14 z座標 を受かるパターン分だけ格納されたもの” が保存される (All_galileo_ganymede_1_Radio_data.txtのように)
+9.	/work1/rikutoyasuda/tools/result_titan/expres_detectable_radio_data_of_each_flybyに、時間分解能を1秒に補間した電波源の位置情報が保存される、0 時間, 1 分, 2 秒, 3 周波数(MHz),  4 (0~360)orイオの場合は(-1000), 5 極（北:1 南:-1), 6 x座標,  7 y座標, 8 z座標, 9 電波源経度, 10 探査機経度, 11 電波源タイプ（A,C:1 B,D:-1)]　 (lnterpolated_all_galileo_ganymede_1_Radio_data.txtのように)
+10.	/work1/rikutoyasuda/tools/result_titan/calculated_expres_detectable_radio_data_of_each_flybyには"時間方向に補間した電波源の結果と探査機・月の位置情報を使って掩蔽の判定ができるように探査機の位置情報を座標変換したもの 0 時間, 1 分, 2 秒, 3 周波数(MHz),  4 (0~360)orイオの場合は(-1000), 5 極（北:1 南:-1), 6 座標変換した時のx(tangential point との水平方向の距離), 7座標変換した時のy(tangential pointからの高さ方向の距離), 8 電波源経度, 9 探査機経度, 10 電波源タイプ（A,C:1 B,D:-1)]が保存される。(interpolated_calculated_all_galileo_ganymede_1_Radio_data.txtのように)
+11.	座標変換の方法は以下の図を参照
+12.	電波データに関する情報を追記　先行研究から完全に掩蔽されている日時（日、時、分）を目視で確認して/work1/rikutoyasuda/tools/result_titan/occultation_flyby_list.csvに追記する  
+
+以上、新しいフライバイを追加する時の手順
+
+ 
+
+⑥ 新しい電子密度分布で計算を行う時の手順 2通りあり（土星衛星・Deimos）
+
+まだ未計算のパラメータを持つガウシアン電離圏モデル使う場合
+ガウシアン電離圏モデルを使う場合はとても簡単に計算が行えるようにしてある。
+1.	/work1/rikutoyasuda/tools/python_Titan_ionsphere/occultaicon_range_calc.pyのobject_name, spacecraft_name, time_of_flybiesを電離圏探査する衛星名、探査機名、フライバイ数を設定する。（実行はしない）他のパラメータは勝手に設定されるから放置。
+例）
+object_name = "titan"  # ganydeme/europa/calisto
+spacecraft_name = "cassini"  # galileo/JUICE(?)
+time_of_flybies = 15  # ..th flyby
+2.	/work1/rikutoyasuda/tools/python_Titan_ionsphere/radio_and_ft_plot/detectable_radio_pickup.py探査対象天体、探査機名、フライバイ数を記入。（実行はしない）
+3.	/work1/rikutoyasuda/tools/python_Titan_ionsphere/radio_and_ft_plot/plot_cassini_background.pyで、電波をプロットするのに必要なデータの保存先をpathに、計算結果の保存先をplot_result_pathに記す。Cassini_flybyにフライバイの回数（例: T15）、Derived_frequencyにはExPRESで使った周波数、start_year ~ end_minまでは、電波データが乗っていない時間帯を指定する。そして実行。
+→ /work1/rikutoyasuda/tools/result_titan/radio_plot/T15（フライバイ数）/に各周波数における平均的な背景ノイズ強度が出力される
+4.	/work1/rikutoyasuda/tools/python_Titan_ionsphere/radio_and_ft_plot/plot_f-t_2.py　に探査対象天体、探査機名、フライバイ回数、背景ノイズの何倍を閾値にするか
+（csvファイルに記載した開始時刻からプロット時の開始・目盛・終了に使う時刻までの秒数、それに対応する時刻）を記入。（実行はしない）
+5.	また、フライバイにおけるf-t図をプロットする際に必要なパラメータがあれば、36行目以降の書き方に従って、if文を追加する。
+6.	/work1/rikutoyasuda/rtc_cost_reduction/run2.pyに電離圏モデルをしているpython名、run2.pyのパス、結果と他のpythonが保存されているパスを指定する。
+例）
+target_file = 'parameter_plasma_model.cpp'
+path = "/work1/rikutoyasuda/rtc_cost_reduction/"
+result_path = "/work1/rikutoyasuda/tools/result_titan/"
+python_path = "/work1/rikutoyasuda/tools/python_Titan_ionsphere/"
+7.	加えて同ファイルに、最大電子密度・ピーク高度・標準偏差を配列で指定する。単位はkmと/cc。
+例) 
+max_density = np.arange(2900, 3501, 100) 
+peak_height = np.arange(1000, 1251, 50) 
+sigma = np.arange(150, 251, 100) 
+8.	同ファイルにExPRESで回した周波数をFrequencyに配列に記載。そして実行。
+実行コマンドの例
+nohup python3 run2.py&
+9.	/work1/rikutoyasuda/tools/result_titan/f-t_plot_cassini_15_flybyの結果を見ながら、星印が本当に掩蔽の始まり・終わりの時間になっているか確認。ズレている場合は、/work1/rikutoyasuda/tools/python_Titan_ionsphere/radio_and_ft_plot/plot_f-t_2.pyを編集する。対応するフライバイのときのexclave_exceptionに[[ずれている周波数][掩蔽開始時のズレ（時間ステップ）][ 掩蔽終了時時のズレ（時間ステップ）]]で記載していく。変更後にplot_f-t_2.pyを実行して自身が意図している箇所に星が打たれるまで修正する。
+10.	8.で星の位置に納得がいったら再度すべてのパラメータセットに対してplot_f-t_2.pyする。run2.pyのmain関数の一部をコメントアウトすることで複数のパラメータセットでの計算をまとめておこなうことができる。
+11.	/work1/rikutoyasuda/tools/python_Titan_ionsphere/evaluate_time_def/evaluate_ft_2_revision3.py　の天体名、探査機名、フライバイ数、調べる周波数幅、閾値の電波強度、掩蔽開始or終了時(ingress or egress)、電波の種類（A~D）を記入して実行。今までのレイトレーシング結果から、どの電子密度分布が観測とよくあっているのか、その結果が図とテキストで出力される。出力先は' /work1/rikutoyasuda/tools/result_titan/evaluate_f-t_diagram_plot_'+探査機名+'_'+天体名+'_'+フライバイ数+'_flyby_radioint_'+"閾値にするノイズの倍率"dB
+
+
+タイタンでガウシアン電離圏モデルを使わない場合
+1.	タイタンの電離圏は、最大電池密度・調べたい電子密度分布のパラメータに/work1/rikutoyasuda/research/icymoon_raytracing/raytrace.tohoku/src/rtc/model/parameter_plasma_model.cppのパラメータを変更する。
+2.	icymoon_raytracing/raytrace.tohoku/src/rtc/testing/mkray3.sh　の　“出力ファイル名を指定する。”の部分で最大電子密度(/cc)&スケールハイト(km)を記入する 例）ray-Peuropa_nonplume_4e2_6e2-Mtest_simple-benchmark-LO-Z-2-FR3.984813988208770752e5
+3.	icymoon_raytracing/raytrace.tohoku/src/rtc/testing/mkray3.sh　のHIGのfor文の要素を変更する。0以下では100おき、0以上では500,600,1000,1100 のように+500 +100を繰り返した数字にする。この範囲で計算範囲が十分かを確認するので、やや広めにHIGの幅を持たせておく　例) for HIG in -300 -200 -100 0 100 500 600 1000 1100 1500 1600 2000 2100 2500 2600
+4.	icymoon_raytracing/raytrace.tohoku/src/rtc でmakeコマンドでコンパイル実行
+5.	icymoon_raytracing/raytrace.tohoku/src/rtc/testing でmakeコマンドでコンパイル実行
+6.	icymoon_raytracing/raytrace.tohoku/src/rtc/testing でbash mkray3.sh で計算実行
+7.	計算終了後、/work1/rikutoyasuda/tools/python_Titan_ionsphere/occultaion_range_calc.pyに、探査対象天体、探査機名、フライバイ回数、最大電子密度、スケールハイト、3.で指定したH I Gの最大値と最小値を記入して実行
+object_name = 'europa'   # europa/ganymde/callisto
+spacecraft_name = "galileo"  # galileo/JUICE(?)
+time_of_flybies = 14  # ..th flyby
+highest_plasma = '4e2'  # 単位は(/cc) 2e2/4e2/16e2
+plasma_scaleheight = '6e2'  # 単位は(km) 1.5e2/3e2/6e2
+raytrace_lowest_altitude = -300  # レイトレーシングの下端の初期高度(km) 100の倍数で
+raytrace_highest_altitude = 2600  # レイトレーシング上端の初期高度(km) 500の倍数+100で
+8.	"Start position need to be far from moon"というメッセージが出力された場合、レイトレーシングの開始座標が、天体に近すぎるので、SXの値を小さくして再実行
+9.	角周波数での最高高度・最低高度が出力されるので、その出力結果を参考にしてicymoon_raytracing/raytrace.tohoku/src/rtc/testing/mkray3.sh　のHIGとFREQのfor文の範囲を指定して実行。
+なお、/work1/rikutoyasuda/tools/result_titan/tracing_range_'探査機名'_'天体名'_'フライバイ数'_flybys/para_'最大電子密度'_'スケールハイト'.csv'に計算が必要な高度範囲が出力されている
+10.	/work1/rikutoyasuda/tools/python_Titan_ionsphere/radio_and_ft_plot/detectable_radio_pickup.py探査対象天体、探査機名、フライバイ回数、最大電子密度、スケールハイトを記入して実行。その結果が　/work1/rikutoyasuda/tools/result_titan /raytracing_results/Nmax_'最大電子密度'-hpeak_'ピーク高度'-sigma_’電離圏の厚さ’/Interpolated_'天体名'_'探査機名'_'フライバイ数'_'最大電子密度 '_'スケールハイト'_dectable_radio_data.txt',に格納される
+object_name = 'ganymede'  # ganydeme/europa/calisto``
+spacecraft_name = "galileo"  # galileo/JUICE(?)
+time_of_flybies = 1  # ..th flyby
+highest_plasma = '4e2'  # 単位は(/cc) 2e2/4e2/16e22
+plasma_scaleheight = '6e2'  # 単位は(km) 1.5e2/3e2/6e2
+11.	/work1/rikutoyasuda/tools/python_Titan_ionsphere/radio_and_ft_plot/plot_f-t_2.py　に探査対象天体、探査機名、フライバイ回数、最大電子密度、スケールハイト、背景ノイズの何倍を閾値にするか、（csvファイルに記載した開始時刻からプロット時の開始・目盛・終了に使う時刻までの秒数、それに対応する時刻）を記入して実行。「（）の内容は自動で代入されるように改良済み」
+a.	'/work1/rikutoyasuda/tools/result_titan /raytracing_results/Nmax_'最大電子密度'-hpeak_'ピーク高度'-sigma_’電離圏の厚さ’/と'/work1/rikutoyasuda/tools/result_titan/f-t_plot_'+探査機名+'_'+天体名+'_'+フライバイ数+'_flyby/radio_boundary_intensity_="閾値にするノイズの倍率"dB, にf-tダイアグラム（full, ingress. Egress）の３つがそれぞれ保存される。(  "interpolated_"探査機名"_"天体名"_"フライバイ数"_"最大電子密度"_"スケールハイト"_boundary_int="閾値にするノイズの倍率"dB_”full or ingress or egress"のような名前で）
+b.	'/work1/rikutoyasuda/tools/result_titan/radio_data_occultation_timing_'+探査機名+'_'+天体名+'_'+フライバイ数 '_flyby/'+天体名+ '_'+"閾値にするノイズの倍率"dB +'_ingress_time_data.txt', のようにingressとegressのそれぞれの時に、電波データから閾値を超えるタイミングを周波数ごとに調べた配列が保存される。（結果は[[周波数一覧][掩蔽開始時刻一覧]]の二次元データ 掩蔽開始時刻…レイトレーシング開始時刻からの秒数で出力）
+c.	レイトレーシングにおける掩蔽開始時刻・終了時刻を周波数ごとに計算したものが保存される　'/work1/rikutoyasuda/tools/result_titan /raytracing_occultation_timing_'+探査機名+'_'+天体名+'_'+フライバイ数+'_flyby/interpolated_'+探査機名+'_'+天体名+'_'+フライバイ数+'_'+最大電子密度+'_'+スケールハイト+'_ingress_time_list.txt'
+d.	'/work1/rikutoyasuda/tools/result_titan/radio_raytracing_occultation_timing_def_'+探査機名+'_'+天体名+'_'+フライバイ数+'_flyby_radioint_"閾値にするノイズの倍率"dB +'/interpolated_’+天体名+’_’+最大電子密度+'_'+スケールハイト+'_ingress_defference_time_'+電波の種類（A~D）+'_'閾値にするノイズの倍率"dB.txt'にレイトレーシングと観測結果の掩蔽開始時刻・終了時刻の差分を周波数ごとに計算したものが保存される。 
+13.	work1/rikutoyasuda/tools/result_titan/f-t_plot_cassini_15_flybyの結果を見ながら、星印が本当に掩蔽の始まり・終わりの時間になっているか確認。ズレている場合は、/work1/rikutoyasuda/tools/python_Titan_ionsphere/radio_and_ft_plot/plot_f-t_2.pyを編集する。対応するフライバイのときのexclave_exceptionに[[ずれている周波数][掩蔽開始時のズレ（時間ステップ）][ 掩蔽終了時時のズレ（時間ステップ）]]で記載していく。変更後にplot_f-t_2.pyを実行して自身が意図している箇所に星が打たれるまで修正する。
+14.	13.で星の位置に納得がいったら再度すべてのパラメータセットに対してplot_f-t_2.pyする。run2.pyのmain関数の一部をコメントアウトすることで複数のパラメータセットでの計算をまとめておこなうことができる。
+15.	/work1/rikutoyasuda/tools/python_Titan_ionsphere/evaluate_time_def/evaluate_ft_2_revision3.py　の天体名、探査機名、フライバイ数、調べる周波数幅、閾値の電波強度、掩蔽開始or終了時(ingress or egress)、電波の種類（A~D）を記入して実行。今までのレイトレーシング結果から、どの電子密度分布が観測とよくあっているのか、その結果が図とテキストで出力される。出力先は'/work1/rikutoyasuda/tools/result_titan/evaluate_f-t_diagram_plot_'+探査機名+'_'+天体名+'_'+フライバイ数+'_flyby_radioint_'+"閾値にするノイズの倍率"dB
+####################################################
+object_name = 'ganymede'  # ganydeme/europa/calisto`
+spacecraft_name = "galileo"  # galileo/JUICE(?)
+time_of_flybies = 1  # ..th flyby
+"""lowest frequency and highest_freqency(MHz)"""
+using_frequency_range = [5.5e-1, 6]  # egress
+boundary_intensity_str = '7e-16'  # '7e-16' '1e-15'
+occultaion_type = 'egress'  # 'ingress' or 'egress'
+radio_type = 'A'  # 'A' or 'B' or 'C' or 'D'
+
+ 
